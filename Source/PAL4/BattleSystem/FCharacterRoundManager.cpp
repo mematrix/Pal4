@@ -3,10 +3,4 @@
 #include "PAL4.h"
 #include "FCharacterRoundManager.h"
 
-FCharacterRoundManager::FCharacterRoundManager()
-{
-}
 
-FCharacterRoundManager::~FCharacterRoundManager()
-{
-}

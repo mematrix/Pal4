@@ -6,7 +6,7 @@ template<typename... Mutexes>
 class _LockGuard_t;
 
 template<typename Mutex1, typename... Mutexes>
-class _LockGuard_t : public _LockGuard_t<Mutexes...>
+class PAL4_API _LockGuard_t : public _LockGuard_t<Mutexes...>
 {
     Mutex1& mtx;
 
@@ -22,7 +22,7 @@ public:
 };
 
 template<>
-class _LockGuard_t<> { };
+class PAL4_API _LockGuard_t<> { };
 
 template<typename Mutex1, typename Mutex2, typename... Mutexes>
 class PAL4_API LockGuard : public _LockGuard_t<Mutex2, Mutexes...>
