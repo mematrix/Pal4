@@ -70,21 +70,21 @@ public:
     }
 
     template<typename Alloc,
-        typename = typename enable_if<usesAllocator<Container, Alloc>::value, void>::type>
+        typename = typename std::enable_if<std::uses_allocator<Container, Alloc>::value, void>::type>
         explicit PriorityQueue(const Alloc& alloc)
         : c(alloc)
     {	// construct with empty container, allocator
     }
 
     template<typename Alloc,
-        typename = typename enable_if<usesAllocator<Container, Alloc>::value, void>::type>
+        typename = typename std::enable_if<std::uses_allocator<Container, Alloc>::value, void>::type>
         PriorityQueue(const Compare& pred, const Alloc& alloc)
         : c(alloc), comp(pred)
     {	// construct with empty container, comparator, allocator
     }
 
     template<typename Alloc,
-        typename = typename enable_if<std::uses_allocator usesAllocator<Container, Alloc>::value, void>::type>
+        typename = typename std::enable_if<std::uses_allocator<Container, Alloc>::value, void>::type>
         PriorityQueue(const Compare& pred, const Container& container,
             const Alloc& alloc)
         : c(container, alloc), comp(pred)
@@ -93,14 +93,14 @@ public:
     }
 
     template<typename Alloc,
-        typename = typename enable_if<usesAllocator<Container, Alloc>::value, void>::type>
+        typename = typename std::enable_if<std::uses_allocator<Container, Alloc>::value, void>::type>
         PriorityQueue(const Myt& right, const Alloc& alloc)
         : c(right.c, alloc), comp(right.comp)
     {	// construct by copying right, allocator
     }
 
     PriorityQueue(Myt&& right)
-        noexcept(is_nothrow_move_constructible<Container>::value && is_nothrow_move_constructible<Compare>::value)
+        noexcept(std::is_nothrow_move_constructible<Container>::value && std::is_nothrow_move_constructible<Compare>::value)
         : c(std::move(right.c)), comp(std::move(right.comp))
     {	// construct by moving right
     }
@@ -111,7 +111,7 @@ public:
         std::make_heap(c.begin(), c.end(), comp);
     }
 
-    template<class InputIterator>
+    template<typename InputIterator>
     PriorityQueue(InputIterator first, InputIterator last, const Compare& pred, Container&& container)
         : c(std::move(container)), comp(pred)
     {	// construct by copying [first, last), moving container
@@ -119,43 +119,39 @@ public:
         std::make_heap(c.begin(), c.end(), comp);
     }
 
-    template<class Alloc,
-        class = typename enable_if<usesAllocator<Container, Alloc>::value,
-        void>::type>
-        PriorityQueue(const Compare& pred, Container&& container,
-            const Alloc& alloc)
+    template<typename Alloc,
+        typename = typename std::enable_if<std::uses_allocator<Container, Alloc>::value, void>::type>
+        PriorityQueue(const Compare& pred, Container&& container, const Alloc& alloc)
         : c(std::move(container), alloc), comp(pred)
     {	// construct by moving specified container, comparator, allocator
         std::make_heap(c.begin(), c.end(), comp);
     }
 
-    template<class Alloc,
-        class = typename enable_if<usesAllocator<Container, Alloc>::value,
-        void>::type>
+    template<typename Alloc,
+        typename = typename std::enable_if<std::uses_allocator<Container, Alloc>::value, void>::type>
         PriorityQueue(Myt&& right, const Alloc& alloc)
         : c(std::move(right.c), alloc), comp(std::move(right.comp))
     {	// construct by moving right, allocator
     }
 
     Myt& operator=(Myt&& right)
-        _NOEXCEPT_OP(is_nothrow_move_assignable<Container>::value
-            && is_nothrow_move_assignable<Compare>::value)
+        noexcept(std::is_nothrow_move_assignable<Container>::value && std::is_nothrow_move_assignable<Compare>::value)
     {	// assign by moving right
         c = std::move(right.c);
         comp = std::move(right.comp);
         return (*this);
     }
 
-    void push(value_type&& _Val)
+    void push(value_type&& val)
     {	// insert element at beginning
-        c.push_back(std::move(_Val));
+        c.push_back(std::move(val));
         push_heap(c.begin(), c.end(), comp);
     }
 
-    template<class... _Valty>
-    void emplace(_Valty&&... _Val)
+    template<class... Args>
+    void emplace(Args&&... args)
     {	// insert element at beginning
-        c.emplace_back(std::forward<_Valty>(_Val)...);
+        c.emplace_back(std::forward<Args>(args)...);
         push_heap(c.begin(), c.end(), comp);
     }
 
@@ -175,9 +171,9 @@ public:
         return (c.front());
     }
 
-    void push(const value_type& _Val)
+    void push(const value_type& val)
     {	// insert value in priority order
-        c.push_back(_Val);
+        c.push_back(val);
         push_heap(c.begin(), c.end(), comp);
     }
 
@@ -193,32 +189,33 @@ protected:
 
 public:
     void swap(Myt& right)
-        _NOEXCEPT_OP(_Is_nothrow_swappable<Container>::value
-            && _Is_nothrow_swappable<Compare>::value)
+#ifdef _MSC_VER
+        noexcept(std::_Is_nothrow_swappable<Container>::value && std::_Is_nothrow_swappable<Compare>::value)
+#endif
     {	// exchange contents with right
-        _Swap_adl(c, right.c);
-        _Swap_adl(comp, right.comp);
+        using std::swap;
+        swap(c, right.c);
+        swap(comp, right.comp);
     }
 };
 
 // PriorityQueue TEMPLATE FUNCTIONS
-template<class _Ty,
-    class Container,
-    class Compare,
-    class = enable_if_t<_Is_swappable<Container>::value && _Is_swappable<Compare>::value>> inline
-    void swap(PriorityQueue<_Ty, Container, Compare>& _Left,
-        PriorityQueue<_Ty, Container, Compare>& right)
-    _NOEXCEPT_OP(_NOEXCEPT_OP(_Left.swap(right)))
-{	// swap _Left and right queues
-    _Left.swap(right);
+template<typename T,
+    typename Container,
+    typename Compare/*,
+    typename = typename std::enable_if<_Is_swappable<Container>::value && _Is_swappable<Compare>::value, void>::type*/>
+    inline void swap(PriorityQueue<T, Container, Compare>& left, PriorityQueue<T, Container, Compare>& right)
+    noexcept(noexcept(left.swap(right)))
+{	// swap left and right queues
+    left.swap(right);
 }
 
 
-//template<class _Ty,
+//template<class T,
 //    class Container,
 //    class Compare,
 //    class Alloc>
-//    struct usesAllocator<PriorityQueue<_Ty, Container, Compare>, Alloc>
-//    : std::usesAllocator<Container, Alloc>
+//    struct std::uses_allocator<PriorityQueue<T, Container, Compare>, Alloc>
+//    : std::uses_allocator<Container, Alloc>
 //{	// true_type if container allocator enabled
 //};
