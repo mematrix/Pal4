@@ -3,8 +3,8 @@
 #include <algorithm>
 #include <deque>
 
-// custom priority queue. main code refers to std::priority_queue provided by MSVC.
-// change default Container to std::queue, and add remove node method.
+// custom priority queue. main code cames from the std::priority_queue provided by MSVC.
+// change default Container to std::deque, and add a method to remove node.
 template<typename T,
     typename Container = std::deque<T>,
     typename Compare = std::less<typename Container::value_type> >
@@ -19,36 +19,36 @@ public:
     typedef typename Container::reference reference;
     typedef typename Container::const_reference const_reference;
 
-    PriorityQueue() 
+    PriorityQueue()
         : c(), comp()
     {	// construct with empty container, default comparator
     }
 
-    PriorityQueue(const Myt& right) 
+    PriorityQueue(const Myt& right)
         : c(right.c), comp(right.comp)
     {	// construct by copying right
     }
 
-    explicit PriorityQueue(const Compare& pred) 
+    explicit PriorityQueue(const Compare& pred)
         : c(), comp(pred)
     {	// construct with empty container, specified comparator
     }
 
-    PriorityQueue(const Compare& pred, const Container& container) 
+    PriorityQueue(const Compare& pred, const Container& container)
         : c(container), comp(pred)
     {	// construct by copying specified container, comparator
         std::make_heap(c.begin(), c.end(), comp);
     }
 
     template<typename InputIterator>
-    PriorityQueue(InputIterator first, InputIterator last) 
+    PriorityQueue(InputIterator first, InputIterator last)
         : c(first, last), comp()
     {	// construct by copying [first, last), default comparator
         std::make_heap(c.begin(), c.end(), comp);
     }
 
     template<typename InputIterator>
-    PriorityQueue(InputIterator first, InputIterator last, const Compare& pred) 
+    PriorityQueue(InputIterator first, InputIterator last, const Compare& pred)
         : c(first, last), comp(pred)
     {	// construct by copying [first, last), specified comparator
         std::make_heap(c.begin(), c.end(), comp);
@@ -145,14 +145,14 @@ public:
     void push(value_type&& val)
     {	// insert element at beginning
         c.push_back(std::move(val));
-        push_heap(c.begin(), c.end(), comp);
+        std::push_heap(c.begin(), c.end(), comp);
     }
 
     template<class... Args>
     void emplace(Args&&... args)
     {	// insert element at beginning
         c.emplace_back(std::forward<Args>(args)...);
-        push_heap(c.begin(), c.end(), comp);
+        std::push_heap(c.begin(), c.end(), comp);
     }
 
 
@@ -174,13 +174,28 @@ public:
     void push(const value_type& val)
     {	// insert value in priority order
         c.push_back(val);
-        push_heap(c.begin(), c.end(), comp);
+        std::push_heap(c.begin(), c.end(), comp);
     }
 
     void pop()
     {	// erase highest-priority element
-        pop_heap(c.begin(), c.end(), comp);
+        std::pop_heap(c.begin(), c.end(), comp);
         c.pop_back();
+    }
+
+    void clear()
+    {
+        c.clear();
+    }
+
+    void remove(const value_type& val)
+    {
+        auto itor = std::find(c.begin(), c.end(), val);
+        if (!(itor == c.end()))
+        {
+            c.erase(itor);
+            std::make_heap(c.begin(), c.end(), comp);
+        }
     }
 
 protected:

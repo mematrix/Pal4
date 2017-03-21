@@ -3,8 +3,9 @@
 #pragma once
 
 #include <functional>
-#include <queue>
-#include <vector>
+#include <deque>
+
+#include <Core/PriorityQueue.h>
 
 class FBattleSystem;
 class ISupportRoundAction;
@@ -14,24 +15,34 @@ class ISupportRoundAction;
  */
 class PAL4_API FCharacterRoundManager
 {
+    class FDelayCallFuncWrapper;
+
+    friend void swap(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
+    //friend void std::swap<FDelayCallFuncWrapper>(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
     friend class FBattleSystem;
 
 private:
     struct PAL4_API FDelayCallFuncWrapper
     {
+        //friend void std::swap<FDelayCallFuncWrapper>(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
+
+        uint32 Key;
         uint32 RoundTimeWhenCall;
         std::function<void()> DelayCalledFunc;
 
-        explicit FDelayCallFuncWrapper(uint32 time = 0, std::function<void()> func = nullptr) :
+        explicit FDelayCallFuncWrapper(uint32 key, uint32 time = 0, std::function<void()> func = nullptr) :
+            Key(key),
             RoundTimeWhenCall(time),
             DelayCalledFunc(std::move(func)) { }
 
         FDelayCallFuncWrapper(const FDelayCallFuncWrapper&) = default;
 
         FDelayCallFuncWrapper(FDelayCallFuncWrapper&& other) :
+            Key(other.Key),
             RoundTimeWhenCall(other.RoundTimeWhenCall),
             DelayCalledFunc(std::move(other.DelayCalledFunc))
         {
+            other.Key = 0;
             other.RoundTimeWhenCall = 0;
             other.DelayCalledFunc = nullptr;
         }
@@ -39,9 +50,13 @@ private:
         FDelayCallFuncWrapper& operator=(const FDelayCallFuncWrapper& other) { Swap(FDelayCallFuncWrapper(other)); }
         FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) { Swap(other); }
 
+        bool operator==(const FDelayCallFuncWrapper& other) { return Key == other.Key && RoundTimeWhenCall == other.RoundTimeWhenCall; }
+
         void Swap(FDelayCallFuncWrapper& other) noexcept
         {
-            std::swap(RoundTimeWhenCall, other.RoundTimeWhenCall);
+            using std::swap;
+            swap(Key, other.Key);
+            swap(RoundTimeWhenCall, other.RoundTimeWhenCall);
             DelayCalledFunc.swap(other.DelayCalledFunc);
         }
     };
@@ -55,7 +70,7 @@ private:
         }
     };
 
-    typedef std::priority_queue<FDelayCallFuncWrapper, std::vector<FDelayCallFuncWrapper>, FRoundTimeComparator> FRoundFunc;
+    typedef PriorityQueue<FDelayCallFuncWrapper, std::deque<FDelayCallFuncWrapper>, FRoundTimeComparator> FRoundFunc;
 
 public:
     DECLARE_EVENT_TwoParams(FCharacterRoundManager, FRoundBeginEvent, const FCharacterRoundManager&, uint32)
@@ -79,3 +94,18 @@ private:
     ISupportRoundAction& RoundAction;
     FRoundFunc RoundFunc;
 };
+
+
+void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundManager::FDelayCallFuncWrapper& right)
+{
+    left.Swap(right);
+}
+
+//namespace std
+//{
+//    template<> void swap<FCharacterRoundManager::FDelayCallFuncWrapper>(FCharacterRoundManager::FDelayCallFuncWrapper& left,
+//        FCharacterRoundManager::FDelayCallFuncWrapper& right)
+//    {
+//        left.Swap(right);
+//    }
+//}
