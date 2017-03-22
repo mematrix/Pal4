@@ -190,6 +190,7 @@ public:
 
     void remove(const value_type& val)
     {
+        // 此处可优化。不必每次删除都重新构建堆，而是类似pop_heap的做法来删除元素。
         auto itor = std::find(c.begin(), c.end(), val);
         if (!(itor == c.end()))
         {

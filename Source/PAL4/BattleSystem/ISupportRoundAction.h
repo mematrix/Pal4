@@ -20,3 +20,5 @@ public:
 
     virtual void OnRoundFinished() { }
 };
+
+FORCEINLINE ISupportRoundAction& GetDefaultRoundAction();
