@@ -199,6 +199,17 @@ public:
         }
     }
 
+    template<typename UnaryPredicate>
+    void remove(UnaryPredicate pred)
+    {
+        auto itor = std::find_if(c.begin(), c.end(), pred);
+        if (!(itor == c.end()))
+        {
+            c.erase(itor);
+            std::make_heap(c.begin(), c.end(), comp);
+        }
+    }
+
 protected:
     Container c;	// the underlying container
     Compare comp;	// the comparator functor

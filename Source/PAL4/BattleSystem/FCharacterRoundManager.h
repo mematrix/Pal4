@@ -5,10 +5,24 @@
 #include <functional>
 #include <deque>
 
+#include <SharedPointer.h>
+
 #include "Core/PriorityQueue.h"
 
 class FBattleSystem;
 class ISupportRoundAction;
+
+enum class ECharacterRoundStatus
+{
+    // 未行动状态，即人物处于行动条非终点位置
+    NoAction,
+    // 准备行动
+    BeforeAction,
+    // 正在行动
+    OnAction,
+    // 行动完毕，即将进入未行动状态
+    PostAction
+};
 
 /**
  *
@@ -84,7 +98,7 @@ public:
     DECLARE_EVENT_OneParam(FCharacterRoundManager, FRoundFinishedEvent, const FCharacterRoundManager&)
 
 public:
-    explicit FCharacterRoundManager(ISupportRoundAction& action);
+    explicit FCharacterRoundManager(TSharedRef<ISupportRoundAction> action);
     FCharacterRoundManager(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager(FCharacterRoundManager&&);
     ~FCharacterRoundManager() = default;
@@ -92,10 +106,20 @@ public:
     FCharacterRoundManager& operator=(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager& operator=(FCharacterRoundManager&&);
 
+    void Swap(FCharacterRoundManager& other);
+
     // 新回合开始事件
     FRoundBeginEvent& OnNewRoundBegin() { return RoundBeginEvent; }
     // 当前回合结束事件
     FRoundFinishedEvent& OnRoundFinished() { return RoundFinishedEvent; }
+
+    uint32 GetCurrentRoundNum() const { return RoundNum; }
+
+    ECharacterRoundStatus GetCurrentRoundStatus() const { return RoundStatus; }
+
+    TSharedRef<ISupportRoundAction>& GetBindAction() { return RoundAction; }
+
+    const TSharedRef<ISupportRoundAction>& GetBindAction() const { return RoundAction; }
 
     /*
      * 添加延迟回合调用事件，在指定的回合数之后调用。
@@ -112,7 +136,7 @@ public:
      * @param callWhenBegin 是否应该在回合开始时调用，true为在回合开始调用，false为结束时调用
      * @param callIfPast 如果前两个参数指定的调用时机已经过了（比如传入回合数小于当前回合），是否应该立即调用
      * @param func 调用方法
-     * @return 一个key值，用于取消事件
+     * @return 一个key值，用于取消事件。或者0，表示调用时机已过
      */
     uint32 AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, std::function<void()> func);
 
@@ -130,9 +154,10 @@ private:
     FRoundBeginEvent RoundBeginEvent;
     FRoundFinishedEvent RoundFinishedEvent;
 
-    ISupportRoundAction& RoundAction;
+    TSharedRef<ISupportRoundAction> RoundAction;
     FRoundFunc RoundFunc;
     uint32 RoundNum;
+    ECharacterRoundStatus RoundStatus;
 
     // 用于添加延迟调用时返回的key值，每次添加都递增。考虑使用原子类型
     uint32 DelayFuncKey;
@@ -142,6 +167,14 @@ private:
 void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundManager::FDelayCallFuncWrapper& right)
 {
     left.Swap(right);
+}
+
+namespace std
+{
+    template<> void swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right)
+    {
+        left.Swap(right);
+    }
 }
 
 //namespace std
