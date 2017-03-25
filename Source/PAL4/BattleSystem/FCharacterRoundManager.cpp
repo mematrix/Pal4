@@ -89,5 +89,50 @@ void FCharacterRoundManager::RemoveDelayCallFunc(uint32 key)
 
 void FCharacterRoundManager::DoRoundAction()
 {
-    //
+    ++RoundNum;
+
+    RoundStatus = ECharacterRoundStatus::BeforeAction;
+    while (RoundFunc.top().RoundTimeWhenCall < RoundNum)
+    {
+        RoundFunc.pop();
+    }
+    while (RoundFunc.top().RoundTimeWhenCall == RoundNum && RoundFunc.top().CallWhenRoundBegin)
+    {
+        auto &func = RoundFunc.top().DelayCalledFunc;
+        if (func)
+        {
+            func();
+        }
+
+        RoundFunc.pop();
+    }
+    RoundAction->OnNewRoundBegin(RoundNum);
+
+    if (RoundBeginEvent.IsBound())
+    {
+        RoundBeginEvent.Broadcast(*this, RoundNum);
+    }
+
+    RoundStatus = ECharacterRoundStatus::OnAction;
+    RoundAction->OnAction();
+
+    RoundStatus = ECharacterRoundStatus::PostAction;
+    while (RoundFunc.top().RoundTimeWhenCall == RoundNum && !RoundFunc.top().CallWhenRoundBegin)
+    {
+        auto &func = RoundFunc.top().DelayCalledFunc;
+        if (func)
+        {
+            func();
+        }
+
+        RoundFunc.pop();
+    }
+    RoundAction->OnRoundFinished();
+
+    if (RoundFinishedEvent.IsBound())
+    {
+        RoundFinishedEvent.Broadcast(*this);
+    }
+
+    RoundStatus = ECharacterRoundStatus::NoAction;
 }

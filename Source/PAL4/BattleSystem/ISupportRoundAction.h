@@ -12,7 +12,7 @@ class PAL4_API ISupportRoundAction
 public:
 	virtual ~ISupportRoundAction() { }
 
-    virtual void WaitingAct() { }
+    // virtual void WaitingAct() { }
 
     virtual void OnNewRoundBegin(uint32 roundNum) { }
 

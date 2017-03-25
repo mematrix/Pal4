@@ -87,7 +87,8 @@ private:
     public:
         bool operator()(const FDelayCallFuncWrapper& left, const FDelayCallFuncWrapper& right)
         {
-            return left.RoundTimeWhenCall > right.RoundTimeWhenCall;
+            return (left.RoundTimeWhenCall > right.RoundTimeWhenCall ||
+                (left.RoundTimeWhenCall == right.RoundTimeWhenCall && left.CallWhenRoundBegin));
         }
     };
 
@@ -150,13 +151,18 @@ private:
     void DoRoundAction();
 
 private:
-    // 事件
+    // 回合开始事件
     FRoundBeginEvent RoundBeginEvent;
+    // 回合结束事件
     FRoundFinishedEvent RoundFinishedEvent;
 
+    // 支持回合处理的类型引用。通常为战场中的人物或AI
     TSharedRef<ISupportRoundAction> RoundAction;
+    // 保存延迟回调的方法
     FRoundFunc RoundFunc;
+    // 当前回合数
     uint32 RoundNum;
+    // 人物行动状态：未行动，即将行动，正在行动，行动完毕
     ECharacterRoundStatus RoundStatus;
 
     // 用于添加延迟调用时返回的key值，每次添加都递增。考虑使用原子类型
