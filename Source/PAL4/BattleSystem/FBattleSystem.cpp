@@ -3,7 +3,9 @@
 #include "PAL4.h"
 #include "FBattleSystem.h"
 
-FBattleSystem::FBattleSystem()
+
+FBattleSystem::FBattleSystem(TArray<TSharedRef<IBattleStatus>> characters) :
+    Characters(MoveTemp(characters))
 {
 }
 

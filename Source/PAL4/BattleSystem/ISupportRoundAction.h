@@ -4,12 +4,23 @@
 
 #include <Platform.h>
 
+class FCharacterRoundManager;
+
 /**
  * 
  */
 class PAL4_API ISupportRoundAction
 {
+    friend class FCharacterRoundManager;
+
 public:
+    ISupportRoundAction() noexcept : RoundManager(nullptr) { }
+    ISupportRoundAction(const ISupportRoundAction&) = delete;
+    ISupportRoundAction(ISupportRoundAction&&);
+
+    ISupportRoundAction& operator=(ISupportRoundAction&) = delete;
+    ISupportRoundAction& operator=(ISupportRoundAction&&);
+
 	virtual ~ISupportRoundAction() { }
 
     // virtual void WaitingAct() { }
@@ -19,6 +30,14 @@ public:
     virtual void OnAction() = 0;
 
     virtual void OnRoundFinished() { }
+
+private:
+    void SwapManager(ISupportRoundAction& other) noexcept
+    {
+        std::swap(RoundManager, other.RoundManager);
+    }
+
+    FCharacterRoundManager *RoundManager;
 };
 
 FORCEINLINE ISupportRoundAction& GetDefaultRoundAction();

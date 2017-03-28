@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "PAL4.h"
+
+#include <stdexcept>
 #include "FCharacterRoundManager.h"
 #include "ISupportRoundAction.h"
 
@@ -13,6 +15,12 @@ FCharacterRoundManager::FCharacterRoundManager(TSharedRef<ISupportRoundAction> a
     DelayFuncKey(0),
     RoundStatus(ECharacterRoundStatus::NoAction)
 {
+    if (nullptr != action->RoundManager)
+    {
+        throw std::invalid_argument("Action already has a round manager");
+    }
+
+    RoundAction->RoundManager = this;
 }
 
 FCharacterRoundManager::FCharacterRoundManager(FCharacterRoundManager &&other) :
@@ -24,12 +32,16 @@ FCharacterRoundManager::FCharacterRoundManager(FCharacterRoundManager &&other) :
     DelayFuncKey(other.DelayFuncKey),
     RoundStatus(other.RoundStatus)
 {
-    // other.RoundNum = 0;
-    // other.DelayFuncKey = 0;
+    RoundAction->RoundManager = this;
 }
 
 FCharacterRoundManager & FCharacterRoundManager::operator=(FCharacterRoundManager &&other)
 {
+    if (&other == this)
+    {
+        return (*this);
+    }
+
     RoundBeginEvent = MoveTemp(other.RoundBeginEvent);
     RoundFinishedEvent = MoveTemp(other.RoundFinishedEvent);
     RoundAction = MoveTemp(other.RoundAction);
@@ -37,12 +49,20 @@ FCharacterRoundManager & FCharacterRoundManager::operator=(FCharacterRoundManage
     RoundNum = other.RoundNum;
     DelayFuncKey = other.DelayFuncKey;
     RoundStatus = other.RoundStatus;
+    RoundAction->RoundManager = this;
+
     return (*this);
 }
 
 void FCharacterRoundManager::Swap(FCharacterRoundManager & other)
 {
     using std::swap;
+
+    if (&other == this)
+    {
+        return;
+    }
+
     swap(RoundBeginEvent, other.RoundBeginEvent);
     swap(RoundFinishedEvent, other.RoundFinishedEvent);
     swap(RoundAction, other.RoundAction);
@@ -50,6 +70,8 @@ void FCharacterRoundManager::Swap(FCharacterRoundManager & other)
     swap(RoundNum, other.RoundNum);
     swap(DelayFuncKey, other.DelayFuncKey);
     swap(RoundStatus, other.RoundStatus);
+
+    RoundAction->SwapManager(other.RoundAction.Get());
 }
 
 uint32 FCharacterRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, std::function<void()> func)

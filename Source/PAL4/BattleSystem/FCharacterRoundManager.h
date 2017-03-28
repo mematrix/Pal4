@@ -12,7 +12,7 @@
 class FBattleSystem;
 class ISupportRoundAction;
 
-enum class ECharacterRoundStatus
+enum class PAL4_API ECharacterRoundStatus
 {
     // 未行动状态，即人物处于行动条非终点位置
     NoAction,
