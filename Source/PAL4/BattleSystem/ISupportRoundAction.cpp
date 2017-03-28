@@ -11,7 +11,7 @@ ISupportRoundAction::ISupportRoundAction(ISupportRoundAction && other) :
 
 ISupportRoundAction & ISupportRoundAction::operator=(ISupportRoundAction &&other)
 {
-    Swap(other);
+    SwapManager(other);
     return (*this);
 }
 

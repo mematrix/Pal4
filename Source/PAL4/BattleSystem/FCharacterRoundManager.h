@@ -29,7 +29,7 @@ enum class PAL4_API ECharacterRoundStatus
  */
 class PAL4_API FCharacterRoundManager
 {
-    class FDelayCallFuncWrapper;
+    struct FDelayCallFuncWrapper;
 
     friend void swap(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
     //friend void std::swap<FDelayCallFuncWrapper>(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
@@ -64,8 +64,8 @@ private:
             other.DelayCalledFunc = nullptr;
         }
 
-        FDelayCallFuncWrapper& operator=(const FDelayCallFuncWrapper& other) { Swap(FDelayCallFuncWrapper(other)); }
-        FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) { Swap(other); }
+        FDelayCallFuncWrapper& operator=(const FDelayCallFuncWrapper& other) = default;
+        FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) { Swap(other); return (*this); }
 
         bool operator==(const FDelayCallFuncWrapper& other)
         {
