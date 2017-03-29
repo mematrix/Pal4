@@ -6,7 +6,7 @@
 #include "FCharacterRoundManager.h"
 #include "ISupportRoundAction.h"
 
-FCharacterRoundManager::FCharacterRoundManager(TSharedRef<ISupportRoundAction> action) :
+FCharacterRoundManager::FCharacterRoundManager(TSharedRef<ISupportRoundAction>& action) :
     RoundBeginEvent(),
     RoundFinishedEvent(),
     RoundAction(action),

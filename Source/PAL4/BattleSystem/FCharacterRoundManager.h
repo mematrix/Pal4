@@ -99,7 +99,7 @@ public:
     DECLARE_EVENT_OneParam(FCharacterRoundManager, FRoundFinishedEvent, const FCharacterRoundManager&)
 
 public:
-    explicit FCharacterRoundManager(TSharedRef<ISupportRoundAction> action);
+    explicit FCharacterRoundManager(TSharedRef<ISupportRoundAction>&);
     FCharacterRoundManager(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager(FCharacterRoundManager&&);
     ~FCharacterRoundManager() = default;
