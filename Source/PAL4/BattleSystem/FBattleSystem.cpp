@@ -25,7 +25,17 @@ void FBattleSystem::Run()
         BattleBeginEvent.Broadcast(*this);
     }
 
-    //
+    // 不应该出现这种情况
+    if (BattleIsOver())
+    {
+        _ASSERT(0);
+    }
+
+    while (!BattleIsOver())
+    {
+        auto& character = Dispatcher->MoveToNext(Characters);
+        //character
+    }
 }
 
 bool FBattleSystem::BattleIsOver() const
@@ -35,7 +45,7 @@ bool FBattleSystem::BattleIsOver() const
     for (int i = 0; i < Characters.Num(); ++i)
     {
         auto& manager = Characters[i]->GetPropertyManager();
-        if (manager.IsPlayer)
+        if (manager.IsPlayer())
         {
             isAnyPlayerAlive = isAnyPlayerAlive || manager.IsAlive();
         }

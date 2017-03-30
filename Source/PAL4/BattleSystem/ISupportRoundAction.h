@@ -22,6 +22,8 @@ public:
     ISupportRoundAction& operator=(ISupportRoundAction&) = delete;
     ISupportRoundAction& operator=(ISupportRoundAction&&);
 
+    FCharacterRoundManager* GetRoundManager() const { return RoundManager; }
+
 	virtual ~ISupportRoundAction() { }
 
     // virtual void WaitingAct() { }

@@ -35,6 +35,14 @@ FCharacterRoundManager::FCharacterRoundManager(FCharacterRoundManager &&other) :
     RoundAction->RoundManager = this;
 }
 
+FCharacterRoundManager::~FCharacterRoundManager()
+{
+    if (this == RoundAction->RoundManager)
+    {
+        RoundAction->RoundManager = nullptr;
+    }
+}
+
 FCharacterRoundManager & FCharacterRoundManager::operator=(FCharacterRoundManager &&other)
 {
     if (&other == this)

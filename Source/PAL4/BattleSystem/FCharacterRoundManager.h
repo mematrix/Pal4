@@ -102,7 +102,7 @@ public:
     explicit FCharacterRoundManager(TSharedRef<ISupportRoundAction>&);
     FCharacterRoundManager(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager(FCharacterRoundManager&&);
-    ~FCharacterRoundManager() = default;
+    ~FCharacterRoundManager();
 
     FCharacterRoundManager& operator=(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager& operator=(FCharacterRoundManager&&);
