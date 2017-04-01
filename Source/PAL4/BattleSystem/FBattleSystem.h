@@ -5,7 +5,7 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "IBattleStatus.h"
+#include "ICharacterBattleStatus.h"
 #include "ICharacterRoundDispatcher.h"
 #include "FCharacterRoundManager.h"
 
@@ -17,11 +17,11 @@ class PAL4_API FBattleSystem
 public:
     DECLARE_EVENT_OneParam(FBattleSystem, FBattleBeginEvent, const FBattleSystem&)
     DECLARE_EVENT_OneParam(FBattleSystem, FBattleFinishedEvent, const FBattleSystem&)
-    DECLARE_EVENT_TwoParams(FBattleSystem, FCharacterWillActEvent, const FBattleSystem&, const IBattleStatus&)
-    DECLARE_EVENT_TwoParams(FBattleSystem, FCharacterFinishActEvent, const FBattleSystem&, const IBattleStatus&)
+    DECLARE_EVENT_TwoParams(FBattleSystem, FCharacterWillActEvent, const FBattleSystem&, const ICharacterBattleStatus&)
+    DECLARE_EVENT_TwoParams(FBattleSystem, FCharacterFinishActEvent, const FBattleSystem&, const ICharacterBattleStatus&)
 
 public:
-    FBattleSystem(TArray<TSharedRef<IBattleStatus>>&, TSharedRef<ICharacterRoundDispatcher>&);
+    FBattleSystem(TArray<TSharedRef<ICharacterBattleStatus>>&, TSharedRef<ICharacterRoundDispatcher>&);
     FBattleSystem(const FBattleSystem&) = delete;
 	~FBattleSystem();
 
@@ -31,13 +31,15 @@ public:
     FBattleBeginEvent& OnBattleBegin() { return BattleBeginEvent; }
     // 战斗结束事件
     FBattleFinishedEvent& OnBattleFinished() { return BattleFinishedEvent; }
+    // 人物即将行动
     FCharacterWillActEvent& OnCharacterWillAct() { return CharacterWillActEvent; }
+    // 人物结束行动
     FCharacterFinishActEvent& OnCharacterFinishAct() { return CharacterFinishActEvent; }
 
-    // TArray<TSharedRef<IBattleStatus>>& GetCharacters() { return Characters; }
-    const TArray<TSharedRef<IBattleStatus>>& GetCharacters() const { return Characters; }
+    // TArray<TSharedRef<ICharacterBattleStatus>>& GetCharacters() { return Characters; }
+    const TArray<TSharedRef<ICharacterBattleStatus>>& GetCharacters() const { return Characters; }
 
-    void AddCharacter(const TSharedRef<IBattleStatus>& character);
+    void AddCharacter(const TSharedRef<ICharacterBattleStatus>& character);
 
     const TSharedRef<ICharacterRoundDispatcher>& GetDispatcher() const { return Dispatcher; }
 
@@ -59,7 +61,7 @@ public:
     bool IsPlayerWinned() const;
 
 private:
-    bool IsPlayerWinned(TSharedRef<IBattleStatus>&) const;
+    bool IsPlayerWinned(TSharedRef<ICharacterBattleStatus>&) const;
 
 private:
     FBattleBeginEvent BattleBeginEvent;
@@ -67,7 +69,7 @@ private:
     FCharacterWillActEvent CharacterWillActEvent;
     FCharacterFinishActEvent CharacterFinishActEvent;
 
-    TArray<TSharedRef<IBattleStatus>> Characters;
+    TArray<TSharedRef<ICharacterBattleStatus>> Characters;
     TSharedRef<ICharacterRoundDispatcher> Dispatcher;
     // 存储每个参战人物的回合管理器实例。不直接存对象而是存储智能指针，原因是这个列表可能会有增加操作，
     // 那么就有可能会导致列表存储内存重分配，造成指向其中元素实例的指针悬挂（在FCharacterRoundManager里
@@ -75,5 +77,5 @@ private:
     TArray<TSharedRef<FCharacterRoundManager>> RoundManagers;
 
     // 最后一次出手的人
-    IBattleStatus *CharacterActLast;
+    ICharacterBattleStatus *CharacterActLast;
 };

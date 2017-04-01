@@ -3,10 +3,14 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "IBattleStatus.h"
+#include "ICharacterBattleStatus.h"
 
 class PAL4_API ICharacterRoundDispatcher
 {
 public:
-    virtual const TSharedRef<IBattleStatus>& MoveToNext(const TArray<TSharedRef<IBattleStatus>>&) = 0;
+    virtual ~ICharacterRoundDispatcher()
+    {
+    }
+
+    virtual const TSharedRef<ICharacterBattleStatus>& MoveToNext(const TArray<TSharedRef<ICharacterBattleStatus>>&) = 0;
 };

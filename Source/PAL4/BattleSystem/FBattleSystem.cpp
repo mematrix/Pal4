@@ -9,7 +9,7 @@
 #include "Character/FCharacterPropertyManager.h"
 
 
-FBattleSystem::FBattleSystem(TArray<TSharedRef<IBattleStatus>>& characters, TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
+FBattleSystem::FBattleSystem(TArray<TSharedRef<ICharacterBattleStatus>>& characters, TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
     BattleBeginEvent(),
     BattleFinishedEvent(),
     CharacterWillActEvent(),
@@ -32,10 +32,9 @@ FBattleSystem::~FBattleSystem()
 {
 }
 
-void FBattleSystem::AddCharacter(const TSharedRef<IBattleStatus>& character)
+void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleStatus>& character)
 {
-    auto& roundManager = MakeShared<FCharacterRoundManager>(character->GetRoundAction());
-    RoundManagers.Add(MoveTemp(roundManager));
+    RoundManagers.Add(MakeShared<FCharacterRoundManager>(character->GetRoundAction()));
     Characters.Add(character);
 }
 
@@ -52,7 +51,7 @@ void FBattleSystem::Run()
         _ASSERT(0);
     }
 
-    IBattleStatus* characterActLast = nullptr;
+    ICharacterBattleStatus* characterActLast = nullptr;
     while (!BattleIsOver())
     {
         auto& character = Dispatcher->MoveToNext(Characters).Get();
@@ -130,7 +129,7 @@ bool FBattleSystem::IsPlayerWinned() const
     return CharacterActLast->GetPropertyManager().IsPlayer();
 }
 
-bool FBattleSystem::IsPlayerWinned(TSharedRef<IBattleStatus>& lastCharacter) const
+bool FBattleSystem::IsPlayerWinned(TSharedRef<ICharacterBattleStatus>& lastCharacter) const
 {
     bool isAnyPlayerAlive = false;
     bool isAnyNonPlayerAlive = false;

@@ -12,8 +12,8 @@ FCharacterRoundManager::FCharacterRoundManager(TSharedRef<ISupportRoundAction>& 
     RoundAction(action),
     RoundFunc(),
     RoundNum(0),
-    DelayFuncKey(0),
-    RoundStatus(ECharacterRoundStatus::NoAction)
+    RoundStatus(ECharacterRoundStatus::NoAction),
+    DelayFuncKey(0)
 {
     if (nullptr != action->RoundManager)
     {
@@ -29,8 +29,8 @@ FCharacterRoundManager::FCharacterRoundManager(FCharacterRoundManager &&other) :
     RoundAction(MoveTemp(other.RoundAction)),
     RoundFunc(MoveTemp(other.RoundFunc)),
     RoundNum(other.RoundNum),
-    DelayFuncKey(other.DelayFuncKey),
-    RoundStatus(other.RoundStatus)
+    RoundStatus(other.RoundStatus),
+    DelayFuncKey(other.DelayFuncKey)
 {
     RoundAction->RoundManager = this;
 }
