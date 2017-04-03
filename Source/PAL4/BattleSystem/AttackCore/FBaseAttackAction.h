@@ -15,9 +15,11 @@ public:
     DECLARE_EVENT_TwoParams(FBaseAttackAction, FAfterAttackEvent, const FBaseAttackAction&, const ICharacterBattleStatus&)
 
 public:
-    virtual ~FBaseAttackAction()
-    {
-    }
+    FBaseAttackAction();
+    FBaseAttackAction(const FBaseAttackAction&) = default;
+    FBaseAttackAction& operator=(const FBaseAttackAction&) = default;
+
+    virtual ~FBaseAttackAction() = default;
 
     FBeforeAttackEvent& BeforeAttack() { return BeforeAttackEvent; }
     FOnAttackEvent& OnAttack() { return OnAttackEvent; }
