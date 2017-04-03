@@ -5,9 +5,9 @@
 /**
  * 
  */
-class PAL4_API FCharacterPropertyStatus
+class PAL4_API FPersistentStatusOpWrapper
 {
 public:
-	FCharacterPropertyStatus();
-	~FCharacterPropertyStatus();
+	FPersistentStatusOpWrapper();
+	~FPersistentStatusOpWrapper();
 };

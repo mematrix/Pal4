@@ -5,7 +5,7 @@
 #include <Platform.h>
 
 template<typename Event, typename... Args>
-FORCEINLINE void InvokeEvent(Event e, Args&&... args)
+FORCEINLINE void InvokeEvent(Event& e, Args&&... args)
 {
     if (e.IsBound())
     {

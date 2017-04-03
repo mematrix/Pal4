@@ -3,6 +3,7 @@
 #include "PAL4.h"
 
 #include "FBaseAttackAction.h"
+#include "Util/EventUtil.h"
 
 FBaseAttackAction::FBaseAttackAction() :
     Character(nullptr),
@@ -15,10 +16,11 @@ FBaseAttackAction::FBaseAttackAction() :
 void FBaseAttackAction::BeforeDoAttack(const ICharacterBattleStatus& character)
 {
     Character = &character;
-    if (BeforeAttackEvent.IsBound())
-    {
-        BeforeAttackEvent.Broadcast(*this, character);
-    }
+//    if (BeforeAttackEvent.IsBound())
+//    {
+//        BeforeAttackEvent.Broadcast(*this, character);
+//    }
+    InvokeEvent(BeforeAttackEvent, *this, character);
 }
 
 void FBaseAttackAction::DoAttack()
