@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "FBattleSystem.h"
-#include "CharacterBridge/ISupportRoundAction.h"
+#include "CharacterBridge/IRoundActionHandler.h"
 #include "Character/FCharacterPropertyManager.h"
 
 
@@ -46,10 +46,7 @@ void FBattleSystem::Run()
     }
 
     // 不应该出现这种情况
-    if (BattleIsOver())
-    {
-        _ASSERT(0);
-    }
+    _ASSERT(!BattleIsOver());
 
     ICharacterBattleStatus* characterActLast = nullptr;
     while (!BattleIsOver())

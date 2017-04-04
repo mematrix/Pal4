@@ -19,9 +19,9 @@ private:
     {
         KeyType Key;
         GroupType Group;
-        std::function<Ret(Params...)> Func;
+        std::function<Ret(KeyType, GroupType, Params...)> Func;
 
-        Node(KeyType key, GroupType group, const std::function<Ret(Params...)>& func) : 
+        Node(KeyType key, GroupType group, const std::function<Ret(KeyType, GroupType, Params...)>& func) :
             Key(key),
             Group(group),
             Func(func)
@@ -41,7 +41,7 @@ public:
     ValueTransformer& operator=(const ValueTransformer&) = default;
     ValueTransformer& operator=(ValueTransformer&&) = default;
 
-    void AddTransformer(KeyType key, GroupType group, std::function<Ret(Params...)>& func)
+    void AddTransformer(KeyType key, GroupType group, const std::function<Ret(KeyType, GroupType, Params...)>& func)
     {
         Transformers.emplace_back(key, group, func);
     }
@@ -55,7 +55,7 @@ public:
     }
 
     template<typename Function>
-    void Traverse(Function& fn)
+    void Traverse(Function& fn) const
     {
         std::for_each(Transformers.begin(), Transformers.end(), [&fn](const Node& node)
         {
@@ -64,7 +64,7 @@ public:
     }
 
     template<typename Function>
-    void TraverseByGroup(GroupType group, Function& fn)
+    void TraverseByGroup(GroupType group, Function& fn) const
     {
         std::for_each(Transformers.begin(), Transformers.end(), [group, &fn](const Node& node)
         {
@@ -75,13 +75,13 @@ public:
         });
     }
 
-    Ret AccumulateByGroup(Ret init, GroupType group, Params... params)
+    Ret AccumulateByGroup(Ret init, GroupType group, Params... params) const
     {
         for (const Node& node : Transformers)
         {
             if (group == node.Group)
             {
-                init = init + node.Func(params...);
+                init = init + node.Func(node.Key, node.Group, params...);
             }
         }
 

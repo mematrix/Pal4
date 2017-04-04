@@ -2,91 +2,46 @@
 
 #pragma once
 
-#include "PAL4.h"
+#include <Platform.h>
+#include <Delegate.h>
+
 #include "Util/FlagBitUtil.h"
+#include "Core/ValueTransformer.h"
+#include "Helper/FInfoModelAccessHelper.h"
+#include "Model/ECharacterPropertyType.h"
+#include "Model/FCharacterInfoModel.h"
 
-enum class PAL4_API ECommonBuff
+template ValueTransformer<void*, ECharacterPropertyType, int32, int32>;
+typedef ValueTransformer<void*, ECharacterPropertyType, int32, int32> FPersistentTransformer;
+
+class PAL4_API FCharacterPersistentStatus
 {
-    None = 0,
-    // 镜，反弹普攻和特技
-    ReboundAttackAndSkill = 1,
-    // 壁，普通攻击无效
-    InvalidateAttack = 2,
-    // 界，法术攻击无效
-    InvalidateMagic = 3,
-    // 宁，吸收仙术伤害
-    AbsorbMagicDamage = 4
+public:
+    typedef std::function<int32(void*, ECharacterPropertyType, int32)> FTransformAction;
+
+    /**
+     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterPropertyType::PropertyEnd，
+     * 则说明有多个属性发生了变化。
+     */
+    DECLARE_EVENT_TwoParams(FCharacterPersistentStatus, FOnPropertyChangedEvent, const FCharacterPersistentStatus&, ECharacterPropertyType)
+
+public:
+    explicit FCharacterPersistentStatus(FInfoModelAccessHelper& base);
+    FCharacterPersistentStatus(const FCharacterPersistentStatus&) = delete;
+    FCharacterPersistentStatus(FCharacterPersistentStatus&&) = default;
+
+    FCharacterPersistentStatus& operator=(const FCharacterPersistentStatus&) = delete;
+    FCharacterPersistentStatus& operator=(FCharacterPersistentStatus&&) = default;
+
+private:
+    FCharacterInfoModel InfoModel;
+
+    FInfoModelAccessHelper BaseInfoAccessor;
+    FInfoModelAccessHelper PersistentInfoAccessor;
+
+    FPersistentTransformer Transformer;
 };
 
-enum class PAL4_API EPoison
-{
-    None = 0,
-    // 水毒
-    Water = 1,
-    // 火毒
-    Fire = 2,
-    // 雷毒
-    Thunder = 3,
-    // 风毒
-    Wind = 4,
-    // 土毒
-    Soil = 5
-};
-
-enum class PAL4_API EControlledDebuff
-{
-    None = 0,
-    // 定，角色行动条停止，不可操作
-    Root = 1,
-    // 封，角色不可使用仙术
-    SealMagic = 2,
-    // 禁，角色不可使用物品或者逃跑
-    BanProp = 3,
-    // 眠，角色行动条停止
-    Sleep = 4,
-    // 狂，角色无法控制，不分敌我的进行普通攻击，攻击力加倍
-    Crazy = 5,
-    // 乱，角色无法控制，不分敌我，可使用任意技能、物品
-    Chaos = 6
-};
-
-enum class PAL4_API ECharacterProperty : uint32
-{
-    // 武
-    Attack = 1 << 0,
-    // 运
-    Luck = 1 << 1,
-    // 灵
-    Nimbus = 1 << 2,
-    // 速
-    Speed = 1 << 3,
-    // 防
-    Defence = 1 << 4,
-    PropertyEnd
-};
-
-enum class PAL4_API ECharacterStatus
-{
-    // 常规属性
-    Property,
-    // 通用Buff
-    CommonBuff,
-    // 隐身状态
-    Invisible,
-    // “生”状态
-    CanRevive,
-    // 中毒属性
-    Poison,
-    // 控制性Debuff
-    ControlledDebuff
-};
-
-constexpr int32 GetFlagLeastBitIndex(ECharacterProperty prop)
-{
-    return GetLeastBitIndex(static_cast<int32>(prop));
-}
-
-constexpr int32 CharacterPropertyEnumCount = GetLeastBitIndex(static_cast<int32>(ECharacterProperty::PropertyEnd) - 1) + 1;
 
 template<typename... T>
 class PAL4_API FCharacterPropertyStatus;
