@@ -53,3 +53,6 @@ enum class PAL4_API ECharacterPropertyType
 
     PropertyEnd
 };
+
+constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterPropertyType::PropertyEnd);
+
