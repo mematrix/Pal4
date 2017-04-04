@@ -55,7 +55,7 @@ void FCharacterTemporaryStatus::AddTransformer(void* key, ECharacterPropertyType
     UpdatePropertyValue(type);
 }
 
-void FCharacterTemporaryStatus::RemoveTransformer(void * key, ECharacterPropertyType type)
+void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterPropertyType type)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.RemoveTransformer(key, type);

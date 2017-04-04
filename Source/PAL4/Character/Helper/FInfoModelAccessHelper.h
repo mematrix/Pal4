@@ -16,6 +16,7 @@ public:
 
     int32 GetPropertyValue(ECharacterPropertyType type) const;
     void SetPropertyValue(ECharacterPropertyType type, int32 value) const;
+    // TODO: Ìí¼Ó+=¸³ÖµÂß¼­
 
     template<ECharacterPropertyType Type>
     int32 GetPropertyValue() const

@@ -14,13 +14,17 @@
 template ValueTransformer<void*, ECharacterPropertyType, int32, int32>;
 typedef ValueTransformer<void*, ECharacterPropertyType, int32, int32> FPersistentTransformer;
 
+
+/**
+ * 用于存储持久化的状态信息，比如装备、被动技能带来的状态信息
+ */
 class PAL4_API FCharacterPersistentStatus
 {
 public:
     typedef std::function<int32(void*, ECharacterPropertyType, int32)> FTransformAction;
 
     /**
-     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterPropertyType::PropertyEnd，
+     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterPropertyType::PropertyEnd \endcode，
      * 则说明有多个属性发生了变化。
      */
     DECLARE_EVENT_TwoParams(FCharacterPersistentStatus, FOnPropertyChangedEvent, const FCharacterPersistentStatus&, ECharacterPropertyType)
@@ -33,7 +37,21 @@ public:
     FCharacterPersistentStatus& operator=(const FCharacterPersistentStatus&) = delete;
     FCharacterPersistentStatus& operator=(FCharacterPersistentStatus&&) = default;
 
+    FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
+
+    int32 GetPropertyValue(ECharacterPropertyType type) const { return PersistentInfoAccessor.GetPropertyValue(type); }
+    const FCharacterInfoModel& GetAccumulateInfo() const { return InfoModel; }
+
+    void UpdatePropertyValue(ECharacterPropertyType type) const;
+    void UpdateAllProperties() const;
+
+    void AddTransformer(void*, ECharacterPropertyType, const FTransformAction&);
+
+    void RemoveTransformer(void* key, ECharacterPropertyType type);
+
 private:
+    FOnPropertyChangedEvent OnPropertyChangedEvent;
+
     FCharacterInfoModel InfoModel;
 
     FInfoModelAccessHelper BaseInfoAccessor;
@@ -43,26 +61,10 @@ private:
 };
 
 
-template<typename... T>
-class PAL4_API FCharacterPropertyStatus;
 
-/**
- *
- */
 template<typename... T>
 class PAL4_API FCharacterStatusInfo
 {
-    friend class FCharacterPropertyStatus<T...>;
-
-public:
-    FCharacterStatusInfo() = default;
-    FCharacterStatusInfo(FCharacterStatusInfo&&) = default;
-    FCharacterStatusInfo(const FCharacterStatusInfo&) = delete;
-    ~FCharacterStatusInfo() = default;
-
-    FCharacterStatusInfo& operator= (FCharacterStatusInfo&&) = default;
-    FCharacterStatusInfo& operator= (const FCharacterStatusInfo&) = delete;
-
 public:
     int32 GetStatusValue(ECharacterStatus status) const
     {
@@ -102,74 +104,4 @@ public:
             return 0;
         }
     }
-
-    const TMap<void*, int32(void*, ECharacterProperty, T...)>* GetPropertyTransformer(ECharacterProperty prop) const
-    {
-        switch (prop)
-        {
-        case ECharacterProperty::Attack:
-            return &propertyTransformers[GetFlagLeastBitIndex(ECharacterProperty::Attack)];
-
-        case ECharacterProperty::Luck:
-            return &propertyTransformers[GetFlagLeastBitIndex(ECharacterProperty::Luck)];
-
-        case ECharacterProperty::Nimbus:
-            return &propertyTransformers[GetFlagLeastBitIndex(ECharacterProperty::Nimbus)];
-
-        case ECharacterProperty::Speed:
-            return &propertyTransformers[GetFlagLeastBitIndex(ECharacterProperty::Speed)];
-
-        case ECharacterProperty::Defence:
-            return &propertyTransformers[GetFlagLeastBitIndex(ECharacterProperty::Defence)];
-
-        default:
-            return nullptr;
-        }
-    }
-
-private:
-    void AddPropertyTransformer(uint32 props, const void* key, int32(*value)(void*, ECharacterProperty, T...))
-    {
-        for (int32 i = 0; i < CharacterPropertyEnumCount && props; ++i)
-        {
-            if (props & 0x01)
-            {
-                propertyTransformers[i].Add(key, value);
-            }
-            props >>= 1;
-        }
-    }
-
-    void RemovePropertyTransformer(uint32 props, const void* key)
-    {
-        for (int32 i = 0; i < CharacterPropertyEnumCount && props; ++i)
-        {
-            if (props & 0x01)
-            {
-                propertyTransformers[i].Remove(key);
-            }
-            props >>= 1;
-        }
-    }
-
-private:
-    // 属性增益变换列表。存储了每一个可附加计算状态的属性的变换列表
-    TMap<void*, int32(void*, ECharacterProperty, T...)> propertyTransformers[CharacterPropertyEnumCount];
-
-    // Buff状态
-    // 通用Buff：镜壁界宁
-    ECommonBuff CommonBuff;
-    // 中毒状态
-    EPoison Poison;
-    // 控制性Debuff
-    EControlledDebuff ControlledDebuff;
-    // 是否隐身状态
-    bool IsInvisible;
-    // 是否可在死亡后立即复活。“生”状态
-    bool CanRevive;
 };
-
-// 用于存储持久化的状态信息，比如装备、被动技能带来的状态信息
-using FPersistenceStatusInfo = FCharacterStatusInfo<int32>;
-// 用于存储临时的状态信息，比如战斗中使用技能、仙术等附加的Buff
-using FTemporaryStatusInfo = FCharacterStatusInfo<int32, int32>;
