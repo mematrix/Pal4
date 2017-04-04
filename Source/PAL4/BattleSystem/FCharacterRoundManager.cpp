@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 #include "FCharacterRoundManager.h"
-#include "ISupportRoundAction.h"
+#include "CharacterBridge/IRoundActionHandler.h"
 
 FCharacterRoundManager::FCharacterRoundManager(TSharedRef<ISupportRoundAction>& action) :
     RoundBeginEvent(),

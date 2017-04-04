@@ -5,9 +5,9 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "ICharacterBattleStatus.h"
-#include "ICharacterRoundDispatcher.h"
 #include "FCharacterRoundManager.h"
+#include "CharacterBridge/ICharacterBattleDelegate.h"
+#include "CharacterBridge/ICharacterRoundDispatcher.h"
 
 /**
  * 

@@ -3,7 +3,7 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "ICharacterBattleStatus.h"
+#include "ICharacterBattleDelegate.h"
 
 class PAL4_API ICharacterRoundDispatcher
 {

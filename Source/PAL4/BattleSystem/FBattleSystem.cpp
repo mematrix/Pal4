@@ -5,7 +5,7 @@
 #include <algorithm>
 
 #include "FBattleSystem.h"
-#include "ISupportRoundAction.h"
+#include "CharacterBridge/ISupportRoundAction.h"
 #include "Character/FCharacterPropertyManager.h"
 
 
@@ -122,7 +122,7 @@ bool FBattleSystem::IsPlayerWinned() const
     {
         return true;
     }
-    else if (isAnyNonPlayerAlive && !isAnyPlayerAlive)
+    if (isAnyNonPlayerAlive && !isAnyPlayerAlive)
     {
         return false;
     }
