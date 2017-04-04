@@ -3,26 +3,15 @@
 #include "PAL4.h"
 #include "IRoundActionHandler.h"
 
-ISupportRoundAction::ISupportRoundAction(ISupportRoundAction && other) :
+IRoundActionHandler::IRoundActionHandler(IRoundActionHandler && other) noexcept :
     RoundManager(other.RoundManager)
 {
     other.RoundManager = nullptr;
 }
 
-ISupportRoundAction & ISupportRoundAction::operator=(ISupportRoundAction &&other)
+IRoundActionHandler & IRoundActionHandler::operator=(IRoundActionHandler &&other) noexcept
 {
     SwapManager(other);
     return (*this);
 }
 
-class FDefaultRoundAction : public ISupportRoundAction
-{
-    void OnAction() override { }
-};
-
-static FDefaultRoundAction action;
-
-ISupportRoundAction & GetDefaultRoundAction()
-{
-    return action;
-}

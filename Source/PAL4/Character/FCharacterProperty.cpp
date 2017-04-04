@@ -3,10 +3,10 @@
 #include "PAL4.h"
 #include "FCharacterProperty.h"
 
-FCharacterBasicInfo::FCharacterBasicInfo()
+FCharacterProperty::FCharacterProperty()
 {
 }
 
-FCharacterBasicInfo::~FCharacterBasicInfo()
+FCharacterProperty::~FCharacterProperty()
 {
 }

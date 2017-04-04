@@ -1,19 +1,16 @@
 #pragma once
 
-class ISupportRoundAction;
-class FCharacterPropertyManager;
-class FCharacterBasicInfo;
+#include "IRoundActionHandler.h"
 
-class PAL4_API ICharacterBattleStatus
+class FCharacterPropertyManager;
+class FCharacterProperty;
+
+class PAL4_API ICharacterBattleStatus : public IRoundActionHandler
 {
 public:
-    virtual ~ICharacterBattleStatus()
-    {
-    }
-
-    virtual ISupportRoundAction& GetRoundAction() = 0;
+    virtual IRoundActionHandler& GetRoundAction() = 0;
 
     virtual FCharacterPropertyManager& GetPropertyManager() = 0;
 
-    virtual FCharacterBasicInfo& GetCharacter() = 0;
+    virtual FCharacterProperty& GetCharacter() = 0;
 };

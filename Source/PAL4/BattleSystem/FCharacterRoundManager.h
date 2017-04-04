@@ -10,7 +10,7 @@
 #include "Core/PriorityQueue.h"
 
 class FBattleSystem;
-class ISupportRoundAction;
+class IRoundActionHandler;
 
 enum class PAL4_API ECharacterRoundStatus
 {
@@ -99,7 +99,7 @@ public:
     DECLARE_EVENT_OneParam(FCharacterRoundManager, FRoundFinishedEvent, const FCharacterRoundManager&)
 
 public:
-    explicit FCharacterRoundManager(TSharedRef<ISupportRoundAction>&);
+    explicit FCharacterRoundManager(TSharedRef<IRoundActionHandler>&);
     FCharacterRoundManager(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager(FCharacterRoundManager&&);
     ~FCharacterRoundManager();
@@ -118,9 +118,9 @@ public:
 
     ECharacterRoundStatus GetCurrentRoundStatus() const { return RoundStatus; }
 
-    TSharedRef<ISupportRoundAction>& GetBindAction() { return RoundAction; }
+    TSharedRef<IRoundActionHandler>& GetBindAction() { return RoundAction; }
 
-    const TSharedRef<ISupportRoundAction>& GetBindAction() const { return RoundAction; }
+    const TSharedRef<IRoundActionHandler>& GetBindAction() const { return RoundAction; }
 
     /*
      * 添加延迟回合调用事件，在指定的回合数之后调用。
@@ -157,7 +157,7 @@ private:
     FRoundFinishedEvent RoundFinishedEvent;
 
     // 支持回合处理的类型引用。通常为战场中的人物或AI
-    TSharedRef<ISupportRoundAction> RoundAction;
+    TSharedRef<IRoundActionHandler> RoundAction;
     // 保存延迟回调的方法
     FRoundFunc RoundFunc;
     // 当前回合数

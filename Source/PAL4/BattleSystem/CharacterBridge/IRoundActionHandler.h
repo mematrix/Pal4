@@ -8,23 +8,23 @@
 class FCharacterRoundManager;
 
 /**
- * 
+ * 处理回合动作的回调接口。每次只能绑定单个@see FCharacterRoundManager，绑定单个玩家角色或AI角色
  */
-class PAL4_API ISupportRoundAction
+class PAL4_API IRoundActionHandler
 {
     friend class FCharacterRoundManager;
 
 public:
-    ISupportRoundAction() noexcept : RoundManager(nullptr) { }
-    ISupportRoundAction(const ISupportRoundAction&) = delete;
-    ISupportRoundAction(ISupportRoundAction&&);
+    IRoundActionHandler() noexcept : RoundManager(nullptr) { }
+    IRoundActionHandler(const IRoundActionHandler&) = delete;
+    IRoundActionHandler(IRoundActionHandler&&) noexcept;
 
-    ISupportRoundAction& operator=(ISupportRoundAction&) = delete;
-    ISupportRoundAction& operator=(ISupportRoundAction&&);
+    IRoundActionHandler& operator=(IRoundActionHandler&) = delete;
+    IRoundActionHandler& operator=(IRoundActionHandler&&) noexcept;
+
+	virtual ~IRoundActionHandler() { }
 
     FCharacterRoundManager* GetRoundManager() const { return RoundManager; }
-
-	virtual ~ISupportRoundAction() { }
 
     // virtual void WaitingAct() { }
 
@@ -35,12 +35,10 @@ public:
     virtual void OnRoundFinished() { }
 
 private:
-    void SwapManager(ISupportRoundAction& other) noexcept
+    void SwapManager(IRoundActionHandler& other) noexcept
     {
         std::swap(RoundManager, other.RoundManager);
     }
 
     FCharacterRoundManager *RoundManager;
 };
-
-FORCEINLINE ISupportRoundAction& GetDefaultRoundAction();

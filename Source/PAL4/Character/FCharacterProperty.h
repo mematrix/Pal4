@@ -8,13 +8,13 @@
 /**
  * 
  */
-class PAL4_API FCharacterBasicInfo
+class PAL4_API FCharacterProperty
 {
     friend class FBattleSystem;
 
 public:
-	FCharacterBasicInfo();
-	~FCharacterBasicInfo();
+	FCharacterProperty();
+	~FCharacterProperty();
 
 protected:
     // 攻击命中后气增量
