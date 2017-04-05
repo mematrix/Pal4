@@ -4,6 +4,8 @@
 #include <Delegate.h>
 
 #include "Core/ValueTransformer.h"
+//#include "Util/TypeTraitsUtil.h"
+
 #include "Character/Helper/FInfoModelAccessHelper.h"
 #include "Character/Model/ECharacterPropertyType.h"
 #include "Character/Model/FCharacterInfoModel.h"
@@ -11,6 +13,9 @@
 
 template ValueTransformer<void*, ECharacterPropertyType, int32, int32, int32>;
 typedef ValueTransformer<void*, ECharacterPropertyType, int32, int32, int32> FTemporaryTransformer;
+
+//template<ECharacterBattleStatus v1, ECharacterBattleStatus v2>
+//using is_status_equal = pal4::is_equal<ECharacterBattleStatus, v1, v2>;
 
 
 /**
@@ -26,6 +31,7 @@ public:
      * 则说明有多个属性发生了变化。
      */
     DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnPropertyChangedEvent, const FCharacterTemporaryStatus&, ECharacterPropertyType)
+    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnBattleStatusChangedEvent, const FCharacterTemporaryStatus&, ECharacterBattleStatus)
 
 public:
     FCharacterTemporaryStatus(const FInfoModelAccessHelper& base, const FInfoModelAccessHelper& pers);
@@ -36,6 +42,7 @@ public:
     FCharacterTemporaryStatus& operator=(FCharacterTemporaryStatus&&) = default;
 
     FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
+    FOnBattleStatusChangedEvent& OnBattleStatusChanged() { return OnBattleStatusChangedEvent; }
 
     int32 GetPropertyValue(ECharacterPropertyType type) const { return TemporaryInfoAccessor.GetPropertyValue(type); }
     const FCharacterInfoModel& GetAccumulatedInfo() const { return InfoModel; }
@@ -47,27 +54,48 @@ public:
 
     void RemoveTransformer(void* key, ECharacterPropertyType type);
 
-    // ReSharper disable once CppFunctionIsNotImplemented
-    template<ECharacterBattleStatus Status>
-    void GetStatusValue() const;
+    ECommonBuff GetCommonBuffStatus() const { return CommonBuff; }
+    EPoison GetPoisonStatus() const { return Poison; }
+    EControlledDebuff GetControlledDebuffStatus() const { return ControlledDebuff; }
+    bool GetInVisibleStatus() const { return IsInvisible; }
+    bool GetReviveStatus() const { return CanRevive; }
 
-    template<>
-    const FCharacterInfoModel& GetStatusValue<ECharacterBattleStatus::Property>() const { return InfoModel; }
-    template<>
-    ECommonBuff GetStatusValue<ECharacterBattleStatus::CommonBuff>() const { return CommonBuff; }
-    template<>
-    EPoison GetStatusValue<ECharacterBattleStatus::Poison>() const { return Poison; }
-    template<>
-    EControlledDebuff GetStatusValue<ECharacterBattleStatus::ControlledDebuff>() const { return ControlledDebuff; }
-    template<>
-    bool GetStatusValue<ECharacterBattleStatus::Invisible>() const { return IsInvisible; }
-    template<>
-    bool GetStatusValue<ECharacterBattleStatus::CanRevive>() const { return CanRevive; }
+    void SetCommonBuffStatus(ECommonBuff value)
+    {
+        CommonBuff = value;
+        NotifyBattleStatusChanged(ECharacterBattleStatus::CommonBuff);
+    }
 
-    // TODO: 添加统一的返回int32的取状态值方法。添加设置状态值方法。添加状态变化通知事件。
+    void SetPoisonStatus(EPoison value)
+    {
+        Poison = value;
+        NotifyBattleStatusChanged(ECharacterBattleStatus::Poison);
+    }
+
+    void SetControlledDebuffStatus(EControlledDebuff value)
+    {
+        ControlledDebuff = value;
+        NotifyBattleStatusChanged(ECharacterBattleStatus::ControlledDebuff);
+    }
+
+    void SetInVisibleStatus(bool value)
+    {
+        IsInvisible = value;
+        NotifyBattleStatusChanged(ECharacterBattleStatus::Invisible);
+    }
+
+    void SetReviveStatus(bool value)
+    {
+        CanRevive = value;
+        NotifyBattleStatusChanged(ECharacterBattleStatus::CanRevive);
+    }
+
+private:
+    void NotifyBattleStatusChanged(ECharacterBattleStatus);
 
 private:
     FOnPropertyChangedEvent OnPropertyChangedEvent;
+    FOnBattleStatusChangedEvent OnBattleStatusChangedEvent;
 
     FCharacterInfoModel InfoModel;
 

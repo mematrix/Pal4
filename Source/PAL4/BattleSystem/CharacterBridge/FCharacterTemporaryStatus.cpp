@@ -7,11 +7,17 @@
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(const FInfoModelAccessHelper& base, const FInfoModelAccessHelper& pers) :
     OnPropertyChangedEvent(),
+    OnBattleStatusChangedEvent(),
     InfoModel{0},
     BaseInfoAccessor(base),
     PersistentInfoAccessor(pers),
     TemporaryInfoAccessor(InfoModel),
-    Transformer()
+    Transformer(),
+    CommonBuff(ECommonBuff::None),
+    Poison(EPoison::None),
+    ControlledDebuff(EControlledDebuff::None),
+    IsInvisible(false),
+    CanRevive(false)
 {
 }
 
@@ -60,4 +66,14 @@ void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterPropertyT
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.RemoveTransformer(key, type);
     UpdatePropertyValue(type);
+}
+
+void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus status)
+{
+    if (status == ECharacterBattleStatus::Property || status > ECharacterBattleStatus::ControlledDebuff)
+    {
+        return;
+    }
+
+    InvokeEvent(OnBattleStatusChangedEvent, *this, status);
 }
