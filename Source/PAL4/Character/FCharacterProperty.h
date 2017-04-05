@@ -10,8 +10,6 @@
  */
 class PAL4_API FCharacterProperty
 {
-    friend class FBattleSystem;
-
 public:
 	FCharacterProperty();
 	~FCharacterProperty();

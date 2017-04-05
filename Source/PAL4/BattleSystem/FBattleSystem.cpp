@@ -9,7 +9,8 @@
 #include "Character/FCharacterPropertyManager.h"
 
 
-FBattleSystem::FBattleSystem(TArray<TSharedRef<ICharacterBattleStatus>>& characters, TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
+FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleStatus>>& characters,
+    const TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
     BattleBeginEvent(),
     BattleFinishedEvent(),
     CharacterWillActEvent(),

@@ -21,7 +21,7 @@ public:
     DECLARE_EVENT_TwoParams(FBattleSystem, FCharacterFinishActEvent, const FBattleSystem&, const ICharacterBattleStatus&)
 
 public:
-    FBattleSystem(TArray<TSharedRef<ICharacterBattleStatus>>&, TSharedRef<ICharacterRoundDispatcher>&);
+    FBattleSystem(const TArray<TSharedRef<ICharacterBattleStatus>>&, const TSharedRef<ICharacterRoundDispatcher>&);
     FBattleSystem(const FBattleSystem&) = delete;
 	~FBattleSystem();
 
@@ -54,7 +54,7 @@ public:
     void Run();
 
     bool BattleIsOver() const;
-    /*
+    /**
      * 获取战斗结束后玩家一方是否胜利。
      * @warning 此方法仅在战斗结束(@see BattleIsOver)后才具有正确的返回值，如果战斗未结束，返回值是未知的。
      */
