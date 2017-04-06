@@ -1,6 +1,8 @@
 #pragma once
 
-enum class PAL4_API ECharacterPropertyType
+#include <Platform.h>
+
+enum class PAL4_API ECharacterStatusPropertyType
 {
     // Œ‰
     Attack = 0,
@@ -54,5 +56,5 @@ enum class PAL4_API ECharacterPropertyType
     PropertyEnd
 };
 
-constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterPropertyType::PropertyEnd);
+constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterStatusPropertyType::PropertyEnd);
 

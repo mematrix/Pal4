@@ -4,68 +4,68 @@
 
 #include <crtdbg.h>
 
-#include "FInfoModelAccessHelper.h"
-#include "../Model/FCharacterInfoModel.h"
+#include "FStatusInfoAccessHelper.h"
+#include "../Model/FCharacterStatusInfo.h"
 
-int32 FCharacterInfoModel::* const FInfoModelAccessHelper::PropertySet[PropertySetCount] =
+int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[PropertySetCount] =
 {
     // 武
-    &FCharacterInfoModel::AttackPoint,
+    &FCharacterStatusInfo::AttackPoint,
     // 运
-    &FCharacterInfoModel::LuckPoint,
+    &FCharacterStatusInfo::LuckPoint,
     // 灵
-    &FCharacterInfoModel::NimbusPoint,
+    &FCharacterStatusInfo::NimbusPoint,
     // 速
-    &FCharacterInfoModel::SpeedPoint,
+    &FCharacterStatusInfo::SpeedPoint,
     // 防
-    &FCharacterInfoModel::DefencePoint,
+    &FCharacterStatusInfo::DefencePoint,
 
     // 物理抗性
-    &FCharacterInfoModel::AttackResistance,
+    &FCharacterStatusInfo::AttackResistance,
     // 水系仙术抗性
-    &FCharacterInfoModel::WaterMagicResistance,
+    &FCharacterStatusInfo::WaterMagicResistance,
     // 火系仙术抗性
-    &FCharacterInfoModel::FireMagicResistance,
+    &FCharacterStatusInfo::FireMagicResistance,
     // 雷系仙术抗性
-    &FCharacterInfoModel::ThunderMagicResistance,
+    &FCharacterStatusInfo::ThunderMagicResistance,
     // 风系仙术抗性
-    &FCharacterInfoModel::WindMagicResistance,
+    &FCharacterStatusInfo::WindMagicResistance,
     // 土系仙术抗性
-    &FCharacterInfoModel::SoilMagicResistance,
+    &FCharacterStatusInfo::SoilMagicResistance,
 
     // 直接物理伤害
-    &FCharacterInfoModel::DirectAttackDamage,
+    &FCharacterStatusInfo::DirectAttackDamage,
     // 水系元素伤害
-    &FCharacterInfoModel::WaterElementalDamage,
+    &FCharacterStatusInfo::WaterElementalDamage,
     // 火系元素伤害
-    &FCharacterInfoModel::FireElementalDamage,
+    &FCharacterStatusInfo::FireElementalDamage,
     // 雷系元素伤害
-    &FCharacterInfoModel::ThunderElementalDamage,
+    &FCharacterStatusInfo::ThunderElementalDamage,
     // 风系元素伤害
-    &FCharacterInfoModel::WindElementalDamage,
+    &FCharacterStatusInfo::WindElementalDamage,
     // 土系元素伤害
-    &FCharacterInfoModel::SoilElementalDamage,
+    &FCharacterStatusInfo::SoilElementalDamage,
 
     // 元素伤害抗性
-    &FCharacterInfoModel::ElementalResistance,
+    &FCharacterStatusInfo::ElementalResistance,
 
     // 格挡率
-    &FCharacterInfoModel::BlockRate,
+    &FCharacterStatusInfo::BlockRate,
     // 闪避率
-    &FCharacterInfoModel::DodgeRate,
+    &FCharacterStatusInfo::DodgeRate,
     // 命中率
-    &FCharacterInfoModel::HitRate,
+    &FCharacterStatusInfo::HitRate,
     // 暴击率
-    &FCharacterInfoModel::CritRate,
+    &FCharacterStatusInfo::CritRate,
 };
 
-int32 FInfoModelAccessHelper::GetPropertyValue(ECharacterPropertyType type) const
+int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusPropertyType type) const
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     return InfoModel.*GetPropertyPtr(type);
 }
 
-void FInfoModelAccessHelper::SetPropertyValue(ECharacterPropertyType type, int32 value) const
+void FStatusInfoAccessHelper::SetPropertyValue(ECharacterStatusPropertyType type, int32 value) const
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     InfoModel.*GetPropertyPtr(type) = value;

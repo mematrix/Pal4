@@ -6,13 +6,13 @@
 #include "Core/ValueTransformer.h"
 //#include "Util/TypeTraitsUtil.h"
 
-#include "Character/Helper/FInfoModelAccessHelper.h"
-#include "Character/Model/ECharacterPropertyType.h"
-#include "Character/Model/FCharacterInfoModel.h"
+#include "CharacterPrimitives/Helper/FStatusInfoAccessHelper.h"
+#include "CharacterPrimitives/Model/ECharacterStatusPropertyType.h"
+#include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
 #include "ECharacterBattleStatus.h"
 
-template ValueTransformer<void*, ECharacterPropertyType, int32, int32, int32>;
-typedef ValueTransformer<void*, ECharacterPropertyType, int32, int32, int32> FTemporaryTransformer;
+template ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32>;
+typedef ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32> FTemporaryTransformer;
 
 //template<ECharacterBattleStatus v1, ECharacterBattleStatus v2>
 //using is_status_equal = pal4::is_equal<ECharacterBattleStatus, v1, v2>;
@@ -24,17 +24,17 @@ typedef ValueTransformer<void*, ECharacterPropertyType, int32, int32, int32> FTe
 class PAL4_API FCharacterTemporaryStatus
 {
 public:
-    typedef std::function<int32(void*, ECharacterPropertyType, int32, int32)> FTransformAction;
+    typedef std::function<int32(void*, ECharacterStatusPropertyType, int32, int32)> FTransformAction;
 
     /**
-     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterPropertyType::PropertyEnd\endcode，
+     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterStatusPropertyType::PropertyEnd\endcode，
      * 则说明有多个属性发生了变化。
      */
-    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnPropertyChangedEvent, const FCharacterTemporaryStatus&, ECharacterPropertyType)
+    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnPropertyChangedEvent, const FCharacterTemporaryStatus&, ECharacterStatusPropertyType)
     DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnBattleStatusChangedEvent, const FCharacterTemporaryStatus&, ECharacterBattleStatus)
 
 public:
-    FCharacterTemporaryStatus(const FInfoModelAccessHelper& base, const FInfoModelAccessHelper& pers);
+    FCharacterTemporaryStatus(const FStatusInfoAccessHelper& base, const FStatusInfoAccessHelper& pers);
     FCharacterTemporaryStatus(const FCharacterTemporaryStatus&) = delete;
     FCharacterTemporaryStatus(FCharacterTemporaryStatus&&) = default;
 
@@ -44,15 +44,15 @@ public:
     FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
     FOnBattleStatusChangedEvent& OnBattleStatusChanged() { return OnBattleStatusChangedEvent; }
 
-    int32 GetPropertyValue(ECharacterPropertyType type) const { return TemporaryInfoAccessor.GetPropertyValue(type); }
-    const FCharacterInfoModel& GetAccumulatedInfo() const { return InfoModel; }
+    int32 GetPropertyValue(ECharacterStatusPropertyType type) const { return TemporaryInfoAccessor.GetPropertyValue(type); }
+    const FCharacterStatusInfo& GetAccumulatedInfo() const { return InfoModel; }
 
-    void UpdatePropertyValue(ECharacterPropertyType type) const;
+    void UpdatePropertyValue(ECharacterStatusPropertyType type) const;
     void UpdateAllProperties() const;
 
-    void AddTransformer(void*, ECharacterPropertyType, const FTransformAction&);
+    void AddTransformer(void*, ECharacterStatusPropertyType, const FTransformAction&);
 
-    void RemoveTransformer(void* key, ECharacterPropertyType type);
+    void RemoveTransformer(void* key, ECharacterStatusPropertyType type);
 
     ECommonBuff GetCommonBuffStatus() const { return CommonBuff; }
     EPoison GetPoisonStatus() const { return Poison; }
@@ -97,11 +97,11 @@ private:
     FOnPropertyChangedEvent OnPropertyChangedEvent;
     FOnBattleStatusChangedEvent OnBattleStatusChangedEvent;
 
-    FCharacterInfoModel InfoModel;
+    FCharacterStatusInfo InfoModel;
 
-    FInfoModelAccessHelper BaseInfoAccessor;
-    FInfoModelAccessHelper PersistentInfoAccessor;
-    FInfoModelAccessHelper TemporaryInfoAccessor;
+    FStatusInfoAccessHelper BaseInfoAccessor;
+    FStatusInfoAccessHelper PersistentInfoAccessor;
+    FStatusInfoAccessHelper TemporaryInfoAccessor;
 
     FTemporaryTransformer Transformer;
 

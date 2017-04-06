@@ -2,7 +2,7 @@
 
 #include <Platform.h>
 
-struct PAL4_API FCharacterInfoModel
+struct PAL4_API FCharacterStatusInfo
 {
     // Œ‰
     int32 AttackPoint;

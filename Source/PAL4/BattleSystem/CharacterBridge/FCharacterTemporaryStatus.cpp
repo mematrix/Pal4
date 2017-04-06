@@ -5,7 +5,7 @@
 #include "Util/EventUtil.h"
 #include "FCharacterTemporaryStatus.h"
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(const FInfoModelAccessHelper& base, const FInfoModelAccessHelper& pers) :
+FCharacterTemporaryStatus::FCharacterTemporaryStatus(const FStatusInfoAccessHelper& base, const FStatusInfoAccessHelper& pers) :
     OnPropertyChangedEvent(),
     OnBattleStatusChangedEvent(),
     InfoModel{0},
@@ -21,9 +21,9 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(const FInfoModelAccessHelpe
 {
 }
 
-void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterPropertyType type) const
+void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusPropertyType type) const
 {
-    if (type >= ECharacterPropertyType::PropertyEnd)
+    if (type >= ECharacterStatusPropertyType::PropertyEnd)
     {
         UpdateAllProperties();
     }
@@ -42,7 +42,7 @@ void FCharacterTemporaryStatus::UpdateAllProperties() const
 {
     // 首先将值更新为持久化值，然后以此为基础进行计算
     TemporaryInfoAccessor.GetModel() = PersistentInfoAccessor.GetModel();
-    Transformer.Traverse([this](void* key, ECharacterPropertyType type, const FTransformAction& func)
+    Transformer.Traverse([this](void* key, ECharacterStatusPropertyType type, const FTransformAction& func)
     {
         auto base = BaseInfoAccessor.GetPropertyValue(type);
         auto persistent = PersistentInfoAccessor.GetPropertyValue(type);
@@ -51,17 +51,17 @@ void FCharacterTemporaryStatus::UpdateAllProperties() const
         TemporaryInfoAccessor.SetPropertyValue(type, value);
     });
 
-    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterPropertyType::PropertyEnd);
+    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusPropertyType::PropertyEnd);
 }
 
-void FCharacterTemporaryStatus::AddTransformer(void* key, ECharacterPropertyType type, const FTransformAction& func)
+void FCharacterTemporaryStatus::AddTransformer(void* key, ECharacterStatusPropertyType type, const FTransformAction& func)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.AddTransformer(key, type, func);
     UpdatePropertyValue(type);
 }
 
-void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterPropertyType type)
+void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterStatusPropertyType type)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.RemoveTransformer(key, type);

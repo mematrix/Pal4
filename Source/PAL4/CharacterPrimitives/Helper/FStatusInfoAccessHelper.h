@@ -2,23 +2,23 @@
 
 #include <Platform.h>
 
-#include "../Model/ECharacterPropertyType.h"
+#include "../Model/ECharacterStatusPropertyType.h"
 
-class FCharacterInfoModel;
+struct FCharacterStatusInfo;
 
-class PAL4_API FInfoModelAccessHelper
+class PAL4_API FStatusInfoAccessHelper
 {
 public:
-    FInfoModelAccessHelper(FCharacterInfoModel& model) : InfoModel(model) { }
+    FStatusInfoAccessHelper(FCharacterStatusInfo& model) : InfoModel(model) { }
 
-    explicit operator FCharacterInfoModel&() const { return InfoModel; }
-    FCharacterInfoModel& GetModel() const { return InfoModel; }
+    explicit operator FCharacterStatusInfo&() const { return InfoModel; }
+    FCharacterStatusInfo& GetModel() const { return InfoModel; }
 
-    int32 GetPropertyValue(ECharacterPropertyType type) const;
-    void SetPropertyValue(ECharacterPropertyType type, int32 value) const;
+    int32 GetPropertyValue(ECharacterStatusPropertyType type) const;
+    void SetPropertyValue(ECharacterStatusPropertyType type, int32 value) const;
     // TODO: Ìí¼Ó+=¸³ÖµÂß¼­
 
-    template<ECharacterPropertyType Type>
+    template<ECharacterStatusPropertyType Type>
     int32 GetPropertyValue() const
     {
         static_assert(static_cast<uint32>(Type) < PropertySetCount, 
@@ -27,13 +27,13 @@ public:
     }
 
 private:
-    FCharacterInfoModel& InfoModel;
+    FCharacterStatusInfo& InfoModel;
 
 public:
-    constexpr static int32 FCharacterInfoModel::* GetPropertyPtr(ECharacterPropertyType type)
+    constexpr static int32 FCharacterStatusInfo::* GetPropertyPtr(ECharacterStatusPropertyType type)
     {
         return PropertySet[static_cast<int32>(type)];
     }
 
-    static int32 FCharacterInfoModel::* const PropertySet[PropertySetCount];
+    static int32 FCharacterStatusInfo::* const PropertySet[PropertySetCount];
 };
