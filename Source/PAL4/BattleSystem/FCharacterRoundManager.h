@@ -31,7 +31,6 @@ class PAL4_API FCharacterRoundManager
 {
     struct FDelayCallFuncWrapper;
 
-    friend void swap(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
     //friend void std::swap<FDelayCallFuncWrapper>(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
     friend class FBattleSystem;
 
@@ -82,6 +81,8 @@ private:
         }
     };
 
+    friend void swap(FDelayCallFuncWrapper& left, FDelayCallFuncWrapper& right) noexcept(noexcept(left.Swap(right)));
+
     class PAL4_API FRoundTimeComparator
     {
     public:
@@ -99,7 +100,7 @@ public:
     DECLARE_EVENT_OneParam(FCharacterRoundManager, FRoundFinishedEvent, const FCharacterRoundManager&)
 
 public:
-    explicit FCharacterRoundManager(TSharedRef<IRoundActionHandler>&);
+    explicit FCharacterRoundManager(const TSharedRef<IRoundActionHandler>&);
     FCharacterRoundManager(const FCharacterRoundManager&) = delete;
     FCharacterRoundManager(FCharacterRoundManager&&);
     ~FCharacterRoundManager();
@@ -169,19 +170,8 @@ private:
     uint32 DelayFuncKey;
 };
 
-
-void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundManager::FDelayCallFuncWrapper& right)
-{
-    left.Swap(right);
-}
-
-namespace std
-{
-    template<> void swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right)
-    {
-        left.Swap(right);
-    }
-}
+template<>
+void std::swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right) noexcept(noexcept(left.Swap(right)));
 
 //namespace std
 //{

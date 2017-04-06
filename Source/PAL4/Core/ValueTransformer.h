@@ -55,7 +55,7 @@ public:
     }
 
     template<typename Function>
-    void Traverse(Function& fn) const
+    void Traverse(Function fn) const
     {
         std::for_each(Transformers.begin(), Transformers.end(), [&fn](const Node& node)
         {
@@ -64,7 +64,7 @@ public:
     }
 
     template<typename Function>
-    void TraverseByGroup(GroupType group, Function& fn) const
+    void TraverseByGroup(GroupType group, Function fn) const
     {
         std::for_each(Transformers.begin(), Transformers.end(), [group, &fn](const Node& node)
         {

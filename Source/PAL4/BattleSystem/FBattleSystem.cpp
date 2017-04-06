@@ -34,7 +34,7 @@ FBattleSystem::~FBattleSystem()
 
 void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& character)
 {
-    RoundManagers.Add(MakeShared<FCharacterRoundManager>(character.Get()));
+    RoundManagers.Add(MakeShared<FCharacterRoundManager>(character));
     Characters.Add(character);
 }
 

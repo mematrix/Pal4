@@ -6,7 +6,7 @@
 #include "FCharacterRoundManager.h"
 #include "CharacterBridge/IRoundActionHandler.h"
 
-FCharacterRoundManager::FCharacterRoundManager(TSharedRef<IRoundActionHandler>& action) :
+FCharacterRoundManager::FCharacterRoundManager(const TSharedRef<IRoundActionHandler>& action) :
     RoundBeginEvent(),
     RoundFinishedEvent(),
     RoundAction(action),
@@ -166,3 +166,20 @@ void FCharacterRoundManager::DoRoundAction()
 
     RoundStatus = ECharacterRoundStatus::NoAction;
 }
+
+
+void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundManager::FDelayCallFuncWrapper& right)
+    noexcept(noexcept(left.Swap(right)))
+{
+    left.Swap(right);
+}
+
+namespace std
+{
+    template<> void swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right)
+        noexcept(noexcept(left.Swap(right)))
+    {
+        left.Swap(right);
+    }
+}
+
