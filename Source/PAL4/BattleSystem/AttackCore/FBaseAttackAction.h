@@ -2,7 +2,7 @@
 
 #include "Delegate.h"
 
-class ICharacterBattleStatus;
+class ICharacterBattleDelegate;
 
 /*
  * 攻击动作的基类。封装了每种攻击（普攻、仙术攻击、技能攻击、物品攻击等）的基本流程
@@ -10,9 +10,9 @@ class ICharacterBattleStatus;
 class PAL4_API FBaseAttackAction
 {
 public:
-    DECLARE_EVENT_TwoParams(FBaseAttackAction, FBeforeAttackEvent, const FBaseAttackAction&, const ICharacterBattleStatus&)
-    DECLARE_EVENT_TwoParams(FBaseAttackAction, FOnAttackEvent, const FBaseAttackAction&, const ICharacterBattleStatus&)
-    DECLARE_EVENT_TwoParams(FBaseAttackAction, FAfterAttackEvent, const FBaseAttackAction&, const ICharacterBattleStatus&)
+    DECLARE_EVENT_TwoParams(FBaseAttackAction, FBeforeAttackEvent, const FBaseAttackAction&, const ICharacterBattleDelegate&)
+    DECLARE_EVENT_TwoParams(FBaseAttackAction, FOnAttackEvent, const FBaseAttackAction&, const ICharacterBattleDelegate&)
+    DECLARE_EVENT_TwoParams(FBaseAttackAction, FAfterAttackEvent, const FBaseAttackAction&, const ICharacterBattleDelegate&)
 
 public:
     FBaseAttackAction();
@@ -26,12 +26,12 @@ public:
     FAfterAttackEvent& AfterAttack() { return AfterAttackEvent; }
 
 protected:
-    virtual void BeforeDoAttack(const ICharacterBattleStatus&);
+    virtual void BeforeDoAttack(const ICharacterBattleDelegate&);
     virtual void DoAttack();
     virtual void AfterDoAttack();
 
 protected:
-    const ICharacterBattleStatus* Character;
+    const ICharacterBattleDelegate* Character;
 
 private:
     FBeforeAttackEvent BeforeAttackEvent;

@@ -12,7 +12,7 @@ class PAL4_API FCharacterProperty
 {
 public:
 	FCharacterProperty();
-	~FCharacterProperty();
+	virtual ~FCharacterProperty();
 
 protected:
     // 攻击命中后气增量
@@ -32,6 +32,4 @@ private:
     int32 ManaPoint;
     // 气
     int32 CraftPoint;
-    
-    
 };

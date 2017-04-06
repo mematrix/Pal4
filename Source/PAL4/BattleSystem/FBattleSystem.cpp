@@ -9,7 +9,7 @@
 #include "Character/FCharacterPropertyManager.h"
 
 
-FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleStatus>>& characters,
+FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters,
     const TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
     BattleBeginEvent(),
     BattleFinishedEvent(),
@@ -24,8 +24,7 @@ FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleStatus>>& c
     RoundManagers.Reserve(count);
     for (int i = 0; i < count; ++i)
     {
-        auto& roundAction = Characters[i]->GetRoundAction();
-        RoundManagers.Add(MakeShared<FCharacterRoundManager>(roundAction));
+        RoundManagers.Add(MakeShared<FCharacterRoundManager>(Characters[i]));
     }
 }
 
@@ -33,9 +32,9 @@ FBattleSystem::~FBattleSystem()
 {
 }
 
-void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleStatus>& character)
+void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& character)
 {
-    RoundManagers.Add(MakeShared<FCharacterRoundManager>(character->GetRoundAction()));
+    RoundManagers.Add(MakeShared<FCharacterRoundManager>(character.Get()));
     Characters.Add(character);
 }
 
@@ -49,7 +48,7 @@ void FBattleSystem::Run()
     // 不应该出现这种情况
     _ASSERT(!BattleIsOver());
 
-    ICharacterBattleStatus* characterActLast = nullptr;
+    ICharacterBattleDelegate* characterActLast = nullptr;
     while (!BattleIsOver())
     {
         auto& character = Dispatcher->MoveToNext(Characters).Get();
@@ -59,7 +58,7 @@ void FBattleSystem::Run()
             CharacterWillActEvent.Broadcast(*this, character);
         }
 
-        auto roundManager = character.GetRoundAction().GetRoundManager();
+        auto roundManager = character.GetRoundManager();
         roundManager->DoRoundAction();
         if (CharacterFinishActEvent.IsBound())
         {
@@ -127,7 +126,7 @@ bool FBattleSystem::IsPlayerWinned() const
     return CharacterActLast->GetPropertyManager().IsPlayer();
 }
 
-bool FBattleSystem::IsPlayerWinned(TSharedRef<ICharacterBattleStatus>& lastCharacter) const
+bool FBattleSystem::IsPlayerWinned(TSharedRef<ICharacterBattleDelegate>& lastCharacter) const
 {
     bool isAnyPlayerAlive = false;
     bool isAnyNonPlayerAlive = false;

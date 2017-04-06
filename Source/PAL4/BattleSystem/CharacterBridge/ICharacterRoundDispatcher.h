@@ -12,5 +12,5 @@ public:
     {
     }
 
-    virtual const TSharedRef<ICharacterBattleStatus>& MoveToNext(const TArray<TSharedRef<ICharacterBattleStatus>>&) = 0;
+    virtual const TSharedRef<ICharacterBattleDelegate>& MoveToNext(const TArray<TSharedRef<ICharacterBattleDelegate>>&) = 0;
 };

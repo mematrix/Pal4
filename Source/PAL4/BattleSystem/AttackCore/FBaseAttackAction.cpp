@@ -13,7 +13,7 @@ FBaseAttackAction::FBaseAttackAction() :
 {
 }
 
-void FBaseAttackAction::BeforeDoAttack(const ICharacterBattleStatus& character)
+void FBaseAttackAction::BeforeDoAttack(const ICharacterBattleDelegate& character)
 {
     Character = &character;
 //    if (BeforeAttackEvent.IsBound())
