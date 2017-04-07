@@ -29,7 +29,7 @@ public:
     DECLARE_EVENT_TwoParams(FCharacterPersistentStatus, FOnPropertyChangedEvent, const FCharacterPersistentStatus&, ECharacterStatusPropertyType)
 
 public:
-    explicit FCharacterPersistentStatus(FStatusInfoAccessHelper& base);
+    explicit FCharacterPersistentStatus(const FStatusInfoAccessHelper& base);
     FCharacterPersistentStatus(const FCharacterPersistentStatus&) = delete;
     FCharacterPersistentStatus(FCharacterPersistentStatus&&) = default;
 
@@ -40,6 +40,9 @@ public:
 
     int32 GetPropertyValue(ECharacterStatusPropertyType type) const { return PersistentInfoAccessor.GetPropertyValue(type); }
     const FCharacterStatusInfo& GetAccumulateInfo() const { return InfoModel; }
+
+    const FStatusInfoAccessHelper& GetBaseAccessor() const { return BaseInfoAccessor; }
+    const FStatusInfoAccessHelper& GetPersistentAccessor() const { return PersistentInfoAccessor; }
 
     void UpdatePropertyValue(ECharacterStatusPropertyType type) const;
     void UpdateAllProperties() const;

@@ -5,7 +5,7 @@
 #include "Util/EventUtil.h"
 #include "FCharacterPersistentStatus.h"
 
-FCharacterPersistentStatus::FCharacterPersistentStatus(FStatusInfoAccessHelper& base) :
+FCharacterPersistentStatus::FCharacterPersistentStatus(const FStatusInfoAccessHelper& base) :
     OnPropertyChangedEvent(),
     InfoModel(),
     BaseInfoAccessor(base),

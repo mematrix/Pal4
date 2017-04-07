@@ -5,12 +5,13 @@
 #include "Util/EventUtil.h"
 #include "FCharacterTemporaryStatus.h"
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(const FStatusInfoAccessHelper& base, const FStatusInfoAccessHelper& pers) :
+FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterPersistentStatus& status) :
     OnPropertyChangedEvent(),
     OnBattleStatusChangedEvent(),
     InfoModel{0},
-    BaseInfoAccessor(base),
-    PersistentInfoAccessor(pers),
+    PersistentStatus(status),
+    BaseInfoAccessor(status.GetBaseAccessor()),
+    PersistentInfoAccessor(status.GetPersistentAccessor()),
     TemporaryInfoAccessor(InfoModel),
     Transformer(),
     CommonBuff(ECommonBuff::None),
@@ -19,6 +20,12 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(const FStatusInfoAccessHelp
     IsInvisible(false),
     CanRevive(false)
 {
+    PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
+}
+
+FCharacterTemporaryStatus::~FCharacterTemporaryStatus()
+{
+    PersistentStatus.OnPropertyChanged().RemoveAll(this);
 }
 
 void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusPropertyType type) const
@@ -76,4 +83,9 @@ void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus
     }
 
     InvokeEvent(OnBattleStatusChangedEvent, *this, status);
+}
+
+void FCharacterTemporaryStatus::OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusPropertyType type) const
+{
+    UpdatePropertyValue(type);
 }

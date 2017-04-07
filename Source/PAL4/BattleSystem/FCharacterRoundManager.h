@@ -29,16 +29,11 @@ enum class PAL4_API ECharacterRoundStatus
  */
 class PAL4_API FCharacterRoundManager
 {
-    struct FDelayCallFuncWrapper;
-
-    //friend void std::swap<FDelayCallFuncWrapper>(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
     friend class FBattleSystem;
 
 private:
     struct PAL4_API FDelayCallFuncWrapper
     {
-        //friend void std::swap<FDelayCallFuncWrapper>(FDelayCallFuncWrapper&, FDelayCallFuncWrapper&);
-
         uint32 Key;
         uint32 RoundTimeWhenCall;
         bool CallWhenRoundBegin;
@@ -64,9 +59,13 @@ private:
         }
 
         FDelayCallFuncWrapper& operator=(const FDelayCallFuncWrapper& other) = default;
-        FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) { Swap(other); return (*this); }
+        FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) noexcept
+        {
+            Swap(other);
+            return (*this);
+        }
 
-        bool operator==(const FDelayCallFuncWrapper& other)
+        bool operator==(const FDelayCallFuncWrapper& other) const
         {
             return Key == other.Key /*&& RoundTimeWhenCall == other.RoundTimeWhenCall && CallWhenRoundBegin == other.CallWhenRoundBegin*/;
         }
@@ -86,7 +85,7 @@ private:
     class PAL4_API FRoundTimeComparator
     {
     public:
-        bool operator()(const FDelayCallFuncWrapper& left, const FDelayCallFuncWrapper& right)
+        bool operator()(const FDelayCallFuncWrapper& left, const FDelayCallFuncWrapper& right) const
         {
             return (left.RoundTimeWhenCall > right.RoundTimeWhenCall ||
                 (left.RoundTimeWhenCall == right.RoundTimeWhenCall && left.CallWhenRoundBegin));
@@ -173,11 +172,3 @@ private:
 template<>
 void std::swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right) noexcept(noexcept(left.Swap(right)));
 
-//namespace std
-//{
-//    template<> void swap<FCharacterRoundManager::FDelayCallFuncWrapper>(FCharacterRoundManager::FDelayCallFuncWrapper& left,
-//        FCharacterRoundManager::FDelayCallFuncWrapper& right)
-//    {
-//        left.Swap(right);
-//    }
-//}

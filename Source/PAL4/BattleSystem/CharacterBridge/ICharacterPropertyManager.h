@@ -16,7 +16,28 @@ public:
      */
     virtual bool IsAlive() const = 0;
     /**
-     * 获取角色速度值
+     * 获取角色生命值
      */
-    virtual int32 GetSpeedValue() const = 0;
+    virtual int32 GetHealthValue() const = 0;
+    /**
+     * 获取角色神属性的值
+     */
+    virtual int32 GetManaValue() const = 0;
+    /**
+     * 获取角色气属性的值
+     */
+    virtual int32 GetCraftValue() const = 0;
+
+    /**
+     * 增加或减少角色生命值。值为正数表示增加，负数表示减少
+     */
+    virtual void AddHealthValue(int32) = 0;
+    /**
+     * 增加或减少角色神属性值。值为正数表示增加，负数表示减少
+     */
+    virtual void AddManaValue(int32) = 0;
+    /**
+     * 增加或减少角色气属性值。值为正数表示增加，负数表示减少
+     */
+    virtual void AddCraftValue(int32) = 0;
 };

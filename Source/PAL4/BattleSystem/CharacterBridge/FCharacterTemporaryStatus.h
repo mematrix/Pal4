@@ -9,6 +9,7 @@
 #include "CharacterPrimitives/Helper/FStatusInfoAccessHelper.h"
 #include "CharacterPrimitives/Model/ECharacterStatusPropertyType.h"
 #include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
+#include "CharacterPrimitives/FCharacterPersistentStatus.h"
 #include "ECharacterBattleStatus.h"
 
 template ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32>;
@@ -34,9 +35,11 @@ public:
     DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnBattleStatusChangedEvent, const FCharacterTemporaryStatus&, ECharacterBattleStatus)
 
 public:
-    FCharacterTemporaryStatus(const FStatusInfoAccessHelper& base, const FStatusInfoAccessHelper& pers);
+    explicit FCharacterTemporaryStatus(FCharacterPersistentStatus&);
     FCharacterTemporaryStatus(const FCharacterTemporaryStatus&) = delete;
     FCharacterTemporaryStatus(FCharacterTemporaryStatus&&) = default;
+
+    ~FCharacterTemporaryStatus();
 
     FCharacterTemporaryStatus& operator=(const FCharacterTemporaryStatus&) = delete;
     FCharacterTemporaryStatus& operator=(FCharacterTemporaryStatus&&) = default;
@@ -92,12 +95,14 @@ public:
 
 private:
     void NotifyBattleStatusChanged(ECharacterBattleStatus);
+    void OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusPropertyType) const;
 
 private:
     FOnPropertyChangedEvent OnPropertyChangedEvent;
     FOnBattleStatusChangedEvent OnBattleStatusChangedEvent;
 
     FCharacterStatusInfo InfoModel;
+    FCharacterPersistentStatus& PersistentStatus;
 
     FStatusInfoAccessHelper BaseInfoAccessor;
     FStatusInfoAccessHelper PersistentInfoAccessor;
