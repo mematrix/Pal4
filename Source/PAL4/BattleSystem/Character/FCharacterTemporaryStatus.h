@@ -10,7 +10,7 @@
 #include "CharacterPrimitives/Model/ECharacterStatusPropertyType.h"
 #include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
 #include "CharacterPrimitives/FCharacterPersistentStatus.h"
-#include "ECharacterBattleStatus.h"
+#include "CharacterPrimitives/Model/ECharacterBattleStatus.h"
 
 template ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32>;
 typedef ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32> FTemporaryTransformer;

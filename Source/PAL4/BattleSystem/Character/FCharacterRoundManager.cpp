@@ -4,65 +4,17 @@
 
 #include <stdexcept>
 #include "FCharacterRoundManager.h"
-#include "CharacterBridge/IRoundActionHandler.h"
+#include "../CharacterBridge/IRoundActionHandler.h"
 
-FCharacterRoundManager::FCharacterRoundManager(const TSharedRef<IRoundActionHandler>& action) :
-    RoundBeginEvent(),
-    RoundFinishedEvent(),
+FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
+    ICharacterRoundManager(),
     RoundAction(action),
     RoundFunc(),
-    RoundNum(0),
-    RoundStatus(ECharacterRoundStatus::NoAction),
     DelayFuncKey(0)
 {
-    if (nullptr != action->RoundManager)
-    {
-        throw std::invalid_argument("Action already has a round manager");
-    }
-
-    RoundAction->RoundManager = this;
 }
 
-FCharacterRoundManager::FCharacterRoundManager(FCharacterRoundManager &&other) :
-    RoundBeginEvent(MoveTemp(other.RoundBeginEvent)),
-    RoundFinishedEvent(MoveTemp(other.RoundFinishedEvent)),
-    RoundAction(MoveTemp(other.RoundAction)),
-    RoundFunc(MoveTemp(other.RoundFunc)),
-    RoundNum(other.RoundNum),
-    RoundStatus(other.RoundStatus),
-    DelayFuncKey(other.DelayFuncKey)
-{
-    RoundAction->RoundManager = this;
-}
-
-FCharacterRoundManager::~FCharacterRoundManager()
-{
-    if (this == RoundAction->RoundManager)
-    {
-        RoundAction->RoundManager = nullptr;
-    }
-}
-
-FCharacterRoundManager & FCharacterRoundManager::operator=(FCharacterRoundManager &&other)
-{
-    if (&other == this)
-    {
-        return (*this);
-    }
-
-    RoundBeginEvent = MoveTemp(other.RoundBeginEvent);
-    RoundFinishedEvent = MoveTemp(other.RoundFinishedEvent);
-    RoundAction = MoveTemp(other.RoundAction);
-    RoundFunc = MoveTemp(other.RoundFunc);
-    RoundNum = other.RoundNum;
-    DelayFuncKey = other.DelayFuncKey;
-    RoundStatus = other.RoundStatus;
-    RoundAction->RoundManager = this;
-
-    return (*this);
-}
-
-void FCharacterRoundManager::Swap(FCharacterRoundManager & other)
+void FCharacterRoundManager::Swap(FCharacterRoundManager& other)
 {
     using std::swap;
 
@@ -78,18 +30,17 @@ void FCharacterRoundManager::Swap(FCharacterRoundManager & other)
     swap(RoundNum, other.RoundNum);
     swap(DelayFuncKey, other.DelayFuncKey);
     swap(RoundStatus, other.RoundStatus);
-
-    RoundAction->SwapManager(other.RoundAction.Get());
 }
 
-uint32 FCharacterRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, std::function<void()> func)
+uint32 FCharacterRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func)
 {
     uint32 key = ++DelayFuncKey;
-    RoundFunc.emplace(key, RoundNum + delayNum, callWhenBegin, MoveTemp(func));
+    uint32 roundNum = RoundNum + delayNum;
+    RoundFunc.emplace(key, roundNum, callWhenBegin, func);
     return key;
 }
 
-uint32 FCharacterRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, std::function<void()> func)
+uint32 FCharacterRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, const std::function<void()>& func)
 {
     // 回合数已过。或者处于当前回合，但是已经没有调用时机了：要求在回合开始调用、或者要求在结束调用但是现在已经处于结束状态了
     if (roundNum < RoundNum ||
@@ -105,7 +56,7 @@ uint32 FCharacterRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool cal
     else
     {
         uint32 key = ++DelayFuncKey;
-        RoundFunc.emplace(key, roundNum, callWhenBegin, MoveTemp(func));
+        RoundFunc.emplace(key, roundNum, callWhenBegin, func);
         return key;
     }
 }
@@ -117,16 +68,16 @@ void FCharacterRoundManager::RemoveDelayCallFunc(uint32 key)
     });
 }
 
-void FCharacterRoundManager::DoRoundAction()
+void FCharacterRoundManager::DoRoundAction(bool shouldSkipAction)
 {
     ++RoundNum;
 
     RoundStatus = ECharacterRoundStatus::BeforeAction;
-    while (RoundFunc.top().RoundTimeWhenCall < RoundNum)
+    while (RoundFunc.top().RoundNumWhenCall < RoundNum)
     {
         RoundFunc.pop();
     }
-    while (RoundFunc.top().RoundTimeWhenCall == RoundNum && RoundFunc.top().CallWhenRoundBegin)
+    while (RoundFunc.top().RoundNumWhenCall == RoundNum && RoundFunc.top().CallWhenRoundBegin)
     {
         auto &func = RoundFunc.top().DelayCalledFunc;
         if (func)
@@ -136,7 +87,7 @@ void FCharacterRoundManager::DoRoundAction()
 
         RoundFunc.pop();
     }
-    RoundAction->OnNewRoundBegin(RoundNum);
+    RoundAction.OnNewRoundBegin(RoundNum);
 
     if (RoundBeginEvent.IsBound())
     {
@@ -144,10 +95,19 @@ void FCharacterRoundManager::DoRoundAction()
     }
 
     RoundStatus = ECharacterRoundStatus::OnAction;
-    RoundAction->OnAction();
+    if (!shouldSkipAction)
+    {
+        RoundAction.OnAction();
+    }
 
     RoundStatus = ECharacterRoundStatus::PostAction;
-    while (RoundFunc.top().RoundTimeWhenCall == RoundNum && !RoundFunc.top().CallWhenRoundBegin)
+    RoundAction.OnRoundFinished();
+
+    if (RoundFinishedEvent.IsBound())
+    {
+        RoundFinishedEvent.Broadcast(*this);
+    }
+    while (RoundFunc.top().RoundNumWhenCall == RoundNum && !RoundFunc.top().CallWhenRoundBegin)
     {
         auto &func = RoundFunc.top().DelayCalledFunc;
         if (func)
@@ -156,12 +116,6 @@ void FCharacterRoundManager::DoRoundAction()
         }
 
         RoundFunc.pop();
-    }
-    RoundAction->OnRoundFinished();
-
-    if (RoundFinishedEvent.IsBound())
-    {
-        RoundFinishedEvent.Broadcast(*this);
     }
 
     RoundStatus = ECharacterRoundStatus::NoAction;

@@ -31,10 +31,15 @@ public:
         RoundStatus(ECharacterRoundStatus::NoAction)
     {
     }
+    ICharacterRoundManager(const ICharacterRoundManager&) = default;
+    ICharacterRoundManager(ICharacterRoundManager&&) = default;
 
     virtual ~ICharacterRoundManager()
     {
     }
+
+    ICharacterRoundManager& operator=(const ICharacterRoundManager&) = default;
+    ICharacterRoundManager& operator=(ICharacterRoundManager&&) = default;
 
     // 新回合开始事件
     FRoundBeginEvent& OnNewRoundBegin() { return RoundBeginEvent; }

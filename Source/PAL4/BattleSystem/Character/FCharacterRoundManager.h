@@ -5,76 +5,49 @@
 #include <functional>
 #include <deque>
 
-#include <SharedPointer.h>
-
 #include "Core/PriorityQueue.h"
+#include "../CharacterBridge/ICharacterRoundManager.h"
 
-class FBattleSystem;
 class IRoundActionHandler;
 
-enum class PAL4_API ECharacterRoundStatus
-{
-    // 未行动状态，即人物处于行动条非终点位置
-    NoAction,
-    // 准备行动
-    BeforeAction,
-    // 正在行动
-    OnAction,
-    // 行动完毕，即将进入未行动状态
-    PostAction
-};
 
 /**
  *
  */
-class PAL4_API FCharacterRoundManager
+class PAL4_API FCharacterRoundManager : public ICharacterRoundManager
 {
-    friend class FBattleSystem;
-
 private:
     struct PAL4_API FDelayCallFuncWrapper
     {
         uint32 Key;
-        uint32 RoundTimeWhenCall;
+        uint32 RoundNumWhenCall;
         bool CallWhenRoundBegin;
         std::function<void()> DelayCalledFunc;
 
-        explicit FDelayCallFuncWrapper(uint32 key, uint32 time = 0, bool callWhenBegin = true, std::function<void()> func = nullptr) :
+        explicit FDelayCallFuncWrapper(uint32 key, uint32 num = 0, bool callWhenBegin = true, std::function<void()> func = nullptr) :
             Key(key),
-            RoundTimeWhenCall(time),
+            RoundNumWhenCall(num),
             CallWhenRoundBegin(callWhenBegin),
-            DelayCalledFunc(std::move(func)) { }
+            DelayCalledFunc(std::move(func))
+        {
+        }
 
         FDelayCallFuncWrapper(const FDelayCallFuncWrapper&) = default;
-
-        FDelayCallFuncWrapper(FDelayCallFuncWrapper&& other) :
-            Key(other.Key),
-            RoundTimeWhenCall(other.RoundTimeWhenCall),
-            CallWhenRoundBegin(other.CallWhenRoundBegin),
-            DelayCalledFunc(std::move(other.DelayCalledFunc))
-        {
-            other.Key = -1;
-            other.RoundTimeWhenCall = 0;
-            other.DelayCalledFunc = nullptr;
-        }
+        FDelayCallFuncWrapper(FDelayCallFuncWrapper&& other) = default;
 
         FDelayCallFuncWrapper& operator=(const FDelayCallFuncWrapper& other) = default;
-        FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) noexcept
-        {
-            Swap(other);
-            return (*this);
-        }
+        FDelayCallFuncWrapper& operator=(FDelayCallFuncWrapper&& other) = default;
 
         bool operator==(const FDelayCallFuncWrapper& other) const
         {
-            return Key == other.Key /*&& RoundTimeWhenCall == other.RoundTimeWhenCall && CallWhenRoundBegin == other.CallWhenRoundBegin*/;
+            return Key == other.Key /*&& RoundNumWhenCall == other.RoundNumWhenCall && CallWhenRoundBegin == other.CallWhenRoundBegin*/;
         }
 
         void Swap(FDelayCallFuncWrapper& other) noexcept
         {
             using std::swap;
             swap(Key, other.Key);
-            swap(RoundTimeWhenCall, other.RoundTimeWhenCall);
+            swap(RoundNumWhenCall, other.RoundNumWhenCall);
             swap(CallWhenRoundBegin, other.CallWhenRoundBegin);
             DelayCalledFunc.swap(other.DelayCalledFunc);
         }
@@ -87,51 +60,37 @@ private:
     public:
         bool operator()(const FDelayCallFuncWrapper& left, const FDelayCallFuncWrapper& right) const
         {
-            return (left.RoundTimeWhenCall > right.RoundTimeWhenCall ||
-                (left.RoundTimeWhenCall == right.RoundTimeWhenCall && left.CallWhenRoundBegin));
+            return (left.RoundNumWhenCall > right.RoundNumWhenCall ||
+                (left.RoundNumWhenCall == right.RoundNumWhenCall && left.CallWhenRoundBegin));
         }
     };
 
     typedef PriorityQueue<FDelayCallFuncWrapper, std::deque<FDelayCallFuncWrapper>, FRoundTimeComparator> FRoundFunc;
 
-public:
-    DECLARE_EVENT_TwoParams(FCharacterRoundManager, FRoundBeginEvent, const FCharacterRoundManager&, uint32)
-    DECLARE_EVENT_OneParam(FCharacterRoundManager, FRoundFinishedEvent, const FCharacterRoundManager&)
 
 public:
-    explicit FCharacterRoundManager(const TSharedRef<IRoundActionHandler>&);
-    FCharacterRoundManager(const FCharacterRoundManager&) = delete;
-    FCharacterRoundManager(FCharacterRoundManager&&);
-    ~FCharacterRoundManager();
+    explicit FCharacterRoundManager(IRoundActionHandler&);
+    FCharacterRoundManager(const FCharacterRoundManager&) = default;
+    FCharacterRoundManager(FCharacterRoundManager&&) = default;
 
-    FCharacterRoundManager& operator=(const FCharacterRoundManager&) = delete;
-    FCharacterRoundManager& operator=(FCharacterRoundManager&&);
+    FCharacterRoundManager& operator=(const FCharacterRoundManager&) = default;
+    FCharacterRoundManager& operator=(FCharacterRoundManager&&) = default;
 
     void Swap(FCharacterRoundManager& other);
 
-    // 新回合开始事件
-    FRoundBeginEvent& OnNewRoundBegin() { return RoundBeginEvent; }
-    // 当前回合结束事件
-    FRoundFinishedEvent& OnRoundFinished() { return RoundFinishedEvent; }
+    IRoundActionHandler& GetBindAction() { return RoundAction; }
+    const IRoundActionHandler& GetBindAction() const { return RoundAction; }
 
-    uint32 GetCurrentRoundNum() const { return RoundNum; }
-
-    ECharacterRoundStatus GetCurrentRoundStatus() const { return RoundStatus; }
-
-    TSharedRef<IRoundActionHandler>& GetBindAction() { return RoundAction; }
-
-    const TSharedRef<IRoundActionHandler>& GetBindAction() const { return RoundAction; }
-
-    /*
+    /**
      * 添加延迟回合调用事件，在指定的回合数之后调用。
      * @param delayNum 延迟回合数
      * @param callWhenBegin 是否应该在回合开始时调用，true为在回合开始调用，false为结束时调用
      * @param func 调用方法
      * @return 一个key值，用于取消事件
      */
-    uint32 AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, std::function<void()> func);
+    uint32 AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func) override;
 
-    /*
+    /**
      * 添加延迟回合调用事件，在指定的回合调用。
      * @param roundNum 指定回合数
      * @param callWhenBegin 是否应该在回合开始时调用，true为在回合开始调用，false为结束时调用
@@ -139,31 +98,26 @@ public:
      * @param func 调用方法
      * @return 一个key值，用于取消事件。或者0，表示调用时机已过
      */
-    uint32 AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, std::function<void()> func);
+    uint32 AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, const std::function<void()>& func) override;
 
-    /*
+    /**
      * 移除延迟调用的事件。前提是事件还未被调度过
      * @param key 在添加事件时返回的key值
      */
-    void RemoveDelayCallFunc(uint32 key);
+    void RemoveDelayCallFunc(uint32 key) override;
+
+    /**
+     * 执行回合动作。
+     * @param shouldSkipAction 指示是否应该跳过当前角色的行动，例如角色处于定、眠状态，
+     * 将会跳过@code IRoundActionHandler::OnAction()\endcode 的执行，但是不会跳过其它方法
+     */
+    void DoRoundAction(bool shouldSkipAction = false);
 
 private:
-    void DoRoundAction();
-
-private:
-    // 回合开始事件
-    FRoundBeginEvent RoundBeginEvent;
-    // 回合结束事件
-    FRoundFinishedEvent RoundFinishedEvent;
-
     // 支持回合处理的类型引用。通常为战场中的人物或AI
-    TSharedRef<IRoundActionHandler> RoundAction;
+    IRoundActionHandler& RoundAction;
     // 保存延迟回调的方法
     FRoundFunc RoundFunc;
-    // 当前回合数
-    uint32 RoundNum;
-    // 人物行动状态：未行动，即将行动，正在行动，行动完毕
-    ECharacterRoundStatus RoundStatus;
 
     // 用于添加延迟调用时返回的key值，每次添加都递增。考虑使用原子类型
     uint32 DelayFuncKey;
