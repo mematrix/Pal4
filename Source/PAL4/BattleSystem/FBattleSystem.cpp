@@ -6,7 +6,7 @@
 
 #include "FBattleSystem.h"
 #include "CharacterBridge/IRoundActionHandler.h"
-#include "Character/FCharacterPropertyManager.h"
+#include "CharacterBridge/ICharacterPropertyManager.h"
 
 
 FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters,
@@ -51,18 +51,18 @@ void FBattleSystem::Run()
     ICharacterBattleDelegate* characterActLast = nullptr;
     while (!BattleIsOver())
     {
-        auto& character = Dispatcher->MoveToNext(Characters).Get();
-        characterActLast = &character;
+        auto& character = Dispatcher->MoveToNext();
+        characterActLast = &character.GetCharacterDelegate();
         if (CharacterWillActEvent.IsBound())
         {
-            CharacterWillActEvent.Broadcast(*this, character);
+            CharacterWillActEvent.Broadcast(*this, character.GetCharacterDelegate());
         }
 
-        auto roundManager = character.GetRoundManager();
-        roundManager->DoRoundAction();
+        auto& roundManager = character.GetRoundManager();
+        roundManager.DoRoundAction();
         if (CharacterFinishActEvent.IsBound())
         {
-            CharacterFinishActEvent.Broadcast(*this, character);
+            CharacterFinishActEvent.Broadcast(*this, character.GetCharacterDelegate());
         }
     }
     CharacterActLast = characterActLast;

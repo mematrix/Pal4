@@ -2,9 +2,9 @@
 
 #include "ECharacterBattleStatus.h"
 
+// Buff×´Ì¬
 struct PAL4_API FCharacterBattleStatus
 {
-    // Buff×´Ì¬
     // Í¨ÓÃBuff£º¾µ±Ú½çÄþ
     ECommonBuff CommonBuff;
     // ÖÐ¶¾×´Ì¬

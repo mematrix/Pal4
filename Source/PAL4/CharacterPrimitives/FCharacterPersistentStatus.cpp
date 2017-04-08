@@ -14,9 +14,9 @@ FCharacterPersistentStatus::FCharacterPersistentStatus(const FStatusInfoAccessHe
 {
 }
 
-void FCharacterPersistentStatus::UpdatePropertyValue(ECharacterStatusPropertyType type) const
+void FCharacterPersistentStatus::UpdatePropertyValue(ECharacterStatusType type) const
 {
-    if (type >= ECharacterStatusPropertyType::PropertyEnd)
+    if (type >= ECharacterStatusType::PropertyEnd)
     {
         UpdateAllProperties();
     }
@@ -34,7 +34,7 @@ void FCharacterPersistentStatus::UpdateAllProperties() const
 {
     // 首先将值更新为基础值，然后以此为基础进行计算
     PersistentInfoAccessor.GetModel() = BaseInfoAccessor.GetModel();
-    Transformer.Traverse([this](void* key, ECharacterStatusPropertyType type, const FTransformAction& func)
+    Transformer.Traverse([this](void* key, ECharacterStatusType type, const FTransformAction& func)
     {
         auto base = BaseInfoAccessor.GetPropertyValue(type);
         auto value = PersistentInfoAccessor.GetPropertyValue(type);
@@ -42,17 +42,17 @@ void FCharacterPersistentStatus::UpdateAllProperties() const
         PersistentInfoAccessor.SetPropertyValue(type, value);
     });
 
-    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusPropertyType::PropertyEnd);
+    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusType::PropertyEnd);
 }
 
-void FCharacterPersistentStatus::AddTransformer(void* key, ECharacterStatusPropertyType type, const FTransformAction& func)
+void FCharacterPersistentStatus::AddTransformer(void* key, ECharacterStatusType type, const FTransformAction& func)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.AddTransformer(key, type, func);
     UpdatePropertyValue(type);
 }
 
-void FCharacterPersistentStatus::RemoveTransformer(void* key, ECharacterStatusPropertyType type)
+void FCharacterPersistentStatus::RemoveTransformer(void* key, ECharacterStatusType type)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.RemoveTransformer(key, type);

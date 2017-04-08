@@ -7,13 +7,13 @@
 //#include "Util/TypeTraitsUtil.h"
 
 #include "CharacterPrimitives/Helper/FStatusInfoAccessHelper.h"
-#include "CharacterPrimitives/Model/ECharacterStatusPropertyType.h"
+#include "CharacterPrimitives/Model/ECharacterStatusType.h"
 #include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
-#include "CharacterPrimitives/FCharacterPersistentStatus.h"
 #include "CharacterPrimitives/Model/ECharacterBattleStatus.h"
+#include "CharacterPrimitives/FCharacterPersistentStatus.h"
 
-template ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32>;
-typedef ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int32> FTemporaryTransformer;
+template ValueTransformer<void*, ECharacterStatusType, int32, int32, int32>;
+typedef ValueTransformer<void*, ECharacterStatusType, int32, int32, int32> FTemporaryTransformer;
 
 //template<ECharacterBattleStatus v1, ECharacterBattleStatus v2>
 //using is_status_equal = pal4::is_equal<ECharacterBattleStatus, v1, v2>;
@@ -25,13 +25,13 @@ typedef ValueTransformer<void*, ECharacterStatusPropertyType, int32, int32, int3
 class PAL4_API FCharacterTemporaryStatus
 {
 public:
-    typedef std::function<int32(void*, ECharacterStatusPropertyType, int32, int32)> FTransformAction;
+    typedef std::function<int32(void*, ECharacterStatusType, int32, int32)> FTransformAction;
 
     /**
-     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterStatusPropertyType::PropertyEnd\endcode，
+     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterStatusType::PropertyEnd\endcode，
      * 则说明有多个属性发生了变化。
      */
-    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnPropertyChangedEvent, const FCharacterTemporaryStatus&, ECharacterStatusPropertyType)
+    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnPropertyChangedEvent, const FCharacterTemporaryStatus&, ECharacterStatusType)
     DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnBattleStatusChangedEvent, const FCharacterTemporaryStatus&, ECharacterBattleStatus)
 
 public:
@@ -47,15 +47,15 @@ public:
     FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
     FOnBattleStatusChangedEvent& OnBattleStatusChanged() { return OnBattleStatusChangedEvent; }
 
-    int32 GetPropertyValue(ECharacterStatusPropertyType type) const { return TemporaryInfoAccessor.GetPropertyValue(type); }
+    int32 GetPropertyValue(ECharacterStatusType type) const { return TemporaryInfoAccessor.GetPropertyValue(type); }
     const FCharacterStatusInfo& GetAccumulatedInfo() const { return InfoModel; }
 
-    void UpdatePropertyValue(ECharacterStatusPropertyType type) const;
+    void UpdatePropertyValue(ECharacterStatusType type) const;
     void UpdateAllProperties() const;
 
-    void AddTransformer(void*, ECharacterStatusPropertyType, const FTransformAction&);
+    void AddTransformer(void*, ECharacterStatusType, const FTransformAction&);
 
-    void RemoveTransformer(void* key, ECharacterStatusPropertyType type);
+    void RemoveTransformer(void* key, ECharacterStatusType type);
 
     ECommonBuff GetCommonBuffStatus() const { return CommonBuff; }
     EPoison GetPoisonStatus() const { return Poison; }
@@ -95,7 +95,7 @@ public:
 
 private:
     void NotifyBattleStatusChanged(ECharacterBattleStatus);
-    void OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusPropertyType) const;
+    void OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType) const;
 
 private:
     FOnPropertyChangedEvent OnPropertyChangedEvent;

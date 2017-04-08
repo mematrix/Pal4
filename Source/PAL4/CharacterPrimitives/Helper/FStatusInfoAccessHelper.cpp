@@ -59,13 +59,13 @@ int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[Propert
     &FCharacterStatusInfo::CritRate,
 };
 
-int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusPropertyType type) const
+int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusType type) const
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     return InfoModel.*GetPropertyPtr(type);
 }
 
-void FStatusInfoAccessHelper::SetPropertyValue(ECharacterStatusPropertyType type, int32 value) const
+void FStatusInfoAccessHelper::SetPropertyValue(ECharacterStatusType type, int32 value) const
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     InfoModel.*GetPropertyPtr(type) = value;

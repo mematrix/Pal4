@@ -2,7 +2,7 @@
 
 #include <Platform.h>
 
-#include "../Model/ECharacterStatusPropertyType.h"
+#include "../Model/ECharacterStatusType.h"
 
 struct FCharacterStatusInfo;
 
@@ -14,11 +14,11 @@ public:
     explicit operator FCharacterStatusInfo&() const { return InfoModel; }
     FCharacterStatusInfo& GetModel() const { return InfoModel; }
 
-    int32 GetPropertyValue(ECharacterStatusPropertyType type) const;
-    void SetPropertyValue(ECharacterStatusPropertyType type, int32 value) const;
+    int32 GetPropertyValue(ECharacterStatusType type) const;
+    void SetPropertyValue(ECharacterStatusType type, int32 value) const;
     // TODO: Ìí¼Ó+=¸³ÖµÂß¼­
 
-    template<ECharacterStatusPropertyType Type>
+    template<ECharacterStatusType Type>
     int32 GetPropertyValue() const
     {
         static_assert(static_cast<uint32>(Type) < PropertySetCount, 
@@ -30,7 +30,7 @@ private:
     FCharacterStatusInfo& InfoModel;
 
 public:
-    constexpr static int32 FCharacterStatusInfo::* GetPropertyPtr(ECharacterStatusPropertyType type)
+    constexpr static int32 FCharacterStatusInfo::* GetPropertyPtr(ECharacterStatusType type)
     {
         return PropertySet[static_cast<int32>(type)];
     }

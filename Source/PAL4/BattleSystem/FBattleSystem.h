@@ -5,7 +5,7 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "FCharacterRoundManager.h"
+#include "Character/FCharacterRoundManager.h"
 #include "CharacterBridge/ICharacterBattleDelegate.h"
 #include "RoundDispatcher/ICharacterRoundDispatcher.h"
 

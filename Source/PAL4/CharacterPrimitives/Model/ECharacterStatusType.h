@@ -2,7 +2,7 @@
 
 #include <Platform.h>
 
-enum class PAL4_API ECharacterStatusPropertyType
+enum class PAL4_API ECharacterStatusType
 {
     // Œ‰
     Attack = 0,
@@ -56,5 +56,5 @@ enum class PAL4_API ECharacterStatusPropertyType
     PropertyEnd
 };
 
-constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterStatusPropertyType::PropertyEnd);
+constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterStatusType::PropertyEnd);
 

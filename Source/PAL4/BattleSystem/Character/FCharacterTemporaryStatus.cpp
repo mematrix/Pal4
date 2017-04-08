@@ -28,9 +28,9 @@ FCharacterTemporaryStatus::~FCharacterTemporaryStatus()
     PersistentStatus.OnPropertyChanged().RemoveAll(this);
 }
 
-void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusPropertyType type) const
+void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type) const
 {
-    if (type >= ECharacterStatusPropertyType::PropertyEnd)
+    if (type >= ECharacterStatusType::PropertyEnd)
     {
         UpdateAllProperties();
     }
@@ -49,7 +49,7 @@ void FCharacterTemporaryStatus::UpdateAllProperties() const
 {
     // 首先将值更新为持久化值，然后以此为基础进行计算
     TemporaryInfoAccessor.GetModel() = PersistentInfoAccessor.GetModel();
-    Transformer.Traverse([this](void* key, ECharacterStatusPropertyType type, const FTransformAction& func)
+    Transformer.Traverse([this](void* key, ECharacterStatusType type, const FTransformAction& func)
     {
         auto base = BaseInfoAccessor.GetPropertyValue(type);
         auto persistent = PersistentInfoAccessor.GetPropertyValue(type);
@@ -58,17 +58,17 @@ void FCharacterTemporaryStatus::UpdateAllProperties() const
         TemporaryInfoAccessor.SetPropertyValue(type, value);
     });
 
-    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusPropertyType::PropertyEnd);
+    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusType::PropertyEnd);
 }
 
-void FCharacterTemporaryStatus::AddTransformer(void* key, ECharacterStatusPropertyType type, const FTransformAction& func)
+void FCharacterTemporaryStatus::AddTransformer(void* key, ECharacterStatusType type, const FTransformAction& func)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.AddTransformer(key, type, func);
     UpdatePropertyValue(type);
 }
 
-void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterStatusPropertyType type)
+void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterStatusType type)
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.RemoveTransformer(key, type);
@@ -85,7 +85,7 @@ void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus
     InvokeEvent(OnBattleStatusChangedEvent, *this, status);
 }
 
-void FCharacterTemporaryStatus::OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusPropertyType type) const
+void FCharacterTemporaryStatus::OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType type) const
 {
     UpdatePropertyValue(type);
 }
