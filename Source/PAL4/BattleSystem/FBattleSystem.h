@@ -7,7 +7,7 @@
 
 #include "FCharacterRoundManager.h"
 #include "CharacterBridge/ICharacterBattleDelegate.h"
-#include "CharacterBridge/ICharacterRoundDispatcher.h"
+#include "RoundDispatcher/ICharacterRoundDispatcher.h"
 
 /**
  * 

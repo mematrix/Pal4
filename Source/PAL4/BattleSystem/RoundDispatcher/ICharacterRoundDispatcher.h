@@ -2,8 +2,8 @@
 
 #include <Array.h>
 #include <SharedPointer.h>
+#include "../Character/FBattleCharacter.h"
 
-#include "ICharacterBattleDelegate.h"
 
 class PAL4_API ICharacterRoundDispatcher
 {
@@ -12,5 +12,11 @@ public:
     {
     }
 
-    virtual const TSharedRef<ICharacterBattleDelegate>& MoveToNext(const TArray<TSharedRef<ICharacterBattleDelegate>>&) = 0;
+    virtual void OnBattleBegin(const TArray<TSharedRef<FBattleCharacter>>&) = 0;
+
+    virtual void AddCharacter(const TSharedRef<FBattleCharacter>&) = 0;
+
+    virtual FBattleCharacter& MoveToNext() = 0;
+
+    virtual void OnBattleFinished() = 0;
 };
