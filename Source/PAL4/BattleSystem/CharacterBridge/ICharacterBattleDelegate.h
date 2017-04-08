@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 class IRoundActionHandler;
 class ICharacterPropertyManager;
 class FCharacterPersistentStatus;
@@ -42,4 +44,15 @@ public:
     virtual void OnPropAttackFinished() = 0;
 
     virtual void BeAttackedWithProp() = 0;
+
+    /**
+    * 设置角色死亡时的回调。
+    * @warning 目前仅用于 @code ICharacterRoundDispatcher\endcode 中
+    */
+    virtual void SetOnDeadCallback(std::function<void(const ICharacterBattleDelegate&)>) = 0;
+    /**
+    * 设置角色复活时的回调。
+    * @warning 目前仅用于 @code ICharacterRoundDispatcher\endcode 中
+    */
+    virtual void SetOnReviveCallback(std::function<void(const ICharacterBattleDelegate&)>) = 0;
 };

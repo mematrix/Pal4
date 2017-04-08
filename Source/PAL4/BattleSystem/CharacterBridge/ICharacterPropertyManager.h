@@ -15,6 +15,11 @@ public:
      * 角色是否存活
      */
     virtual bool IsAlive() const = 0;
+    /*
+     * 获取角色唯一ID，用于从全局数据集中获取角色信息，例如头像、名称等
+     */
+    virtual int32 GetId() const = 0;
+
     /**
      * 获取角色生命值
      */
