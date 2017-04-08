@@ -15,4 +15,13 @@ struct PAL4_API FCharacterBattleStatus
     bool IsInvisible;
     // 是否可在死亡后立即复活。“生”状态
     bool CanRevive;
+
+    FCharacterBattleStatus() :
+        CommonBuff(ECommonBuff::None),
+        Poison(EPoison::None),
+        ControlledDebuff(EControlledDebuff::None),
+        IsInvisible(false),
+        CanRevive(false)
+    {
+    }
 };

@@ -6,20 +6,27 @@
 #include "FCharacterTemporaryStatus.h"
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterPersistentStatus& status) :
-    OnPropertyChangedEvent(),
-    OnBattleStatusChangedEvent(),
+    ICharacterTemporaryStatus(),
     InfoModel{0},
     PersistentStatus(status),
     BaseInfoAccessor(status.GetBaseAccessor()),
     PersistentInfoAccessor(status.GetPersistentAccessor()),
     TemporaryInfoAccessor(InfoModel),
-    Transformer(),
-    CommonBuff(ECommonBuff::None),
-    Poison(EPoison::None),
-    ControlledDebuff(EControlledDebuff::None),
-    IsInvisible(false),
-    CanRevive(false)
+    Transformer()
 {
+    PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
+}
+
+FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) : 
+    ICharacterTemporaryStatus(MoveTemp(other)),
+    InfoModel(MoveTemp(other.InfoModel)),
+    PersistentStatus(other.PersistentStatus),
+    BaseInfoAccessor(MoveTemp(other.BaseInfoAccessor)),
+    PersistentInfoAccessor(MoveTemp(other.PersistentInfoAccessor)),
+    TemporaryInfoAccessor(MoveTemp(other.TemporaryInfoAccessor)),
+    Transformer(MoveTemp(other.Transformer))
+{
+    other.PersistentStatus.OnPropertyChanged().RemoveAll(&other);
     PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
 }
 

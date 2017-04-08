@@ -4,6 +4,7 @@ class IRoundActionHandler;
 class ICharacterPropertyManager;
 class FCharacterPersistentStatus;
 class ICharacterRoundManager;
+class ICharacterTemporaryStatus;
 
 /*
  * 人物战斗代理基类。作为一个代理，在战斗过程中，提供对人物属性的访问和设置接口；
@@ -22,7 +23,7 @@ public:
 
     virtual IRoundActionHandler& GetRoundAction() = 0;
 
-    virtual void OnBattleBegin(const ICharacterRoundManager&) = 0;
+    virtual void OnBattleBegin(const ICharacterRoundManager&, const ICharacterTemporaryStatus&) = 0;
 
     virtual void OnBattleFinished() = 0;
 
