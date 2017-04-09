@@ -6,15 +6,17 @@
 class PAL4_API FCharacterRoundInfo
 {
 public:
-    FCharacterRoundInfo(const FBattleCharacter& character, int32 position) : 
+    FCharacterRoundInfo(FBattleCharacter& character, int32 position) : 
         Character(character),
-        CurrentPosition(0)
+        CurrentPosition(position)
     {
     }
 
     int32 GetCurrentPosition() const { return CurrentPosition; }
     void SetCurrentPosition(int32 value) { CurrentPosition = value; }
     void AddCurrentPosition(int32 value) { CurrentPosition += value; }
+
+    FBattleCharacter& GetCharacter() { return Character; }
     const FBattleCharacter& GetCharacter() const { return Character; }
 
     uint32 GetSpeedValue() const
@@ -33,6 +35,6 @@ public:
     }
 
 private:
-    const FBattleCharacter& Character;
+    FBattleCharacter& Character;
     int32 CurrentPosition;
 };

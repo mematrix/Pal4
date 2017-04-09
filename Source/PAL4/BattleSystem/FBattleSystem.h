@@ -5,9 +5,9 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "Character/FCharacterRoundManager.h"
 #include "CharacterBridge/ICharacterBattleDelegate.h"
 #include "RoundDispatcher/ICharacterRoundDispatcher.h"
+#include "Character/FBattleCharacter.h"
 
 /**
  * 
@@ -37,22 +37,31 @@ public:
     FCharacterFinishActEvent& OnCharacterFinishAct() { return CharacterFinishActEvent; }
 
     // TArray<TSharedRef<ICharacterBattleDelegate>>& GetCharacters() { return Characters; }
-    const TArray<TSharedRef<ICharacterBattleDelegate>>& GetCharacters() const { return Characters; }
+    const TArray<TSharedRef<FBattleCharacter>>& GetCharacters() const { return Characters; }
 
-    void AddCharacter(const TSharedRef<ICharacterBattleDelegate>& character);
+    void AddCharacter(const TSharedRef<ICharacterBattleDelegate>&);
 
     const TSharedRef<ICharacterRoundDispatcher>& GetDispatcher() const { return Dispatcher; }
-
-    void SetDispatcher(const TSharedRef<ICharacterRoundDispatcher>& dispatcher)
-    {
-        Dispatcher = dispatcher;
-    }
 
     /**
      * 开始进入战斗
      */
     void Run();
 
+private:
+    /**
+     * 返回值是一个flag。第0位标识玩家一方状态，为1表示玩家有角色存活，为0表示玩家一方无角色存活；第1位同理，
+     * 标识AI一方状态。
+     * 
+     * 枚举值如下：
+     * 0x00: 没有任何一方有存活的角色
+     * 0x01: 只有玩家一方有存活的角色
+     * 0x02: 只有AI一方有存活角色
+     * 0x03: 双方都有存活角色
+     */
+    int32 StatAliveStatus() const;
+
+public:
     bool BattleIsOver() const;
     /**
      * 获取战斗结束后玩家一方是否胜利。
@@ -61,21 +70,18 @@ public:
     bool IsPlayerWinned() const;
 
 private:
-    bool IsPlayerWinned(TSharedRef<ICharacterBattleDelegate>&) const;
-
-private:
     FBattleBeginEvent BattleBeginEvent;
     FBattleFinishedEvent BattleFinishedEvent;
     FCharacterWillActEvent CharacterWillActEvent;
     FCharacterFinishActEvent CharacterFinishActEvent;
 
-    TArray<TSharedRef<ICharacterBattleDelegate>> Characters;
+    TArray<TSharedRef<FBattleCharacter>> Characters;
     TSharedRef<ICharacterRoundDispatcher> Dispatcher;
     // 存储每个参战人物的回合管理器实例。不直接存对象而是存储智能指针，原因是这个列表可能会有增加操作，
     // 那么就有可能会导致列表存储内存重分配，造成指向其中元素实例的指针悬挂（在FCharacterRoundManager里
     // 面会用到自身的this指针的值。）
-    TArray<TSharedRef<FCharacterRoundManager>> RoundManagers;
+    // TArray<TSharedRef<FCharacterRoundManager>> RoundManagers;
 
     // 最后一次出手的人
-    ICharacterBattleDelegate *CharacterActLast;
+    FBattleCharacter *CharacterActLast;
 };

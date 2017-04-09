@@ -4,9 +4,20 @@
 
 #include <algorithm>
 
+#include "Util/EventUtil.h"
+
 #include "FBattleSystem.h"
-#include "CharacterBridge/IRoundActionHandler.h"
 #include "CharacterBridge/ICharacterPropertyManager.h"
+
+
+class PAL4_API RoundDispatcherRaii
+{
+    ICharacterRoundDispatcher& Dispatcher;
+
+public:
+    explicit RoundDispatcherRaii(ICharacterRoundDispatcher& dispatcher) : Dispatcher(dispatcher) { }
+    ~RoundDispatcherRaii() { Dispatcher.OnBattleFinished(); }
+};
 
 
 FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters,
@@ -15,16 +26,14 @@ FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>&
     BattleFinishedEvent(),
     CharacterWillActEvent(),
     CharacterFinishActEvent(),
-    Characters(characters),
+    Characters(),
     Dispatcher(dispatcher),
-    RoundManagers(),
     CharacterActLast(nullptr)
 {
-    int32 count = Characters.Num();
-    RoundManagers.Reserve(count);
+    auto count = characters.Num();
     for (int i = 0; i < count; ++i)
     {
-        RoundManagers.Add(MakeShared<FCharacterRoundManager>(Characters[i]));
+        Characters.Emplace(MakeShared<FBattleCharacter>(characters[i]));
     }
 }
 
@@ -32,65 +41,70 @@ FBattleSystem::~FBattleSystem()
 {
 }
 
-void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& character)
+void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& characterDelegate)
 {
-    RoundManagers.Add(MakeShared<FCharacterRoundManager>(character));
+    auto character = MakeShared<FBattleCharacter>(characterDelegate);
     Characters.Add(character);
+    Dispatcher->AddCharacter(character);
 }
 
 void FBattleSystem::Run()
 {
-    if (BattleBeginEvent.IsBound())
-    {
-        BattleBeginEvent.Broadcast(*this);
-    }
+    InvokeEvent(BattleBeginEvent, *this);
 
     // 不应该出现这种情况
     _ASSERT(!BattleIsOver());
 
-    ICharacterBattleDelegate* characterActLast = nullptr;
-    while (!BattleIsOver())
     {
-        auto& character = Dispatcher->MoveToNext();
-        characterActLast = &character.GetCharacterDelegate();
-        if (CharacterWillActEvent.IsBound())
+        RoundDispatcherRaii dispatcherRaii(Dispatcher.Get());
+        Dispatcher->OnBattleBegin(Characters);
+
+        FBattleCharacter* characterActLast = nullptr;
+        while (!BattleIsOver())
         {
-            CharacterWillActEvent.Broadcast(*this, character.GetCharacterDelegate());
+            FBattleCharacter& character = Dispatcher->MoveToNext();
+            characterActLast = &character;
+            
+            InvokeEvent(CharacterWillActEvent, *this, character.GetCharacterDelegate());
+
+            auto& roundManager = character.GetRoundManager();
+            roundManager.DoRoundAction();
+            
+            InvokeEvent(CharacterFinishActEvent, *this, character.GetCharacterDelegate());
         }
 
-        auto& roundManager = character.GetRoundManager();
-        roundManager.DoRoundAction();
-        if (CharacterFinishActEvent.IsBound())
+        CharacterActLast = characterActLast;
+    }
+
+    InvokeEvent(BattleFinishedEvent, *this);
+}
+
+int32 FBattleSystem::StatAliveStatus() const
+{
+    int32 playerAlive = 0x0;
+    int32 nonPlayerAlive = 0x0;
+    for (int i = 0; i < Characters.Num(); ++i)
+    {
+        auto& manager = Characters[i]->GetCharacterDelegate().GetPropertyManager();
+        if (manager.IsAlive())
         {
-            CharacterFinishActEvent.Broadcast(*this, character.GetCharacterDelegate());
+            if (manager.IsPlayer())
+            {
+                playerAlive = 1 << 0;
+            }
+            else
+            {
+                nonPlayerAlive = 1 << 1;
+            }
         }
     }
-    CharacterActLast = characterActLast;
 
-    if (BattleFinishedEvent.IsBound())
-    {
-        BattleFinishedEvent.Broadcast(*this);
-    }
+    return playerAlive | nonPlayerAlive;
 }
 
 bool FBattleSystem::BattleIsOver() const
 {
-    bool isAnyPlayerAlive = false;
-    bool isAnyNonPlayerAlive = false;
-    for (int i = 0; i < Characters.Num(); ++i)
-    {
-        auto& manager = Characters[i]->GetPropertyManager();
-        if (manager.IsPlayer())
-        {
-            isAnyPlayerAlive = isAnyPlayerAlive || manager.IsAlive();
-        }
-        else
-        {
-            isAnyNonPlayerAlive = isAnyNonPlayerAlive || manager.IsAlive();
-        }
-    }
-
-    return !(isAnyPlayerAlive && isAnyNonPlayerAlive);
+    return StatAliveStatus() != 3;
 }
 
 bool FBattleSystem::IsPlayerWinned() const
@@ -100,57 +114,15 @@ bool FBattleSystem::IsPlayerWinned() const
         return false;
     }
 
-    bool isAnyPlayerAlive = false;
-    bool isAnyNonPlayerAlive = false;
-    for (int i = 0; i < Characters.Num(); ++i)
-    {
-        auto& manager = Characters[i]->GetPropertyManager();
-        if (manager.IsPlayer())
-        {
-            isAnyPlayerAlive = isAnyPlayerAlive || manager.IsAlive();
-        }
-        else
-        {
-            isAnyNonPlayerAlive = isAnyNonPlayerAlive || manager.IsAlive();
-        }
-    }
+    int32 status = StatAliveStatus();
 
-    if (isAnyPlayerAlive && !isAnyNonPlayerAlive)
+    if (1 == status)
     {
         return true;
     }
-    if (isAnyNonPlayerAlive && !isAnyPlayerAlive)
+    if (2 == status)
     {
         return false;
     }
-    return CharacterActLast->GetPropertyManager().IsPlayer();
-}
-
-bool FBattleSystem::IsPlayerWinned(TSharedRef<ICharacterBattleDelegate>& lastCharacter) const
-{
-    bool isAnyPlayerAlive = false;
-    bool isAnyNonPlayerAlive = false;
-    for (int i = 0; i < Characters.Num(); ++i)
-    {
-        auto& manager = Characters[i]->GetPropertyManager();
-        if (manager.IsPlayer())
-        {
-            isAnyPlayerAlive = isAnyPlayerAlive || manager.IsAlive();
-        }
-        else
-        {
-            isAnyNonPlayerAlive = isAnyNonPlayerAlive || manager.IsAlive();
-        }
-    }
-
-    if (isAnyPlayerAlive && !isAnyNonPlayerAlive)
-    {
-        return true;
-    }
-    else if (isAnyNonPlayerAlive && !isAnyPlayerAlive)
-    {
-        return false;
-    }
-    
-    return lastCharacter->GetPropertyManager().IsPlayer();
+    return CharacterActLast->GetCharacterDelegate().GetPropertyManager().IsPlayer();
 }

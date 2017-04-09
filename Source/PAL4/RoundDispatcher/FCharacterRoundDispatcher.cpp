@@ -5,6 +5,7 @@
 #include <random>
 
 #include "FCharacterRoundDispatcher.h"
+#include <thread>
 
 std::default_random_engine generator;
 std::uniform_int_distribution<int32> distribution(FCharacterRoundDispatcher::GetMinInitPosition(),
@@ -134,8 +135,31 @@ FBattleCharacter& FCharacterRoundDispatcher::MoveToNext()
     }
     else if (minTime >= 100) // 需要1ms以上时间时才对所有角色进行前进移动，否则只移动到100%的那一个
     {
-        //
+        // 每个角色按照其速度前进一定距离：distance = ( (minTime/100) / time ) * 100，其中time为角色
+        // 前进100%时行动时间，化简可得：distance = minTime / time
+        for (int i = 0; i < count; ++i)
+        {
+            int32 time = 4500 - 4 * RoundInfoArray[i].GetSpeedValue();
+            int32 distance = minTime / time;
+            RoundInfoArray[i].AddCurrentPosition(distance);
+        }
     }
+
+    // 所需时间最短的角色直接移动到100%，以修正前面整数计算可能带来的误差
+    RoundInfoArray[minIndex].SetCurrentPosition(100);
+
+    // TODO: 等待UI动画完成，角色在时间槽上移动到100%位置
+    //
+    int32 storyDuration = minTime / 100;
+    storyDuration = storyDuration < 500 ? 500 : storyDuration; // 动画最低时长为500ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(storyDuration));
+
+    // 将到达100%的即将行动的角色进度reset为0。之所以不是在每次方法开始时将100%角色进度置零，
+    // 是考虑到可能会有多个角色同时进度为100%的情况，如果在方法开始置零，就会导致100%进度角色
+    // 尚未行动进度就被置零。
+    RoundInfoArray[minIndex].SetCurrentPosition(0);
+    
+    return RoundInfoArray[minIndex].GetCharacter();
 }
 
 void FCharacterRoundDispatcher::OnBattleFinished()
