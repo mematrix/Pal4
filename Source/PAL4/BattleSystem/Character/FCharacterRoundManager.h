@@ -73,10 +73,10 @@ public:
     FCharacterRoundManager(const FCharacterRoundManager&) = default;
     FCharacterRoundManager(FCharacterRoundManager&&) = default;
 
-    FCharacterRoundManager& operator=(const FCharacterRoundManager&) = default;
-    FCharacterRoundManager& operator=(FCharacterRoundManager&&) = default;
+    FCharacterRoundManager& operator=(const FCharacterRoundManager&) = delete;
+    FCharacterRoundManager& operator=(FCharacterRoundManager&&) = delete;
 
-    void Swap(FCharacterRoundManager& other);
+    // void Swap(FCharacterRoundManager& other);
 
     IRoundActionHandler& GetBindAction() { return RoundAction; }
     const IRoundActionHandler& GetBindAction() const { return RoundAction; }
@@ -123,6 +123,6 @@ private:
     uint32 DelayFuncKey;
 };
 
-template<>
-void std::swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right) noexcept(noexcept(left.Swap(right)));
+//template<>
+//void std::swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right) noexcept(noexcept(left.Swap(right)));
 

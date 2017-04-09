@@ -14,23 +14,23 @@ FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
 {
 }
 
-void FCharacterRoundManager::Swap(FCharacterRoundManager& other)
-{
-    using std::swap;
-
-    if (&other == this)
-    {
-        return;
-    }
-
-    swap(RoundBeginEvent, other.RoundBeginEvent);
-    swap(RoundFinishedEvent, other.RoundFinishedEvent);
-    swap(RoundAction, other.RoundAction);
-    RoundFunc.swap(other.RoundFunc);
-    swap(RoundNum, other.RoundNum);
-    swap(DelayFuncKey, other.DelayFuncKey);
-    swap(RoundStatus, other.RoundStatus);
-}
+//void FCharacterRoundManager::Swap(FCharacterRoundManager& other)
+//{
+//    using std::swap;
+//
+//    if (&other == this)
+//    {
+//        return;
+//    }
+//
+//    swap(RoundBeginEvent, other.RoundBeginEvent);
+//    swap(RoundFinishedEvent, other.RoundFinishedEvent);
+//    swap(RoundAction, other.RoundAction);
+//    RoundFunc.swap(other.RoundFunc);
+//    swap(RoundNum, other.RoundNum);
+//    swap(DelayFuncKey, other.DelayFuncKey);
+//    swap(RoundStatus, other.RoundStatus);
+//}
 
 uint32 FCharacterRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func)
 {
@@ -128,12 +128,12 @@ void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundMa
     left.Swap(right);
 }
 
-namespace std
-{
-    template<> void swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right)
-        noexcept(noexcept(left.Swap(right)))
-    {
-        left.Swap(right);
-    }
-}
+//namespace std
+//{
+//    template<> void swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right)
+//        noexcept(noexcept(left.Swap(right)))
+//    {
+//        left.Swap(right);
+//    }
+//}
 
