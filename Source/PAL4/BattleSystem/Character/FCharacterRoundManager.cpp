@@ -2,9 +2,8 @@
 
 #include "PAL4.h"
 
-#include <stdexcept>
 #include "FCharacterRoundManager.h"
-#include "../CharacterBridge/IRoundActionHandler.h"
+#include "../RoundAction/IRoundActionHandler.h"
 
 FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
     ICharacterRoundManager(),
