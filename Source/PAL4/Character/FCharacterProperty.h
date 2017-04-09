@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "PAL4.h"
-#include "BattleSystem/FBattleSystem.h"
+#include <Platform.h>
 
 /**
  * 

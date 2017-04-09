@@ -1,11 +1,35 @@
 #pragma once
 
 #include <Platform.h>
+#include <Delegate.h>
+
+#include "CharacterPrimitives/Model/ECharacterBasicType.h"
 
 class PAL4_API ICharacterPropertyManager
 {
 public:
+    DECLARE_EVENT_TwoParams(ICharacterPropertyManager, FOnPropertyChangedEvent, const ICharacterPropertyManager&, ECharacterBasicType)
+    DECLARE_EVENT_OneParam(ICharacterPropertyManager, FOnCharacterDeadEvent, const ICharacterPropertyManager&)
+    DECLARE_EVENT_OneParam(ICharacterPropertyManager, FOnCharacterReviveEvent, const ICharacterPropertyManager&)
+
+protected:
+    FOnPropertyChangedEvent OnPropertyChangedEvent;
+    FOnCharacterDeadEvent OnCharacterDeadEvent;
+    FOnCharacterReviveEvent OnCharacterReviveEvent;
+
+public:
+    ICharacterPropertyManager() = default;
+    ICharacterPropertyManager(const ICharacterPropertyManager&) = default;
+    ICharacterPropertyManager(ICharacterPropertyManager&&) = default;
+
     virtual ~ICharacterPropertyManager() { }
+
+    ICharacterPropertyManager& operator=(const ICharacterPropertyManager&) = default;
+    ICharacterPropertyManager& operator=(ICharacterPropertyManager&) = default;
+
+    FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
+    FOnCharacterDeadEvent& OnCharacterDead() { return OnCharacterDeadEvent; }
+    FOnCharacterReviveEvent& OnCharacterRevive() { return OnCharacterReviveEvent; }
 
     /**
      * 角色是否是由玩家控制的一方，true表示玩家一方，false表示敌方（即AI怪物）
@@ -35,14 +59,18 @@ public:
 
     /**
      * 增加或减少角色生命值。值为正数表示增加，负数表示减少
+     * @return 实际增加或减少的生命值
      */
-    virtual void AddHealthValue(int32) = 0;
+    virtual int32 AddHealthValue(int32) = 0;
     /**
      * 增加或减少角色神属性值。值为正数表示增加，负数表示减少
+     * @return 实际增加或减少的神属性值
      */
-    virtual void AddManaValue(int32) = 0;
+    virtual int32 AddManaValue(int32) = 0;
     /**
      * 增加或减少角色气属性值。值为正数表示增加，负数表示减少
+     * @return 实际增加或减少的气属性值
      */
-    virtual void AddCraftValue(int32) = 0;
+    virtual int32 AddCraftValue(int32) = 0;
 };
+

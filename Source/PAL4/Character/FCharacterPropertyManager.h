@@ -2,17 +2,37 @@
 
 #pragma once
 
+#include "BattleSystem/CharacterBridge/ICharacterPropertyManager.h"
+#include "CharacterPrimitives/Model/FCharacterBasicInfo.h"
+
 /**
  * 
  */
-class PAL4_API FCharacterPropertyManager
+class PAL4_API FCharacterPropertyManager : ICharacterPropertyManager
 {
 public:
-	FCharacterPropertyManager();
-	~FCharacterPropertyManager();
+    explicit FCharacterPropertyManager(FCharacterBasicInfo&);
+    FCharacterPropertyManager(const FCharacterPropertyManager&) = default;
+    FCharacterPropertyManager(FCharacterPropertyManager&&) = default;
 
-    // 角色是否是由玩家控制的一方，true表示玩家一方，false表示敌方（即AI怪物）
-    bool IsPlayer() const;
-    // 角色是否存活
-    bool IsAlive() const;
+    bool IsPlayer() const override { return BasicInfo.IsPlayer; }
+
+    bool IsAlive() const override { return 0 != BasicInfo.HealthPoint; }
+
+    int32 GetId() const override { return BasicInfo.ID; }
+
+    int32 GetHealthValue() const override { return BasicInfo.HealthPoint; }
+
+    int32 GetManaValue() const override { return BasicInfo.ManaPoint; }
+
+    int32 GetCraftValue() const override { return BasicInfo.CraftPoint; }
+
+    int32 AddHealthValue(int32) override;
+
+    int32 AddManaValue(int32) override;
+
+    int32 AddCraftValue(int32) override;
+
+private:
+    FCharacterBasicInfo& BasicInfo;
 };
