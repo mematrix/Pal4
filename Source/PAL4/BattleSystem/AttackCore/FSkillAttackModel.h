@@ -3,6 +3,9 @@
 #include "FBaseAttackModel.h"
 
 
+/**
+ * Ãÿºº…À∫¶
+ */
 struct PAL4_API FSkillAttackModel : FBaseAttackModel
 {
     explicit FSkillAttackModel(int32 totalDamage = 0, int32 baseDamage = 0, int32 fixedDamage = 0) :

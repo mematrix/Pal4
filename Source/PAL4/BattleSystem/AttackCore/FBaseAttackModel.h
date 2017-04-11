@@ -2,20 +2,19 @@
 
 #include <Platform.h>
 
-#define MAKE_DEFAULT_COPY_CTOR_AND_OP(ClassName) \
-    ClassName(const ClassName&) = default; \
-    ClassName& operator=(const ClassName&) = default;
+#include "Util/MacroUtil.h"
 
 
 /**
- * 攻击数据模型基类。存储一次攻击的所有相关数据，根据攻击类型不同，子类化对应的模型类
+ * 一次动作的数据模型基类。存储一次攻击/辅助的所有相关数据，根据攻击/辅助类型不同，子类化对应的模型类
  */
 struct PAL4_API FBaseAttackModel
 {
-    explicit FBaseAttackModel(int32 totalDamage = 0) : TotalDamageValue(totalDamage) { }
+    explicit FBaseAttackModel(int32 totalValue = 0) : TotalValue(totalValue) { }
     virtual ~FBaseAttackModel() = default;
 
     MAKE_DEFAULT_COPY_CTOR_AND_OP(FBaseAttackModel)
 
-    int32 TotalDamageValue;
+    // 总值。伤害值或者恢复值
+    int32 TotalValue;
 };

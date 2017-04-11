@@ -5,7 +5,7 @@
 class ICharacterBattleDelegate;
 
 
-/*
+/**
  * ÆÕÍ¨¹¥»÷¶îÍâ×´Ì¬£º±©»÷ÉÁ±Ü¸ñµ²
  */
 enum class PAL4_API ENormalAttackExtroStatus
@@ -21,6 +21,9 @@ enum class PAL4_API ENormalAttackExtroStatus
     Immune
 };
 
+/**
+ * ÆÕÍ¨¹¥»÷ÉËº¦
+ */
 struct PAL4_API FNormalAttackModel : FBaseAttackModel
 {
     explicit FNormalAttackModel(int32 totalDamage = 0, int32 attackDamage = 0, int32 directDamage = 0, int32 elementalDamage = 0,

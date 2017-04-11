@@ -2,6 +2,10 @@
 
 #include "FBaseAttackModel.h"
 
+
+/**
+ * œ… ı…À∫¶
+ */
 struct PAL4_API FMagicAttackModel : FBaseAttackModel
 {
     explicit FMagicAttackModel(int32 totalDamage = 0, int32 originalDamage = 0) :
