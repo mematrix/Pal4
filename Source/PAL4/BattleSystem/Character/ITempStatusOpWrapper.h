@@ -1,6 +1,6 @@
 #pragma once
 
-class FBattleCharacter;
+class FCharacterTempStatusManager;
 
 class PAL4_API ITempStatusOpWrapper
 {
@@ -9,7 +9,7 @@ public:
     {
     }
 
-    virtual void OnAddingStatus(FBattleCharacter&) = 0;
+    virtual void OnAddingStatus(FCharacterTempStatusManager&) = 0;
 
-    virtual void OnRemovingStatus(FBattleCharacter&) = 0;
+    virtual void OnRemovingStatus(FCharacterTempStatusManager&) = 0;
 };
