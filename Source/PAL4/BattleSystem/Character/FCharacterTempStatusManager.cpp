@@ -45,11 +45,12 @@ void FCharacterTempStatusManager::AddTemporaryStatus(ECharacterStatusType type, 
     wrapper->OnAddingStatus(*this);
 }
 
-void FCharacterTempStatusManager::RemoveTemporaryStatus(ECharacterStatusType type, const ITempStatusOpWrapper& wrapper)
+void FCharacterTempStatusManager::RemoveTemporaryStatus(ECharacterStatusType type, ITempStatusOpWrapper& wrapper)
 {
     auto existWrapper = StatusMap.Find(static_cast<int32>(type));
     if (existWrapper && (*existWrapper).operator->() == &wrapper)
     {
         StatusMap.Remove(static_cast<int32>(type));
+        wrapper.OnRemovingStatus(*this);
     }
 }

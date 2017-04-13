@@ -8,6 +8,7 @@
 
 #include "FBattleSystem.h"
 #include "CharacterBridge/ICharacterPropertyManager.h"
+#include "Character/FBattleCharacter.h"
 
 
 class PAL4_API RoundDispatcherRaii

@@ -27,7 +27,7 @@ public:
     inline const ICharacterRoundManager& GetRoundManager() const;
 
     void AddTemporaryStatus(ECharacterStatusType, const TSharedRef<ITempStatusOpWrapper>&);
-    void RemoveTemporaryStatus(ECharacterStatusType, const ITempStatusOpWrapper&);
+    void RemoveTemporaryStatus(ECharacterStatusType, ITempStatusOpWrapper&);
 
 private:
     FBattleCharacter& Character;

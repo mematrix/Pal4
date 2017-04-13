@@ -7,7 +7,8 @@
 FBattleCharacter::FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>& character) :
     CharacterDelegate(character),
     TemporaryStatus(character->GetPersistentStatus()),
-    RoundManager(character->GetRoundAction())
+    RoundManager(character->GetRoundAction()),
+    TempStatusManager(*this)
 {
 }
 

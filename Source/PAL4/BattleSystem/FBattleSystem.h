@@ -7,7 +7,9 @@
 
 #include "CharacterBridge/ICharacterBattleDelegate.h"
 #include "RoundDispatcher/ICharacterRoundDispatcher.h"
-#include "Character/FBattleCharacter.h"
+
+class FBattleCharacter;
+class FBaseStatusModel;
 
 /**
  * 
@@ -47,6 +49,13 @@ public:
      * 开始进入战斗
      */
     void Run();
+
+    /**
+     * 将状态性结果应用到指定角色
+     */
+    void ApplyStatusResult(ICharacterBattleDelegate&, const FBaseStatusModel&);
+
+    // TODO: 其它类似的单次战斗动作结果
 
 private:
     /**

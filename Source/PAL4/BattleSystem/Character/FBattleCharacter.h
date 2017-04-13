@@ -5,6 +5,7 @@
 #include "../CharacterBridge/ICharacterBattleDelegate.h"
 #include "FCharacterTemporaryStatus.h"
 #include "FCharacterRoundManager.h"
+#include "FCharacterTempStatusManager.h"
 
 class PAL4_API FBattleCharacter
 {
@@ -15,10 +16,15 @@ public:
     FBattleCharacter& operator=(FBattleCharacter&&) = default;
 
     ICharacterBattleDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
+
     FCharacterTemporaryStatus& GetTemporaryStatus() { return TemporaryStatus; }
     const FCharacterTemporaryStatus& GetTemporaryStatus() const { return TemporaryStatus; }
+
     FCharacterRoundManager& GetRoundManager() { return RoundManager; }
     const FCharacterRoundManager& GetRoundManager() const { return RoundManager; }
+
+    FCharacterTempStatusManager& GetTempStatusManager() { return TempStatusManager; }
+    const FCharacterTempStatusManager& GetTempStatusManager() const { return TempStatusManager; }
 
     void OnBattleBegin();
     void OnBattleFinished();
@@ -27,4 +33,5 @@ private:
     TSharedRef<ICharacterBattleDelegate> CharacterDelegate;
     FCharacterTemporaryStatus TemporaryStatus;
     FCharacterRoundManager RoundManager;
+    FCharacterTempStatusManager TempStatusManager;
 };
