@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <functional>
+
 #include <Array.h>
 #include <SharedPointer.h>
 
@@ -10,6 +12,8 @@
 
 class FBattleCharacter;
 class FBaseStatusModel;
+class FBaseAttackModel;
+class FBaseRestorerModel;
 
 /**
  * 
@@ -50,12 +54,38 @@ public:
      */
     void Run();
 
-    /**
-     * 将状态性结果应用到指定角色
-     */
-    void ApplyStatusResult(ICharacterBattleDelegate&, const FBaseStatusModel&);
+    void SetStatusResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseStatusModel&)>&);
 
-    // TODO: 其它类似的单次战斗动作结果
+    /**
+     * 应用状态性动作结果。类型0已经有默认行为，传入其它值将调用自定义处理方法。要设置自定义处理函数，
+     * 参见@code SetStatusResultCallback(const std::function<...>&) \endcode 。
+     * @param type 状态类型，其中0对应了默认行为，将会调用默认的方式处理状态逻辑
+     * @param character 要应用状态属性的角色
+     * @param model 状态类型所对应的模型类
+     */
+    void ApplyStatusResult(int32 type, ICharacterBattleDelegate& character, const FBaseStatusModel& model);
+
+    void SetAttackResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseAttackModel&)>&);
+
+    /**
+     * 应用攻击性动作结果。攻击类型0~3已经有默认行为，传入其它值将调用自定义处理方法。要设置自定义处理函数，
+     * 参见@code SetAttackResultCallback(const std::function<...>&) \endcode 。
+     * @param type 攻击类型，其中0,1,2,3对应普通攻击、仙术攻击、技能攻击、物品攻击
+     * @param character 被攻击的角色
+     * @param model 攻击类型所对应的子类化动作模型类
+     */
+    void ApplyAttackResult(int32 type, ICharacterBattleDelegate& character, const FBaseAttackModel& model);
+
+    void SetRestorerResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseRestorerModel&)>&);
+
+    /**
+     * 应用恢复性动作结果。类型0已有默认行为，传入其他值将调用自定义处理方法。要设置自定义处理函数，
+     * 参见@code SetRestorerResultCallback(const std::function<...>&) \endcode 。
+     * @param type 恢复类型。其中0对应了默认行为，将会调用默认的方式处理恢复逻辑
+     * @param character 要应用恢复行为的角色
+     * @param model 恢复类型所对应的模型类
+     */
+    void ApplyRestorerResult(int32 type, ICharacterBattleDelegate& character, const FBaseRestorerModel& model);
 
 private:
     /**
@@ -90,6 +120,10 @@ private:
     // 那么就有可能会导致列表存储内存重分配，造成指向其中元素实例的指针悬挂（在FCharacterRoundManager里
     // 面会用到自身的this指针的值。）
     // TArray<TSharedRef<FCharacterRoundManager>> RoundManagers;
+
+    std::function<void(int32, ICharacterBattleDelegate&, const FBaseStatusModel&)> CustomStatusFunc;
+    std::function<void(int32, ICharacterBattleDelegate&, const FBaseAttackModel&)> CustomAttackFunc;
+    std::function<void(int32, ICharacterBattleDelegate&, const FBaseRestorerModel&)> CustomRestorerFunc;
 
     // 最后一次出手的人
     FBattleCharacter *CharacterActLast;

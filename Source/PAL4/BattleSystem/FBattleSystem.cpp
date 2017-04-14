@@ -9,6 +9,12 @@
 #include "FBattleSystem.h"
 #include "CharacterBridge/ICharacterPropertyManager.h"
 #include "Character/FBattleCharacter.h"
+#include "AttackCore/FBaseRestorerModel.h"
+#include "AttackCore/FBaseStatusModel.h"
+#include "AttackCore/FMagicAttackModel.h"
+#include "AttackCore/FNormalAttackModel.h"
+#include "AttackCore/FSkillAttackModel.h"
+#include "AttackCore/FPropAttackModel.h"
 
 
 class PAL4_API RoundDispatcherRaii
@@ -29,6 +35,9 @@ FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>&
     CharacterFinishActEvent(),
     Characters(),
     Dispatcher(dispatcher),
+    CustomStatusFunc(),
+    CustomAttackFunc(),
+    CustomRestorerFunc(),
     CharacterActLast(nullptr)
 {
     auto count = characters.Num();
@@ -65,12 +74,12 @@ void FBattleSystem::Run()
         {
             FBattleCharacter& character = Dispatcher->MoveToNext();
             characterActLast = &character;
-            
+
             InvokeEvent(CharacterWillActEvent, *this, character.GetCharacterDelegate());
 
             auto& roundManager = character.GetRoundManager();
             roundManager.DoRoundAction();
-            
+
             InvokeEvent(CharacterFinishActEvent, *this, character.GetCharacterDelegate());
         }
 
@@ -78,6 +87,94 @@ void FBattleSystem::Run()
     }
 
     InvokeEvent(BattleFinishedEvent, *this);
+}
+
+void FBattleSystem::SetStatusResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseStatusModel&)>& func)
+{
+    CustomStatusFunc = func;
+}
+
+void FBattleSystem::ApplyStatusResult(int32 type, ICharacterBattleDelegate& character, const FBaseStatusModel& model)
+{
+    if (0 == type)
+    {
+        //
+    }
+    else
+    {
+        if (CustomStatusFunc)
+        {
+            CustomStatusFunc(type, character, model);
+        }
+    }
+}
+
+void FBattleSystem::SetAttackResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseAttackModel&)>& func)
+{
+    CustomAttackFunc = func;
+}
+
+void FBattleSystem::ApplyAttackResult(int32 type, ICharacterBattleDelegate& character, const FBaseAttackModel& model)
+{
+    switch (type)
+    {
+    case 0:
+    {
+        const auto& normalModel = static_cast<const FNormalAttackModel&>(model);
+        //
+        break;
+    }
+
+    case 1:
+    {
+        const auto& maginModel = static_cast<const FMagicAttackModel&>(model);
+        //
+        break;
+    }
+
+    case 2:
+    {
+        const auto& skillModel = static_cast<const FSkillAttackModel&>(model);
+        //
+        break;
+    }
+
+    case 3:
+    {
+        const auto& propModel = static_cast<const FPropAttackModel&>(model);
+        //
+        break;
+    }
+
+    default:
+    {
+        if (CustomAttackFunc)
+        {
+            CustomAttackFunc(type, character, model);
+        }
+        break;
+    }
+    }
+}
+
+void FBattleSystem::SetRestorerResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseRestorerModel&)>& func)
+{
+    CustomRestorerFunc = func;
+}
+
+void FBattleSystem::ApplyRestorerResult(int32 type, ICharacterBattleDelegate& character, const FBaseRestorerModel& model)
+{
+    if (0 == type)
+    {
+        //
+    }
+    else
+    {
+        if (CustomRestorerFunc)
+        {
+            CustomRestorerFunc(type, character, model);
+        }
+    }
 }
 
 int32 FBattleSystem::StatAliveStatus() const
