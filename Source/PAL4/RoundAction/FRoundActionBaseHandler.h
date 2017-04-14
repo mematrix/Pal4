@@ -5,16 +5,16 @@
 
 #include "BattleSystem/RoundAction/IRoundActionHandler.h"
 
-class IAttackAction;
+class ISingleAction;
 class ICharacterBattleDelegate;
 
 
 class PAL4_API FRoundActionBaseHandler : IRoundActionHandler
 {
 public:
-    DECLARE_EVENT_TwoParams(FRoundActionBaseHandler, FBeforeAttackEvent, const FRoundActionBaseHandler&, const IAttackAction&)
-    DECLARE_EVENT_TwoParams(FRoundActionBaseHandler, FOnAttackEvent, const FRoundActionBaseHandler&, const IAttackAction&)
-    DECLARE_EVENT_TwoParams(FRoundActionBaseHandler, FAfterAttackEvent, const FRoundActionBaseHandler&, const IAttackAction&)
+    DECLARE_EVENT_TwoParams(FRoundActionBaseHandler, FBeforeAttackEvent, const FRoundActionBaseHandler&, const ISingleAction&)
+    DECLARE_EVENT_TwoParams(FRoundActionBaseHandler, FOnAttackEvent, const FRoundActionBaseHandler&, const ISingleAction&)
+    DECLARE_EVENT_TwoParams(FRoundActionBaseHandler, FAfterAttackEvent, const FRoundActionBaseHandler&, const ISingleAction&)
 
 private:
     FBeforeAttackEvent BeforeAttackEvent;
@@ -31,7 +31,7 @@ public:
     void OnAction() override final;
 
 protected:
-    virtual TSharedRef<IAttackAction> GetAttackAction() = 0;
+    virtual TSharedRef<ISingleAction> GetAttackAction() = 0;
 
 private:
     TSharedRef<ICharacterBattleDelegate> Character;

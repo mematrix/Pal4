@@ -4,7 +4,7 @@
 
 #include "FRoundActionBaseHandler.h"
 #include "Util/EventUtil.h"
-#include "BattleSystem/AttackCore/IAttackAction.h"
+#include "BattleSystem/AttackCore/ISingleAction.h"
 
 FRoundActionBaseHandler::FRoundActionBaseHandler(const TSharedRef<ICharacterBattleDelegate>& character) :
     BeforeAttackEvent(),
