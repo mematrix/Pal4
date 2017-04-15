@@ -17,6 +17,8 @@ public:
 
     ICharacterBattleDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
 
+    ICharacterPropertyManager& GetPropertyManager() { return CharacterDelegate->GetPropertyManager(); }
+
     FCharacterTemporaryStatus& GetTemporaryStatus() { return TemporaryStatus; }
     const FCharacterTemporaryStatus& GetTemporaryStatus() const { return TemporaryStatus; }
 

@@ -11,12 +11,41 @@
 #include "RoundDispatcher/ICharacterRoundDispatcher.h"
 
 class FBattleCharacter;
-class FBaseStatusModel;
-class FBaseAttackModel;
-class FBaseRestorerModel;
+struct FBaseStatusModel;
+struct FBaseAttackModel;
+struct FBaseRestorerModel;
+
+template<typename Model>
+struct PAL4_API ActionResultModel
+{
+    /**
+     * 类型指示值
+     */
+    int32 Type;
+    /**
+     * 动作释放者（攻击者）
+     */
+    ICharacterBattleDelegate* Releaser;
+    /**
+     * 动作目标（被攻击者）
+     */
+    ICharacterBattleDelegate* Target;
+    /**
+     * 动作数据模型类对象
+     */
+    Model* ActionModel;
+};
+
+template ActionResultModel<FBaseStatusModel>;
+template ActionResultModel<FBaseAttackModel>;
+template ActionResultModel<FBaseRestorerModel>;
+
+typedef std::function<void(const ActionResultModel<FBaseStatusModel>&)> FStatusFunc;
+typedef std::function<void(const ActionResultModel<FBaseAttackModel>&)> FAttackFunc;
+typedef std::function<void(const ActionResultModel<FBaseRestorerModel>&)> FRestorerFunc;
 
 /**
- * 
+ *
  */
 class PAL4_API FBattleSystem
 {
@@ -29,7 +58,7 @@ public:
 public:
     FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>&, const TSharedRef<ICharacterRoundDispatcher>&);
     FBattleSystem(const FBattleSystem&) = delete;
-	~FBattleSystem();
+    ~FBattleSystem();
 
     FBattleSystem& operator=(const FBattleSystem&) = delete;
 
@@ -54,44 +83,38 @@ public:
      */
     void Run();
 
-    void SetStatusResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseStatusModel&)>&);
+    void SetStatusResultCallback(const FStatusFunc&);
 
     /**
      * 应用状态性动作结果。类型0已经有默认行为，传入其它值将调用自定义处理方法。要设置自定义处理函数，
      * 参见@code SetStatusResultCallback(const std::function<...>&) \endcode 。
-     * @param type 状态类型，其中0对应了默认行为，将会调用默认的方式处理状态逻辑
-     * @param character 要应用状态属性的角色
-     * @param model 状态类型所对应的模型类
+     * @param model 状态动作模型类。@code model.type \endcode 为0对应了默认行为，将会调用默认的方式处理状态逻辑
      */
-    void ApplyStatusResult(int32 type, ICharacterBattleDelegate& character, const FBaseStatusModel& model);
+    void ApplyStatusResult(const ActionResultModel<FBaseStatusModel>& model);
 
-    void SetAttackResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseAttackModel&)>&);
+    void SetAttackResultCallback(const FAttackFunc&);
 
     /**
      * 应用攻击性动作结果。攻击类型0~3已经有默认行为，传入其它值将调用自定义处理方法。要设置自定义处理函数，
      * 参见@code SetAttackResultCallback(const std::function<...>&) \endcode 。
-     * @param type 攻击类型，其中0,1,2,3对应普通攻击、仙术攻击、技能攻击、物品攻击
-     * @param character 被攻击的角色
-     * @param model 攻击类型所对应的子类化动作模型类
+     * @param model 攻击动作模型类。@code model.type \endcode 为0,1,2,3对应普通攻击、仙术攻击、技能攻击、物品攻击
      */
-    void ApplyAttackResult(int32 type, ICharacterBattleDelegate& character, const FBaseAttackModel& model);
+    void ApplyAttackResult(const ActionResultModel<FBaseAttackModel>& model);
 
-    void SetRestorerResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseRestorerModel&)>&);
+    void SetRestorerResultCallback(const FRestorerFunc&);
 
     /**
      * 应用恢复性动作结果。类型0已有默认行为，传入其他值将调用自定义处理方法。要设置自定义处理函数，
      * 参见@code SetRestorerResultCallback(const std::function<...>&) \endcode 。
-     * @param type 恢复类型。其中0对应了默认行为，将会调用默认的方式处理恢复逻辑
-     * @param character 要应用恢复行为的角色
-     * @param model 恢复类型所对应的模型类
+     * @param model 恢复动作模型类。@code model.type \endcode 为0对应了默认行为，将会调用默认的方式处理恢复逻辑
      */
-    void ApplyRestorerResult(int32 type, ICharacterBattleDelegate& character, const FBaseRestorerModel& model);
+    void ApplyRestorerResult(const ActionResultModel<FBaseRestorerModel>& model);
 
 private:
     /**
      * 返回值是一个flag。第0位标识玩家一方状态，为1表示玩家有角色存活，为0表示玩家一方无角色存活；第1位同理，
      * 标识AI一方状态。
-     * 
+     *
      * 枚举值如下：
      * 0x00: 没有任何一方有存活的角色
      * 0x01: 只有玩家一方有存活的角色
@@ -101,6 +124,8 @@ private:
     int32 StatAliveStatus() const;
 
 public:
+    TSharedRef<FBattleCharacter>* FindCharacter(const ICharacterBattleDelegate*);
+
     bool BattleIsOver() const;
     /**
      * 获取战斗结束后玩家一方是否胜利。
@@ -121,9 +146,9 @@ private:
     // 面会用到自身的this指针的值。）
     // TArray<TSharedRef<FCharacterRoundManager>> RoundManagers;
 
-    std::function<void(int32, ICharacterBattleDelegate&, const FBaseStatusModel&)> CustomStatusFunc;
-    std::function<void(int32, ICharacterBattleDelegate&, const FBaseAttackModel&)> CustomAttackFunc;
-    std::function<void(int32, ICharacterBattleDelegate&, const FBaseRestorerModel&)> CustomRestorerFunc;
+    FStatusFunc CustomStatusFunc;
+    FAttackFunc CustomAttackFunc;
+    FRestorerFunc CustomRestorerFunc;
 
     // 最后一次出手的人
     FBattleCharacter *CharacterActLast;

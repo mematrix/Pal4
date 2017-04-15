@@ -2,6 +2,9 @@
 
 #include <functional>
 
+struct FBaseRestorerModel;
+struct FBaseAttackModel;
+struct FBaseStatusModel;
 class IRoundActionHandler;
 class ICharacterPropertyManager;
 class FCharacterPersistentStatus;
@@ -29,21 +32,18 @@ public:
 
     virtual void OnBattleFinished() = 0;
 
-    virtual void OnNormalAttackFinished(/*普通攻击结果Model*/) = 0;
-    
-    virtual void BeAttackedInNormal(/**/) = 0;
+    virtual void OnStatusActionFinished(int32, const FBaseStatusModel&) = 0;
 
-    virtual void OnMagicAttackFinished(/*仙术攻击结果Model*/) = 0;
+    virtual void BeInStatusAction(int32, const FBaseStatusModel&) = 0;
 
-    virtual void BeAttackedWithMagic() = 0;
+    virtual void OnAttackActionFinished(int32, const FBaseAttackModel&) = 0;
 
-    virtual void OnSkillAttackFinished() = 0;
+    virtual void BeInAttackAction(int32, const FBaseAttackModel&) = 0;
 
-    virtual void BeAttackedWithSkill() = 0;
+    virtual void OnRestorerActionFinished(int32, const FBaseRestorerModel&) = 0;
 
-    virtual void OnPropAttackFinished() = 0;
+    virtual void BeInRestorerAction(int32, const FBaseRestorerModel&) = 0;
 
-    virtual void BeAttackedWithProp() = 0;
 
     /**
     * 设置角色死亡时的回调。

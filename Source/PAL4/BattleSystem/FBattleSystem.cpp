@@ -89,59 +89,79 @@ void FBattleSystem::Run()
     InvokeEvent(BattleFinishedEvent, *this);
 }
 
-void FBattleSystem::SetStatusResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseStatusModel&)>& func)
+void FBattleSystem::SetStatusResultCallback(const FStatusFunc& func)
 {
     CustomStatusFunc = func;
 }
 
-void FBattleSystem::ApplyStatusResult(int32 type, ICharacterBattleDelegate& character, const FBaseStatusModel& model)
+void FBattleSystem::ApplyStatusResult(const ActionResultModel<FBaseStatusModel>& model)
 {
-    if (0 == type)
+    if (0 == model.Type)
     {
-        //
+        auto battleCharacter = FindCharacter(model.Target);
+        if (!battleCharacter)
+        {
+            _ASSERT(0);
+            return;
+        }
+
+        auto& manager = (*battleCharacter)->GetTempStatusManager();
+        manager.AddTemporaryStatus(model.ActionModel->StatusType, model.ActionModel->TempStatusOpWrapper);
     }
     else
     {
         if (CustomStatusFunc)
         {
-            CustomStatusFunc(type, character, model);
+            CustomStatusFunc(model);
         }
     }
 }
 
-void FBattleSystem::SetAttackResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseAttackModel&)>& func)
+void FBattleSystem::SetAttackResultCallback(const FAttackFunc& func)
 {
     CustomAttackFunc = func;
 }
 
-void FBattleSystem::ApplyAttackResult(int32 type, ICharacterBattleDelegate& character, const FBaseAttackModel& model)
+void FBattleSystem::ApplyAttackResult(const ActionResultModel<FBaseAttackModel>& model)
 {
-    switch (type)
+    TSharedRef<FBattleCharacter>* battleCharacter = nullptr;
+    if (static_cast<uint32>(model.Type) <= 3)
+    {
+        battleCharacter = FindCharacter(model.Target);
+        if (!battleCharacter)
+        {
+            _ASSERT(0);
+            return;
+        }
+    }
+
+    switch (model.Type)
     {
     case 0:
     {
-        const auto& normalModel = static_cast<const FNormalAttackModel&>(model);
-        //
+        auto normalModel = static_cast<const FNormalAttackModel*>(model.ActionModel);
+        auto& propertyManager = model.Target->GetPropertyManager();
+        
         break;
     }
 
     case 1:
     {
-        const auto& maginModel = static_cast<const FMagicAttackModel&>(model);
-        //
+        auto maginModel = static_cast<const FMagicAttackModel*>(model.ActionModel);
+        
         break;
     }
 
     case 2:
     {
-        const auto& skillModel = static_cast<const FSkillAttackModel&>(model);
+        auto skillModel = static_cast<const FSkillAttackModel*>(model.ActionModel);
         //
         break;
     }
 
     case 3:
     {
-        const auto& propModel = static_cast<const FPropAttackModel&>(model);
+        auto propModel = static_cast<const FPropAttackModel*>(model.ActionModel);
         //
         break;
     }
@@ -150,21 +170,21 @@ void FBattleSystem::ApplyAttackResult(int32 type, ICharacterBattleDelegate& char
     {
         if (CustomAttackFunc)
         {
-            CustomAttackFunc(type, character, model);
+            CustomAttackFunc(model);
         }
         break;
     }
     }
 }
 
-void FBattleSystem::SetRestorerResultCallback(const std::function<void(int32, ICharacterBattleDelegate&, const FBaseRestorerModel&)>& func)
+void FBattleSystem::SetRestorerResultCallback(const FRestorerFunc& func)
 {
     CustomRestorerFunc = func;
 }
 
-void FBattleSystem::ApplyRestorerResult(int32 type, ICharacterBattleDelegate& character, const FBaseRestorerModel& model)
+void FBattleSystem::ApplyRestorerResult(const ActionResultModel<FBaseRestorerModel>& model)
 {
-    if (0 == type)
+    if (0 == model.Type)
     {
         //
     }
@@ -172,9 +192,22 @@ void FBattleSystem::ApplyRestorerResult(int32 type, ICharacterBattleDelegate& ch
     {
         if (CustomRestorerFunc)
         {
-            CustomRestorerFunc(type, character, model);
+            CustomRestorerFunc(model);
         }
     }
+}
+
+TSharedRef<FBattleCharacter>* FBattleSystem::FindCharacter(const ICharacterBattleDelegate* del)
+{
+    for (auto& character : Characters)
+    {
+        if (del == &character->GetCharacterDelegate())
+        {
+            return &character;
+        }
+    }
+
+    return nullptr;
 }
 
 int32 FBattleSystem::StatAliveStatus() const
