@@ -9,12 +9,9 @@
 #include "FBattleSystem.h"
 #include "CharacterBridge/ICharacterPropertyManager.h"
 #include "Character/FBattleCharacter.h"
+#include "AttackCore/FBaseAttackModel.h"
 #include "AttackCore/FBaseRestorerModel.h"
 #include "AttackCore/FBaseStatusModel.h"
-#include "AttackCore/FMagicAttackModel.h"
-#include "AttackCore/FNormalAttackModel.h"
-#include "AttackCore/FSkillAttackModel.h"
-#include "AttackCore/FPropAttackModel.h"
 
 
 class PAL4_API RoundDispatcherRaii
@@ -96,15 +93,15 @@ void FBattleSystem::SetStatusResultCallback(const FStatusFunc& func)
 
 void FBattleSystem::ApplyStatusResult(const ActionResultModel<FBaseStatusModel>& model)
 {
+    auto battleCharacter = FindCharacter(model.Target);
+    if (!battleCharacter)
+    {
+        _ASSERT(0);
+        return;
+    }
+
     if (0 == model.Type)
     {
-        auto battleCharacter = FindCharacter(model.Target);
-        if (!battleCharacter)
-        {
-            _ASSERT(0);
-            return;
-        }
-
         auto& manager = (*battleCharacter)->GetTempStatusManager();
         manager.AddTemporaryStatus(model.ActionModel->StatusType, model.ActionModel->TempStatusOpWrapper);
     }
@@ -115,6 +112,9 @@ void FBattleSystem::ApplyStatusResult(const ActionResultModel<FBaseStatusModel>&
             CustomStatusFunc(model);
         }
     }
+
+    model.Releaser->OnStatusActionFinished(model);
+    model.Target->BeInStatusAction(model);
 }
 
 void FBattleSystem::SetAttackResultCallback(const FAttackFunc& func)
@@ -124,57 +124,27 @@ void FBattleSystem::SetAttackResultCallback(const FAttackFunc& func)
 
 void FBattleSystem::ApplyAttackResult(const ActionResultModel<FBaseAttackModel>& model)
 {
-    TSharedRef<FBattleCharacter>* battleCharacter = nullptr;
+    if (!FindCharacter(model.Target))
+    {
+        _ASSERT(0);
+        return;
+    }
+
     if (static_cast<uint32>(model.Type) <= 3)
     {
-        battleCharacter = FindCharacter(model.Target);
-        if (!battleCharacter)
-        {
-            _ASSERT(0);
-            return;
-        }
-    }
-
-    switch (model.Type)
-    {
-    case 0:
-    {
-        auto normalModel = static_cast<const FNormalAttackModel*>(model.ActionModel);
         auto& propertyManager = model.Target->GetPropertyManager();
-        
-        break;
+        propertyManager.AddHealthValue(-model.ActionModel->TotalValue);
     }
-
-    case 1:
-    {
-        auto maginModel = static_cast<const FMagicAttackModel*>(model.ActionModel);
-        
-        break;
-    }
-
-    case 2:
-    {
-        auto skillModel = static_cast<const FSkillAttackModel*>(model.ActionModel);
-        //
-        break;
-    }
-
-    case 3:
-    {
-        auto propModel = static_cast<const FPropAttackModel*>(model.ActionModel);
-        //
-        break;
-    }
-
-    default:
+    else
     {
         if (CustomAttackFunc)
         {
             CustomAttackFunc(model);
         }
-        break;
     }
-    }
+
+    model.Releaser->OnAttackActionFinished(model);
+    model.Target->BeInAttackAction(model);
 }
 
 void FBattleSystem::SetRestorerResultCallback(const FRestorerFunc& func)
@@ -184,9 +154,17 @@ void FBattleSystem::SetRestorerResultCallback(const FRestorerFunc& func)
 
 void FBattleSystem::ApplyRestorerResult(const ActionResultModel<FBaseRestorerModel>& model)
 {
+    if (!FindCharacter(model.Target))
+    {
+        _ASSERT(0);
+        return;
+    }
+
     if (0 == model.Type)
     {
-        //
+        auto& manager = model.Target->GetPropertyManager();
+        manager.AddHealthValue(model.ActionModel->HealthValue);
+        manager.AddManaValue(model.ActionModel->ManaValue);
     }
     else
     {

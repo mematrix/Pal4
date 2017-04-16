@@ -15,30 +15,6 @@ struct FBaseStatusModel;
 struct FBaseAttackModel;
 struct FBaseRestorerModel;
 
-template<typename Model>
-struct PAL4_API ActionResultModel
-{
-    /**
-     * 类型指示值
-     */
-    int32 Type;
-    /**
-     * 动作释放者（攻击者）
-     */
-    ICharacterBattleDelegate* Releaser;
-    /**
-     * 动作目标（被攻击者）
-     */
-    ICharacterBattleDelegate* Target;
-    /**
-     * 动作数据模型类对象
-     */
-    Model* ActionModel;
-};
-
-template ActionResultModel<FBaseStatusModel>;
-template ActionResultModel<FBaseAttackModel>;
-template ActionResultModel<FBaseRestorerModel>;
 
 typedef std::function<void(const ActionResultModel<FBaseStatusModel>&)> FStatusFunc;
 typedef std::function<void(const ActionResultModel<FBaseAttackModel>&)> FAttackFunc;
