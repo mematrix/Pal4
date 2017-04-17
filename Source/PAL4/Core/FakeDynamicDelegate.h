@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include <Util/TypeTraitsUtil.h>
+
 
 template<typename T>
 class FakeDynamicDelegate;
@@ -11,8 +13,8 @@ class FakeDynamicDelegate<Ret(T::*)(Args...)>
 {
 public:
     typedef Ret(T::*TMem)(Args...);
-    typedef std::function<void(T&, Args...)> FPreFunc;
-    typedef std::function<Ret(T&, const Ret&, Args...)> FPostFunc;
+    typedef std::function<void(T&, typename pal4::param<Args>::type...)> FPreFunc;
+    typedef std::function<Ret(T&, typename pal4::param<Ret>::type, typename pal4::param<Args>::type...)> FPostFunc;
 
 private:
     TMem MemFunc;
@@ -38,7 +40,7 @@ public:
         return nullptr != MemFunc;
     }
 
-    Ret operator()(T& obj, Args... args)
+    Ret operator()(T& obj, typename pal4::param<Args>::type... args)
     {
         if (nullptr == MemFunc)
         {
@@ -75,8 +77,8 @@ class FakeDynamicDelegate<void(T::*)(Args...)>
 {
 public:
     typedef void(T::*TMem)(Args...);
-    typedef std::function<void(T&, Args...)> FPreFunc;
-    typedef std::function<void(T&, Args...)> FPostFunc;
+    typedef std::function<void(T&, typename pal4::param<Args>::type...)> FPreFunc;
+    typedef std::function<void(T&, typename pal4::param<Args>::type...)> FPostFunc;
 
 private:
     TMem MemFunc;
@@ -102,7 +104,7 @@ public:
         return nullptr != MemFunc;
     }
 
-    void operator()(T& obj, Args... args)
+    void operator()(T& obj, typename pal4::param<Args>::type... args)
     {
         if (nullptr != MemFunc)
         {
