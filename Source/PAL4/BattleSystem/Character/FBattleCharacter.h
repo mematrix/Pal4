@@ -6,6 +6,7 @@
 #include "FCharacterTemporaryStatus.h"
 #include "FCharacterRoundManager.h"
 #include "FCharacterTempStatusManager.h"
+#include "FPassiveActionInterceptor.h"
 
 class PAL4_API FBattleCharacter
 {
@@ -18,6 +19,8 @@ public:
     ICharacterBattleDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
 
     ICharacterPropertyManager& GetPropertyManager() { return CharacterDelegate->GetPropertyManager(); }
+
+    FPassiveActionInterceptor& GetActionInterceptor() { return ActionInterceptor; }
 
     FCharacterTemporaryStatus& GetTemporaryStatus() { return TemporaryStatus; }
     const FCharacterTemporaryStatus& GetTemporaryStatus() const { return TemporaryStatus; }
@@ -36,4 +39,5 @@ private:
     FCharacterTemporaryStatus TemporaryStatus;
     FCharacterRoundManager RoundManager;
     FCharacterTempStatusManager TempStatusManager;
+    FPassiveActionInterceptor ActionInterceptor;
 };

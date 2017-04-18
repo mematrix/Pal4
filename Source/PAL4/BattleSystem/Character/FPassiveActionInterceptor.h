@@ -1,23 +1,31 @@
 #pragma once
 
+#include <SharedPointer.h>
+
+class ISingleAction;
+class ICharacterBattleDelegate;
+struct FBaseStatusModel;
+struct FBaseAttackModel;
+struct FBaseRestorerModel;
+
 class PAL4_API FPassiveActionInterceptor
 {
 public:
-    void BeforeComputeStatusResult();
+    void BeforeComputeStatusResult(ISingleAction&, int32);
 
-    void AfterComputeStatusResult();
+    TSharedRef<FBaseStatusModel> AfterComputeStatusResult(ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32);
 
     void AfterStatusAction();
 
-    void BeforeComputeAttackResult();
+    void BeforeComputeAttackResult(ISingleAction&, int32);
 
-    void AfterComputeAttackResult();
+    TSharedRef<FBaseAttackModel> AfterComputeAttackResult(ISingleAction&, const TSharedRef<FBaseAttackModel>&, int32);
 
     void AfterAttackAction();
 
-    void BeforeComputeRestorerResult();
+    void BeforeComputeRestorerResult(ISingleAction&, int32);
 
-    void AfterComputeRestorerResult();
+    TSharedRef<FBaseRestorerModel> AfterComputeRestorerResult(ISingleAction&, const TSharedRef<FBaseRestorerModel>&, int32);
 
     void AfterRestorerAction();
 };
