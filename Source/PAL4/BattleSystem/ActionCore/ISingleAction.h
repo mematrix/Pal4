@@ -3,6 +3,9 @@
 #include <SharedPointer.h>
 #include <Array.h>
 
+struct FBaseAttackModel;
+struct FBaseRestorerModel;
+struct FBaseStatusModel;
 class ICharacterBattleDelegate;
 
 /**
@@ -26,6 +29,11 @@ public:
     virtual void BeforeDoAttack() { }
     virtual void DoAttack() = 0;
     virtual void AfterDoAttack() { }
+
+    // 计算伤害值（不考虑人物状态，只考虑当前属性。例如忽略镜的反弹效果）
+    virtual TSharedRef<FBaseAttackModel> ComputeAttackResult(ICharacterBattleDelegate&, int32) = 0;
+    virtual TSharedRef<FBaseRestorerModel> ComputeRestorerResult(ICharacterBattleDelegate&, int32) = 0;
+    virtual TSharedRef<FBaseStatusModel> ComputeStatusResutl(ICharacterBattleDelegate&, int32) = 0;
 
 protected:
     TSharedRef<ICharacterBattleDelegate> Attacker;
