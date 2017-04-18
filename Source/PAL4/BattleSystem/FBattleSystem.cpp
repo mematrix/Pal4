@@ -9,9 +9,9 @@
 #include "FBattleSystem.h"
 #include "CharacterBridge/ICharacterPropertyManager.h"
 #include "Character/FBattleCharacter.h"
-#include "AttackCore/FBaseAttackModel.h"
-#include "AttackCore/FBaseRestorerModel.h"
-#include "AttackCore/FBaseStatusModel.h"
+#include "ActionCore/FBaseAttackModel.h"
+#include "ActionCore/FBaseRestorerModel.h"
+#include "ActionCore/FBaseStatusModel.h"
 
 
 class PAL4_API RoundDispatcherRaii
