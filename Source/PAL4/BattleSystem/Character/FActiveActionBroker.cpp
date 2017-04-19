@@ -4,6 +4,7 @@
 
 #include <utility>
 
+#include "../ActionCore/ISingleAction.h"
 #include "FBattleCharacter.h"
 #include "FActiveActionBroker.h"
 #include "FPassiveActionInterceptor.h"
@@ -37,16 +38,9 @@ TSharedRef<FBaseStatusModel> CallStatusAfter(const FActiveActionBroker* broker, 
 }
 
 FActiveActionBroker::FActiveActionBroker() :
-    ActiveCharacter(nullptr),
     PassiveCharacter(nullptr),
-    AttackComDelegate(&ISingleAction::ComputeAttackResult,
-        std::bind(CallBefore, this, &FPassiveActionInterceptor::BeforeComputeAttackResult, _1, _2, _3),
-            std::bind(CallAttackAfter, this, _1, _2, _3, _4)),
-    RestorerComDelegate(&ISingleAction::ComputeRestorerResult,
-        std::bind(CallBefore, this, &FPassiveActionInterceptor::BeforeComputeRestorerResult, _1, _2, _3),
-            std::bind(CallRestorerAfter, this, _1, _2, _3, _4)),
-    StatusComDelegate(&ISingleAction::ComputeStatusResutl,
-        std::bind(CallBefore, this, &FPassiveActionInterceptor::BeforeComputeStatusResult, _1, _2, _3),
-            std::bind(CallStatusAfter, this, _1, _2, _3, _4))
+    AttackComDelegate(&ISingleAction::ComputeAttackResult, nullptr, std::bind(CallAttackAfter, this, _1, _2, _3, _4)),
+    RestorerComDelegate(&ISingleAction::ComputeRestorerResult, nullptr, std::bind(CallRestorerAfter, this, _1, _2, _3, _4)),
+    StatusComDelegate(&ISingleAction::ComputeStatusResutl, nullptr, std::bind(CallStatusAfter, this, _1, _2, _3, _4))
 {
 }
