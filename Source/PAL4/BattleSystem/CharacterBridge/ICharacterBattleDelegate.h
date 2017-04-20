@@ -63,18 +63,6 @@ public:
 
     virtual void OnBattleFinished() = 0;
 
-    virtual void OnStatusActionFinished(const ActionResultModel<FBaseStatusModel>&) = 0;
-
-    virtual void BeInStatusAction(const ActionResultModel<FBaseStatusModel>&) = 0;
-
-    virtual void OnAttackActionFinished(const ActionResultModel<FBaseAttackModel>&) = 0;
-
-    virtual void BeInAttackAction(const ActionResultModel<FBaseAttackModel>&) = 0;
-
-    virtual void OnRestorerActionFinished(const ActionResultModel<FBaseRestorerModel>&) = 0;
-
-    virtual void BeInRestorerAction(const ActionResultModel<FBaseRestorerModel>&) = 0;
-
 
     /**
     * 设置角色死亡时的回调。

@@ -8,15 +8,31 @@
 class PAL4_API FPassiveActionInterceptor : IPassiveActionInterceptor
 {
 public:
-    TSharedRef<FBaseStatusModel> AfterComputeStatusResult(ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32);
+    explicit FPassiveActionInterceptor(ICharacterBattleDelegate&);
+    FPassiveActionInterceptor(const FPassiveActionInterceptor&) = default;
+    FPassiveActionInterceptor(FPassiveActionInterceptor&&) = default;
 
-    void AfterStatusAction();
+    FPassiveActionInterceptor& operator=(const FPassiveActionInterceptor&) = default;
+    FPassiveActionInterceptor& operator=(FPassiveActionInterceptor&&) = default;
 
-    TSharedRef<FBaseAttackModel> AfterComputeAttackResult(ISingleAction&, const TSharedRef<FBaseAttackModel>&, int32);
+    TSharedRef<FBaseStatusModel> AfterComputeStatusResult(const ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32);
 
-    void AfterAttackAction();
+    void AfterStatusAction(const ISingleAction&, const FBaseStatusModel&, int32);
 
-    TSharedRef<FBaseRestorerModel> AfterComputeRestorerResult(ISingleAction&, const TSharedRef<FBaseRestorerModel>&, int32);
+    TSharedRef<FBaseAttackModel> AfterComputeAttackResult(const ISingleAction&, const TSharedRef<FBaseAttackModel>&, int32);
 
-    void AfterRestorerAction();
+    void AfterAttackAction(const ISingleAction&, const FBaseAttackModel&, int32);
+
+    TSharedRef<FBaseRestorerModel> AfterComputeRestorerResult(const ISingleAction&, const TSharedRef<FBaseRestorerModel>&, int32);
+
+    void AfterRestorerAction(const ISingleAction&, const FBaseRestorerModel&, int32);
+
+    FStatusInterceptorFunc SetStatusInterceptor(const FStatusInterceptorFunc&) override;
+    FAttackInterceptorFunc SetAttackInterceptor(const FAttackInterceptorFunc&) override;
+    FRestorerInterceptorFunc SetRestorerInterceptor(const FRestorerInterceptorFunc&) override;
+
+private:
+    FStatusInterceptorFunc StatusFunc;
+    FAttackInterceptorFunc AttackFunc;
+    FRestorerInterceptorFunc RestorerFunc;
 };

@@ -12,6 +12,7 @@
 #include "ActionCore/FBaseAttackModel.h"
 #include "ActionCore/FBaseRestorerModel.h"
 #include "ActionCore/FBaseStatusModel.h"
+#include "ActionCore/ISingleAction.h"
 
 
 class PAL4_API RoundDispatcherRaii
@@ -32,9 +33,6 @@ FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>&
     CharacterFinishActEvent(),
     Characters(),
     Dispatcher(dispatcher),
-    CustomStatusFunc(),
-    CustomAttackFunc(),
-    CustomRestorerFunc(),
     CharacterActLast(nullptr)
 {
     auto count = characters.Num();
@@ -86,93 +84,90 @@ void FBattleSystem::Run()
     InvokeEvent(BattleFinishedEvent, *this);
 }
 
-void FBattleSystem::SetStatusResultCallback(const FStatusFunc& func)
+void FBattleSystem::ApplyAttackResult(const ISingleAction& action, ICharacterBattleDelegate& character,
+    const FBaseAttackModel& model, int32 type)
 {
-    CustomStatusFunc = func;
-}
-
-void FBattleSystem::ApplyStatusResult(const ActionResultModel<FBaseStatusModel>& model)
-{
-    auto battleCharacter = FindCharacter(model.Target);
+    auto battleCharacter = FindCharacter(&character);
     if (!battleCharacter)
     {
         _ASSERT(0);
         return;
     }
 
-    if (0 == model.Type)
+    if (static_cast<uint32>(type) <= 3)
+    {
+        auto& propertyManager = character.GetPropertyManager();
+        propertyManager.AddHealthValue(-model.TotalValue);
+    }
+    else
+    {
+        action.CustomApplyAttackResult(character, model, type);
+    }
+
+    //model.Releaser->OnAttackActionFinished(model);
+    (*battleCharacter)->GetActionInterceptor().AfterAttackAction(action, model, type);
+}
+
+void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, ICharacterBattleDelegate& character,
+    const FBaseRestorerModel& model, int32 type)
+{
+    auto battleCharacter = FindCharacter(&character);
+    if (!battleCharacter)
+    {
+        _ASSERT(0);
+        return;
+    }
+
+    if (0 == type)
+    {
+        auto& manager = character.GetPropertyManager();
+        manager.AddHealthValue(model.HealthValue);
+        manager.AddManaValue(model.ManaValue);
+    }
+    else
+    {
+        action.CustomApplyRestorerResult(character, model, type);
+    }
+
+    //model.Releaser->OnRestorerActionFinished(model);
+    (*battleCharacter)->GetActionInterceptor().AfterRestorerAction(action, model, type);
+}
+
+void FBattleSystem::ApplyStatusResult(const ISingleAction& action, ICharacterBattleDelegate& character,
+    const FBaseStatusModel& model, int32 type)
+{
+    auto battleCharacter = FindCharacter(&character);
+    if (!battleCharacter)
+    {
+        _ASSERT(0);
+        return;
+    }
+
+    if (0 == type)
     {
         auto& manager = (*battleCharacter)->GetTempStatusManager();
-        manager.AddTemporaryStatus(model.ActionModel->StatusType, model.ActionModel->TempStatusOpWrapper);
+        manager.AddTemporaryStatus(model.StatusType, model.TempStatusOpWrapper);
     }
     else
     {
-        if (CustomStatusFunc)
-        {
-            CustomStatusFunc(model);
-        }
+        action.CustomApplyStatusResult(character, model, type);
     }
 
-    model.Releaser->OnStatusActionFinished(model);
-    model.Target->BeInStatusAction(model);
+    //model.Releaser->OnStatusActionFinished(model);
+    (*battleCharacter)->GetActionInterceptor().AfterStatusAction(action, model, type);
 }
 
-void FBattleSystem::SetAttackResultCallback(const FAttackFunc& func)
+void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb)
 {
-    CustomAttackFunc = func;
+
 }
 
-void FBattleSystem::ApplyAttackResult(const ActionResultModel<FBaseAttackModel>& model)
+void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb)
 {
-    if (!FindCharacter(model.Target))
-    {
-        _ASSERT(0);
-        return;
-    }
-
-    if (static_cast<uint32>(model.Type) <= 3)
-    {
-        auto& propertyManager = model.Target->GetPropertyManager();
-        propertyManager.AddHealthValue(-model.ActionModel->TotalValue);
-    }
-    else
-    {
-        if (CustomAttackFunc)
-        {
-            CustomAttackFunc(model);
-        }
-    }
-
-    model.Releaser->OnAttackActionFinished(model);
-    model.Target->BeInAttackAction(model);
 }
 
-void FBattleSystem::SetRestorerResultCallback(const FRestorerFunc& func)
+void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb)
 {
-    CustomRestorerFunc = func;
-}
-
-void FBattleSystem::ApplyRestorerResult(const ActionResultModel<FBaseRestorerModel>& model)
-{
-    if (!FindCharacter(model.Target))
-    {
-        _ASSERT(0);
-        return;
-    }
-
-    if (0 == model.Type)
-    {
-        auto& manager = model.Target->GetPropertyManager();
-        manager.AddHealthValue(model.ActionModel->HealthValue);
-        manager.AddManaValue(model.ActionModel->ManaValue);
-    }
-    else
-    {
-        if (CustomRestorerFunc)
-        {
-            CustomRestorerFunc(model);
-        }
-    }
 }
 
 TSharedRef<FBattleCharacter>* FBattleSystem::FindCharacter(const ICharacterBattleDelegate* del)

@@ -15,11 +15,11 @@ class PAL4_API IPassiveActionInterceptor
 {
 public:
     typedef std::function<TSharedRef<FBaseStatusModel>(
-        IPassiveActionInterceptor&, ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32)> FStatusInterceptorFunc;
+        IPassiveActionInterceptor&, const ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32)> FStatusInterceptorFunc;
     typedef std::function<TSharedRef<FBaseAttackModel>(
-        IPassiveActionInterceptor&, ISingleAction&, const TSharedRef<FBaseAttackModel>&, int32)> FAttackInterceptorFunc;
+        IPassiveActionInterceptor&, const ISingleAction&, const TSharedRef<FBaseAttackModel>&, int32)> FAttackInterceptorFunc;
     typedef std::function<TSharedRef<FBaseRestorerModel>(
-        IPassiveActionInterceptor&, ISingleAction&, const TSharedRef<FBaseRestorerModel>&, int32)> FRestorerInterceptorFunc;
+        IPassiveActionInterceptor&, const ISingleAction&, const TSharedRef<FBaseRestorerModel>&, int32)> FRestorerInterceptorFunc;
 
     DECLARE_EVENT_FourParams(IPassiveActionInterceptor, FOnAttackActionFinishedEvent, const IPassiveActionInterceptor&,
         const ISingleAction&, const FBaseAttackModel&, int32)

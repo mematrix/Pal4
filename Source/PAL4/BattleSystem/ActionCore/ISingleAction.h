@@ -31,9 +31,14 @@ public:
     virtual void AfterDoAttack() { }
 
     // 计算伤害值（不考虑人物状态，只考虑当前属性。例如忽略镜的反弹效果）
-    virtual TSharedRef<FBaseAttackModel> ComputeAttackResult(ICharacterBattleDelegate&, int32) = 0;
-    virtual TSharedRef<FBaseRestorerModel> ComputeRestorerResult(ICharacterBattleDelegate&, int32) = 0;
-    virtual TSharedRef<FBaseStatusModel> ComputeStatusResutl(ICharacterBattleDelegate&, int32) = 0;
+    virtual TSharedRef<FBaseAttackModel> ComputeAttackResult(const ICharacterBattleDelegate&, int32) const = 0;
+    virtual TSharedRef<FBaseRestorerModel> ComputeRestorerResult(const ICharacterBattleDelegate&, int32) const = 0;
+    virtual TSharedRef<FBaseStatusModel> ComputeStatusResutl(const ICharacterBattleDelegate&, int32) const = 0;
+
+    // 自定义的回调函数。与int32类型的type值有关，当type值没有对应默认处理函数时，将会调用自定义方法
+    virtual void CustomApplyAttackResult(ICharacterBattleDelegate&, const FBaseAttackModel&, int32) const { }
+    virtual void CustomApplyRestorerResult(ICharacterBattleDelegate&, const FBaseRestorerModel&, int32) const { }
+    virtual void CustomApplyStatusResult(ICharacterBattleDelegate&, const FBaseStatusModel&, int32) const { }
 
 protected:
     TSharedRef<ICharacterBattleDelegate> Attacker;
