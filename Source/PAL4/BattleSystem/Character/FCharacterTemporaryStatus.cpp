@@ -6,9 +6,11 @@
 #include "FCharacterTemporaryStatus.h"
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterPersistentStatus& status) :
-    ICharacterTemporaryStatus(),
+    OnPropertyChangedEvent(),
+    OnBattleStatusChangedEvent(),
     InfoModel{0},
     PersistentStatus(status),
+    BattleStatus(),
     BaseInfoAccessor(status.GetBaseAccessor()),
     PersistentInfoAccessor(status.GetPersistentAccessor()),
     TemporaryInfoAccessor(InfoModel),
@@ -17,10 +19,12 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterPersistentStatus&
     PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
 }
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) : 
-    ICharacterTemporaryStatus(MoveTemp(other)),
+FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) :
+    OnPropertyChangedEvent(MoveTemp(other.OnPropertyChangedEvent)),
+    OnBattleStatusChangedEvent(MoveTemp(other.OnBattleStatusChangedEvent)),
     InfoModel(MoveTemp(other.InfoModel)),
     PersistentStatus(other.PersistentStatus),
+    BattleStatus(other.BattleStatus),
     BaseInfoAccessor(MoveTemp(other.BaseInfoAccessor)),
     PersistentInfoAccessor(MoveTemp(other.PersistentInfoAccessor)),
     TemporaryInfoAccessor(MoveTemp(other.TemporaryInfoAccessor)),
@@ -33,6 +37,21 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &
 FCharacterTemporaryStatus::~FCharacterTemporaryStatus()
 {
     PersistentStatus.OnPropertyChanged().RemoveAll(this);
+}
+
+void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus status)
+{
+    if (status == ECharacterBattleStatus::Property || status > ECharacterBattleStatus::ControlledDebuff)
+    {
+        return;
+    }
+
+    InvokeEvent(OnBattleStatusChangedEvent, *this, status);
+}
+
+void FCharacterTemporaryStatus::OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType type) const
+{
+    UpdatePropertyValue(type);
 }
 
 void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type) const
@@ -79,20 +98,5 @@ void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterStatusTyp
 {
     _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     Transformer.RemoveTransformer(key, type);
-    UpdatePropertyValue(type);
-}
-
-void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus status)
-{
-    if (status == ECharacterBattleStatus::Property || status > ECharacterBattleStatus::ControlledDebuff)
-    {
-        return;
-    }
-
-    InvokeEvent(OnBattleStatusChangedEvent, *this, status);
-}
-
-void FCharacterTemporaryStatus::OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType type) const
-{
     UpdatePropertyValue(type);
 }

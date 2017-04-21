@@ -1,11 +1,14 @@
 #pragma once
 
 #include <Platform.h>
+#include <Delegate.h>
 
 #include "Core/ValueTransformer.h"
 
 #include "CharacterPrimitives/FCharacterPersistentStatus.h"
-#include "../CharacterBridge/ICharacterTemporaryStatus.h"
+#include "CharacterPrimitives/Model/ECharacterStatusType.h"
+#include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
+#include "CharacterPrimitives/Model/FCharacterBattleStatus.h"
 
 template ValueTransformer<void*, ECharacterStatusType, int32, int32, int32>;
 typedef ValueTransformer<void*, ECharacterStatusType, int32, int32, int32> FTemporaryTransformer;
@@ -14,10 +17,21 @@ typedef ValueTransformer<void*, ECharacterStatusType, int32, int32, int32> FTemp
 /**
  * 用于存储临时的状态信息，比如战斗中使用技能、仙术等附加的Buff
  */
-class PAL4_API FCharacterTemporaryStatus : public ICharacterTemporaryStatus
+class PAL4_API FCharacterTemporaryStatus
 {
 public:
     typedef std::function<int32(void*, ECharacterStatusType, int32, int32)> FTransformAction;
+
+    /**
+     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterStatusType::PropertyEnd\endcode，
+     * 则说明有多个属性发生了变化。
+     */
+    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnPropertyChangedEvent, const FCharacterTemporaryStatus&, ECharacterStatusType)
+    DECLARE_EVENT_TwoParams(FCharacterTemporaryStatus, FOnBattleStatusChangedEvent, const FCharacterTemporaryStatus&, ECharacterBattleStatus)
+
+private:
+    FOnPropertyChangedEvent OnPropertyChangedEvent;
+    FOnBattleStatusChangedEvent OnBattleStatusChangedEvent;
 
 public:
     explicit FCharacterTemporaryStatus(FCharacterPersistentStatus&);
@@ -29,9 +43,13 @@ public:
     FCharacterTemporaryStatus& operator=(const FCharacterTemporaryStatus&) = delete;
     FCharacterTemporaryStatus& operator=(FCharacterTemporaryStatus&&) = default;
 
+    FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
+    FOnBattleStatusChangedEvent& OnBattleStatusChanged() { return OnBattleStatusChangedEvent; }
 
-    int32 GetPropertyValue(ECharacterStatusType type) const override { return TemporaryInfoAccessor.GetPropertyValue(type); }
-    const FCharacterStatusInfo& GetAccumulatedInfo() const override { return InfoModel; }
+    const FCharacterBattleStatus& GetBattleStatus() const { return BattleStatus; }
+
+    int32 GetPropertyValue(ECharacterStatusType type) const { return TemporaryInfoAccessor.GetPropertyValue(type); }
+    const FCharacterStatusInfo& GetAccumulatedInfo() const { return InfoModel; }
 
     void UpdatePropertyValue(ECharacterStatusType type) const;
     void UpdateAllProperties() const;
@@ -40,7 +58,11 @@ public:
 
     void RemoveTransformer(void* key, ECharacterStatusType type);
 
+private:
+    void NotifyBattleStatusChanged(ECharacterBattleStatus);
+    void OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType) const;
 
+public:
     void SetCommonBuffStatus(ECommonBuff value)
     {
         BattleStatus.CommonBuff = value;
@@ -72,12 +94,10 @@ public:
     }
 
 private:
-    void NotifyBattleStatusChanged(ECharacterBattleStatus);
-    void OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType) const;
-
-private:
     FCharacterStatusInfo InfoModel;
     FCharacterPersistentStatus& PersistentStatus;
+
+    FCharacterBattleStatus BattleStatus;
 
     FStatusInfoAccessHelper BaseInfoAccessor;
     FStatusInfoAccessHelper PersistentInfoAccessor;
