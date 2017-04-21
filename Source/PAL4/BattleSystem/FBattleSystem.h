@@ -65,19 +65,19 @@ private:
      * 应用攻击性动作结果。
      * 参数含义同@code FBattleSystem::DoAttackAction \endcode
      */
-    void ApplyAttackResult(const ISingleAction&, ICharacterBattleDelegate&, const FBaseAttackModel&, int32);
+    void ApplyAttackResult(const ISingleAction&, FBattleCharacter&, const FBaseAttackModel&, int32);
 
     /**
      * 应用恢复性动作结果。
      * 参数含义同@code FBattleSystem::DoRestorerAction \endcode
      */
-    void ApplyRestorerResult(const ISingleAction&, ICharacterBattleDelegate&, const FBaseRestorerModel&, int32);
+    void ApplyRestorerResult(const ISingleAction&, FBattleCharacter&, const FBaseRestorerModel&, int32);
 
     /**
      * 应用状态性动作结果。
      * 参数含义同@code FBattleSystem::DoStatusAction \endcode
      */
-    void ApplyStatusResult(const ISingleAction&, ICharacterBattleDelegate&, const FBaseStatusModel&, int32);
+    void ApplyStatusResult(const ISingleAction&, FBattleCharacter&, const FBaseStatusModel&, int32);
 
 public:
     /**
@@ -124,7 +124,7 @@ private:
     int32 StatAliveStatus() const;
 
 public:
-    TSharedRef<FBattleCharacter>* FindCharacter(const ICharacterBattleDelegate*);
+    bool IsCharacterExist(const ICharacterBattleDelegate&);
 
     bool BattleIsOver() const;
     /**

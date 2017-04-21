@@ -2,13 +2,13 @@
 
 #include <SharedPointer.h>
 
+#include "../CharacterBridge/ICharacterBattleContext.h"
 #include "../CharacterBridge/ICharacterBattleDelegate.h"
-#include "FCharacterTemporaryStatus.h"
 #include "FCharacterRoundManager.h"
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"
 
-class PAL4_API FBattleCharacter
+class PAL4_API FBattleCharacter : ICharacterBattleContext
 {
 public:
     explicit FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>&);
@@ -18,14 +18,13 @@ public:
 
     ICharacterBattleDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
 
-    ICharacterPropertyManager& GetPropertyManager() { return CharacterDelegate->GetPropertyManager(); }
+    ICharacterPropertyManager& GetPropertyManager() const { return CharacterDelegate->GetPropertyManager(); }
 
-    FPassiveActionInterceptor& GetActionInterceptor() { return ActionInterceptor; }
+    FPassiveActionInterceptor& GetActionInterceptor() override { return ActionInterceptor; }
 
-    FCharacterTemporaryStatus& GetTemporaryStatus() { return TemporaryStatus; }
-    const FCharacterTemporaryStatus& GetTemporaryStatus() const { return TemporaryStatus; }
+    FCharacterTempStatusManager& GetTempStatusAccessor() override { return TempStatusManager; }
 
-    FCharacterRoundManager& GetRoundManager() { return RoundManager; }
+    FCharacterRoundManager& GetRoundManager() override { return RoundManager; }
     const FCharacterRoundManager& GetRoundManager() const { return RoundManager; }
 
     FCharacterTempStatusManager& GetTempStatusManager() { return TempStatusManager; }
@@ -36,7 +35,6 @@ public:
 
 private:
     TSharedRef<ICharacterBattleDelegate> CharacterDelegate;
-    FCharacterTemporaryStatus TemporaryStatus;
     FCharacterRoundManager RoundManager;
     FCharacterTempStatusManager TempStatusManager;
     FPassiveActionInterceptor ActionInterceptor;

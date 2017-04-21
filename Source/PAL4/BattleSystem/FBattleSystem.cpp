@@ -84,16 +84,9 @@ void FBattleSystem::Run()
     InvokeEvent(BattleFinishedEvent, *this);
 }
 
-void FBattleSystem::ApplyAttackResult(const ISingleAction& action, ICharacterBattleDelegate& character,
+void FBattleSystem::ApplyAttackResult(const ISingleAction& action, FBattleCharacter& character,
     const FBaseAttackModel& model, int32 type)
 {
-    auto battleCharacter = FindCharacter(&character);
-    if (!battleCharacter)
-    {
-        _ASSERT(0);
-        return;
-    }
-
     if (static_cast<uint32>(type) <= 3)
     {
         auto& propertyManager = character.GetPropertyManager();
@@ -101,23 +94,16 @@ void FBattleSystem::ApplyAttackResult(const ISingleAction& action, ICharacterBat
     }
     else
     {
-        action.CustomApplyAttackResult(character, model, type);
+        action.CustomApplyAttackResult(character.GetCharacterDelegate(), model, type);
     }
 
-    //model.Releaser->OnAttackActionFinished(model);
-    (*battleCharacter)->GetActionInterceptor().AfterAttackAction(action, model, type);
+    action.GetActor()->OnAttackActionFinished(action, character.GetCharacterDelegate(), model, type);
+    character.GetActionInterceptor().AfterAttackAction(action, model, type);
 }
 
-void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, ICharacterBattleDelegate& character,
+void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, FBattleCharacter& character,
     const FBaseRestorerModel& model, int32 type)
 {
-    auto battleCharacter = FindCharacter(&character);
-    if (!battleCharacter)
-    {
-        _ASSERT(0);
-        return;
-    }
-
     if (0 == type)
     {
         auto& manager = character.GetPropertyManager();
@@ -126,61 +112,91 @@ void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, ICharacterB
     }
     else
     {
-        action.CustomApplyRestorerResult(character, model, type);
+        action.CustomApplyRestorerResult(character.GetCharacterDelegate(), model, type);
     }
 
-    //model.Releaser->OnRestorerActionFinished(model);
-    (*battleCharacter)->GetActionInterceptor().AfterRestorerAction(action, model, type);
+    action.GetActor()->OnRestorerActionFinished(action, character.GetCharacterDelegate(), model, type);
+    character.GetActionInterceptor().AfterRestorerAction(action, model, type);
 }
 
-void FBattleSystem::ApplyStatusResult(const ISingleAction& action, ICharacterBattleDelegate& character,
+void FBattleSystem::ApplyStatusResult(const ISingleAction& action, FBattleCharacter& character,
     const FBaseStatusModel& model, int32 type)
 {
-    auto battleCharacter = FindCharacter(&character);
-    if (!battleCharacter)
-    {
-        _ASSERT(0);
-        return;
-    }
-
     if (0 == type)
     {
-        auto& manager = (*battleCharacter)->GetTempStatusManager();
+        auto& manager = character.GetTempStatusManager();
         manager.AddTemporaryStatus(model.StatusType, model.TempStatusOpWrapper);
     }
     else
     {
-        action.CustomApplyStatusResult(character, model, type);
+        action.CustomApplyStatusResult(character.GetCharacterDelegate(), model, type);
     }
 
-    //model.Releaser->OnStatusActionFinished(model);
-    (*battleCharacter)->GetActionInterceptor().AfterStatusAction(action, model, type);
+    action.GetActor()->OnStatusActionFinished(action, character.GetCharacterDelegate(), model, type);
+    character.GetActionInterceptor().AfterStatusAction(action, model, type);
 }
 
 void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb)
 {
+    _ASSERT(IsCharacterExist(character));
 
+    auto battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto model = battleCharacter.GetActionInterceptor().AfterComputeAttackResult(action, action.ComputeAttackResult(character, type), type);
+
+    if (cb)
+    {
+        cb(action, character, model.Get(), type);
+    }
+
+    ApplyAttackResult(action, battleCharacter, model.Get(), type);
 }
 
 void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb)
 {
+    _ASSERT(IsCharacterExist(character));
+
+    auto battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto model = battleCharacter.GetActionInterceptor().AfterComputeRestorerResult(action, action.ComputeRestorerResult(character, type), type);
+
+    if (cb)
+    {
+        cb(action, character, model.Get(), type);
+    }
+
+    ApplyRestorerResult(action, battleCharacter, model.Get(), type);
 }
 
 void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb)
 {
+    _ASSERT(IsCharacterExist(character));
+
+    auto battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto model = battleCharacter.GetActionInterceptor().AfterComputeStatusResult(action, action.ComputeStatusResult(character, type), type);
+
+    if (cb)
+    {
+        cb(action, character, model.Get(), type);
+    }
+
+    ApplyStatusResult(action, battleCharacter, model.Get(), type);
 }
 
-TSharedRef<FBattleCharacter>* FBattleSystem::FindCharacter(const ICharacterBattleDelegate* del)
+bool FBattleSystem::IsCharacterExist(const ICharacterBattleDelegate& characterDelegate)
 {
+    if (!characterDelegate.GetContext())
+    {
+        return false;
+    }
+
     for (auto& character : Characters)
     {
-        if (del == &character->GetCharacterDelegate())
+        if (characterDelegate.GetContext() == character.operator->())
         {
-            return &character;
+            return true;
         }
     }
 
-    return nullptr;
+    return false;
 }
 
 int32 FBattleSystem::StatAliveStatus() const

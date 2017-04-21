@@ -5,19 +5,20 @@
 #include "FBattleCharacter.h"
 
 FBattleCharacter::FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>& character) :
+    ICharacterBattleContext(),
     CharacterDelegate(character),
-    TemporaryStatus(character->GetPersistentStatus()),
     RoundManager(character->GetRoundAction()),
-    TempStatusManager(*this)
+    TempStatusManager(character.Get()),
+    ActionInterceptor(character.Get())
 {
 }
 
 void FBattleCharacter::OnBattleBegin()
 {
-    CharacterDelegate->OnBattleBegin(RoundManager, TemporaryStatus);
+    CharacterDelegate->BeginBattle(*this);
 }
 
 void FBattleCharacter::OnBattleFinished()
 {
-    CharacterDelegate->OnBattleFinished();
+    CharacterDelegate->FinishBattle();
 }
