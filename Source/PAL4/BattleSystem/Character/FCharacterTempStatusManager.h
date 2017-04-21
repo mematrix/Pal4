@@ -3,34 +3,54 @@
 #include <Map.h>
 #include <SharedPointer.h>
 
-#include "ITempStatusOpWrapper.h"
-#include "FCharacterTempStatusFacade.h"
-#include "CharacterPrimitives/Model/ECharacterStatusType.h"
+#include "../CharacterBridge/ICharacterTempStatusAccessor.h"
+#include "../StatusOpWrapper/ICharacterTempStatusOperator.h"
+#include "FCharacterTemporaryStatus.h"
 
 class FBattleCharacter;
 class ICharacterBattleDelegate;
 class ICharacterRoundManager;
 
 
-class PAL4_API FCharacterTempStatusManager
+class PAL4_API FCharacterTempStatusManager : public ICharacterTempStatusAccessor, public ICharacterTempStatusOperator
 {
 public:
-    explicit FCharacterTempStatusManager(FBattleCharacter&);
+    explicit FCharacterTempStatusManager(ICharacterBattleDelegate&);
 
-    FCharacterTempStatusFacade& GetTempStatusFacade() { return TempStatusFacade; }
-    const FCharacterTempStatusFacade& GetTempStatusFacade() const { return TempStatusFacade; }
+    MAKE_DEFAULT_COPY_MOVE_CTOR_AND_OP(FCharacterTempStatusManager)
 
-    inline ICharacterBattleDelegate& GetCharacter();
-    inline const ICharacterBattleDelegate& GetCharacter() const;
+    ICharacterBattleDelegate& GetCharacter() { return Character; }
+    const ICharacterBattleDelegate& GetCharacter() const { return Character; }
 
-    inline ICharacterRoundManager& GetRoundManager();
+    ICharacterRoundManager& GetRoundManager() override;
     inline const ICharacterRoundManager& GetRoundManager() const;
 
-    void AddTemporaryStatus(ECharacterStatusType, const TSharedRef<ITempStatusOpWrapper>&);
-    void RemoveTemporaryStatus(ECharacterStatusType, ITempStatusOpWrapper&);
+    void AddTemporaryStatus(ECharacterStatusType, const TSharedRef<ITempStatusOpWrapper>&) override;
+
+    void RemoveTemporaryStatus(ECharacterStatusType, ITempStatusOpWrapper&) override;
+
+    void AddTransformer(void*, ECharacterStatusType, const FTransformAction&) override;
+
+    void RemoveTransformer(void* key, ECharacterStatusType type) override;
+
+    void SetCommonBuffStatus(ECommonBuff value) override;
+
+    void SetPoisonStatus(EPoison value) override;
+
+    void SetControlledDebuffStatus(EControlledDebuff value) override;
+
+    void SetInVisibleStatus(bool value) override;
+
+    void SetReviveStatus(bool value) override;
+
+    const FCharacterBattleStatus& GetBattleStatus() const override;
+
+    int32 GetPropertyValue(ECharacterStatusType type) const override;
+
+    const FCharacterStatusInfo& GetAccumulatedInfo() const override;
 
 private:
-    FBattleCharacter& Character;
-    FCharacterTempStatusFacade TempStatusFacade;
+    ICharacterBattleDelegate& Character;
+    FCharacterTemporaryStatus TempStatus;
     TMap<int32, TSharedRef<ITempStatusOpWrapper>> StatusMap;
 };
