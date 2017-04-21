@@ -41,6 +41,6 @@ FActiveActionBroker::FActiveActionBroker() :
     PassiveCharacter(nullptr),
     AttackComDelegate(&ISingleAction::ComputeAttackResult, nullptr, std::bind(CallAttackAfter, this, _1, _2, _3, _4)),
     RestorerComDelegate(&ISingleAction::ComputeRestorerResult, nullptr, std::bind(CallRestorerAfter, this, _1, _2, _3, _4)),
-    StatusComDelegate(&ISingleAction::ComputeStatusResutl, nullptr, std::bind(CallStatusAfter, this, _1, _2, _3, _4))
+    StatusComDelegate(&ISingleAction::ComputeStatusResult, nullptr, std::bind(CallStatusAfter, this, _1, _2, _3, _4))
 {
 }
