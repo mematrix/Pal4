@@ -21,7 +21,7 @@ public:
 
     uint32 GetSpeedValue() const
     {
-        return static_cast<uint32>(Character.GetTemporaryStatus().GetAccumulatedInfo().SpeedPoint);
+        return static_cast<uint32>(Character.GetTempStatusManager().GetAccumulatedInfo().SpeedPoint);
     }
 
     bool IsAlive() const

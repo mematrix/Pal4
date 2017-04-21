@@ -8,7 +8,7 @@
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"
 
-class PAL4_API FBattleCharacter : ICharacterBattleContext
+class PAL4_API FBattleCharacter : public ICharacterBattleContext
 {
 public:
     explicit FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>&);

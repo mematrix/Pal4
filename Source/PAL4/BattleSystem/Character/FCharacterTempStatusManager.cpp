@@ -4,11 +4,13 @@
 
 #include "FCharacterTempStatusManager.h"
 #include "../CharacterBridge/ICharacterBattleDelegate.h"
-#include "../CharacterBridge/FCharacterBattleContext.h"
+#include "../CharacterBridge/ICharacterBattleContext.h"
 #include "../StatusOpWrapper/ITempStatusOpWrapper.h"
 
 
 FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterBattleDelegate& character) :
+    ICharacterTempStatusAccessor(),
+    ICharacterTempStatusOperator(),
     Character(character),
     TempStatus(character.GetPersistentStatus()),
     StatusMap()
@@ -18,13 +20,13 @@ FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterBattleDelegat
 ICharacterRoundManager& FCharacterTempStatusManager::GetRoundManager()
 {
     _ASSERT(Character.GetContext());
-    return Character.GetContext()->RoundManager;
+    return Character.GetContext()->GetRoundManager();
 }
 
 const ICharacterRoundManager& FCharacterTempStatusManager::GetRoundManager() const
 {
     _ASSERT(Character.GetContext());
-    return Character.GetContext()->RoundManager;
+    return Character.GetContext()->GetRoundManager();
 }
 
 void FCharacterTempStatusManager::AddTemporaryStatus(ECharacterStatusType type, const TSharedRef<ITempStatusOpWrapper>& wrapper)

@@ -8,7 +8,7 @@
 /**
  * 
  */
-class PAL4_API FCharacterPropertyManager : ICharacterPropertyManager
+class PAL4_API FCharacterPropertyManager : public ICharacterPropertyManager
 {
 public:
     explicit FCharacterPropertyManager(FCharacterBasicInfo&);

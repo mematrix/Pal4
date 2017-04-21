@@ -140,7 +140,7 @@ void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattle
 {
     _ASSERT(IsCharacterExist(character));
 
-    auto battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto& battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
     auto model = battleCharacter.GetActionInterceptor().AfterComputeAttackResult(action, action.ComputeAttackResult(character, type), type);
 
     if (cb)
@@ -155,7 +155,7 @@ void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBatt
 {
     _ASSERT(IsCharacterExist(character));
 
-    auto battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto& battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
     auto model = battleCharacter.GetActionInterceptor().AfterComputeRestorerResult(action, action.ComputeRestorerResult(character, type), type);
 
     if (cb)
@@ -170,7 +170,7 @@ void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattle
 {
     _ASSERT(IsCharacterExist(character));
 
-    auto battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto& battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
     auto model = battleCharacter.GetActionInterceptor().AfterComputeStatusResult(action, action.ComputeStatusResult(character, type), type);
 
     if (cb)

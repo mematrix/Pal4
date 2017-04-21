@@ -25,7 +25,7 @@ public:
     virtual ~ICharacterPropertyManager() { }
 
     ICharacterPropertyManager& operator=(const ICharacterPropertyManager&) = default;
-    ICharacterPropertyManager& operator=(ICharacterPropertyManager&) = default;
+    ICharacterPropertyManager& operator=(ICharacterPropertyManager&&) = default;
 
     FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
     FOnCharacterDeadEvent& OnCharacterDead() { return OnCharacterDeadEvent; }
