@@ -33,6 +33,8 @@ public:
 
     int32 AddCraftValue(int32) override;
 
+    int32 GetMagicPoint(EMagicCategory category) override { return BasicInfo.MagicPoints[static_cast<int32>(category)]; }
+
 private:
     FCharacterBasicInfo& BasicInfo;
 };

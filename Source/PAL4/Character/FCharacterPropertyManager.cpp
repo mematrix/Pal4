@@ -7,6 +7,7 @@
 
 
 FCharacterPropertyManager::FCharacterPropertyManager(FCharacterBasicInfo& info) :
+    ICharacterPropertyManager(),
     BasicInfo(info)
 {
 }

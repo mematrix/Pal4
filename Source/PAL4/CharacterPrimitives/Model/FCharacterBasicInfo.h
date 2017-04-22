@@ -27,4 +27,7 @@ struct PAL4_API FCharacterBasicInfo
     int32 ManaPoint;
     // 气
     int32 CraftPoint;
+
+    // 五系仙术技能点
+    unsigned char MagicPoints[5];
 };

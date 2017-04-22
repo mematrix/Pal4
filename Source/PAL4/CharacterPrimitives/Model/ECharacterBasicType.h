@@ -8,3 +8,15 @@ enum class PAL4_API ECharacterBasicType
     Mana,
     Craft
 };
+
+/**
+ * 仙术分类。水火雷风土
+ */
+enum class PAL4_API EMagicCategory
+{
+    Water,
+    Fire,
+    Thunder,
+    Wind,
+    Soil
+};

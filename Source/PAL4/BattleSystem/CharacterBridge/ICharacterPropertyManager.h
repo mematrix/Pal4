@@ -72,5 +72,11 @@ public:
      * @return 实际增加或减少的气属性值
      */
     virtual int32 AddCraftValue(int32) = 0;
+
+    /**
+     * 获取指定类别的仙术属性点数
+     * @return 指定系仙术的属性点数
+     */
+    virtual int32 GetMagicPoint(EMagicCategory) = 0;
 };
 
