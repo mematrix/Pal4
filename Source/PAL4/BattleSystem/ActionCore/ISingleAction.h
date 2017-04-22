@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <SharedPointer.h>
 #include <Array.h>
 
@@ -14,8 +16,9 @@ class ICharacterBattleDelegate;
 class PAL4_API ISingleAction
 {
 public:
-    ISingleAction(const TSharedRef<ICharacterBattleDelegate>& actor,
-        const TSharedRef<TArray<TSharedRef<ICharacterBattleDelegate>>>& targets) :
+    typedef TSharedRef<TArray<std::reference_wrapper<ICharacterBattleDelegate>>> FTargetArray;
+
+    ISingleAction(ICharacterBattleDelegate& actor, const FTargetArray& targets) :
         Actor(actor),
         Targets(targets)
     {
@@ -26,11 +29,11 @@ public:
 
     virtual ~ISingleAction() = default;
 
-    const TSharedRef<ICharacterBattleDelegate>& GetActor() const { return Actor; }
+    ICharacterBattleDelegate& GetActor() const { return Actor; }
 
-    virtual void BeforeDoAttack() { }
-    virtual void DoAttack() = 0;
-    virtual void AfterDoAttack() { }
+    virtual void BeforeDoAction() { }
+    virtual void DoAction() = 0;
+    virtual void AfterDoAction() { }
 
     // 计算伤害值（不考虑人物状态，只考虑当前属性。例如忽略镜的反弹效果）
     virtual TSharedRef<FBaseAttackModel> ComputeAttackResult(const ICharacterBattleDelegate&, int32) const = 0;
@@ -42,7 +45,16 @@ public:
     virtual void CustomApplyRestorerResult(ICharacterBattleDelegate&, const FBaseRestorerModel&, int32) const { }
     virtual void CustomApplyStatusResult(ICharacterBattleDelegate&, const FBaseStatusModel&, int32) const { }
 
+    // 通知一次动作已经结束
+    void OnAttackFinished(const ICharacterBattleDelegate&, const FBaseAttackModel&, int32) const;
+    void OnRestorerFinished(const ICharacterBattleDelegate&, const FBaseRestorerModel&, int32) const;
+    void OnStatusFinished(const ICharacterBattleDelegate&, const FBaseStatusModel&, int32) const;
+
 protected:
-    TSharedRef<ICharacterBattleDelegate> Actor;
-    TSharedRef<TArray<TSharedRef<ICharacterBattleDelegate>>> Targets;
+    virtual void OnAttackFinishedOverride(const ICharacterBattleDelegate&, const FBaseAttackModel&, int32) const { }
+    virtual void OnRestorerFinishedOverride(const ICharacterBattleDelegate&, const FBaseRestorerModel&, int32) const { }
+    virtual void OnStatusFinishedOverride(const ICharacterBattleDelegate&, const FBaseStatusModel&, int32) const { }
+
+    ICharacterBattleDelegate& Actor;
+    FTargetArray Targets;
 };

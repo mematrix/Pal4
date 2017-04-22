@@ -19,11 +19,11 @@ void FRoundActionBaseHandler::OnAction()
     auto action = GetAttackAction();
 
     InvokeEvent(BeforeAttackEvent, *this, action.Get());
-    action->BeforeDoAttack();
+    action->BeforeDoAction();
 
     InvokeEvent(OnAttackEvent, *this, action.Get());
-    action->DoAttack();
+    action->DoAction();
 
-    action->AfterDoAttack();
+    action->AfterDoAction();
     InvokeEvent(AfterAttackEvent, *this, action.Get());
 }

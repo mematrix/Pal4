@@ -65,19 +65,19 @@ private:
      * 应用攻击性动作结果。
      * 参数含义同@code FBattleSystem::DoAttackAction \endcode
      */
-    void ApplyAttackResult(const ISingleAction&, FBattleCharacter&, const FBaseAttackModel&, int32);
+    static void ApplyAttackResult(const ISingleAction&, FBattleCharacter&, const FBaseAttackModel&, int32);
 
     /**
      * 应用恢复性动作结果。
      * 参数含义同@code FBattleSystem::DoRestorerAction \endcode
      */
-    void ApplyRestorerResult(const ISingleAction&, FBattleCharacter&, const FBaseRestorerModel&, int32);
+    static void ApplyRestorerResult(const ISingleAction&, FBattleCharacter&, const FBaseRestorerModel&, int32);
 
     /**
      * 应用状态性动作结果。
      * 参数含义同@code FBattleSystem::DoStatusAction \endcode
      */
-    void ApplyStatusResult(const ISingleAction&, FBattleCharacter&, const FBaseStatusModel&, int32);
+    static void ApplyStatusResult(const ISingleAction&, FBattleCharacter&, const FBaseStatusModel&, int32);
 
 public:
     /**
@@ -88,7 +88,7 @@ public:
      * @param type 攻击类型
      * @param cb 用于更新UI的回调函数
      */
-    void DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb);
+    void DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb) const;
 
     /**
      * 执行恢复性动作。类型0已有默认行为，传入其他值将回调@code ISingleAction::CustomApplyRestorerResult \endcode
@@ -98,7 +98,7 @@ public:
      * @param type 恢复类型
      * @param cb 用于更新UI的回调函数
      */
-    void DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb);
+    void DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb) const;
 
     /**
      * 执行状态性动作。类型0已经有默认行为，传入其它值将回调@code ISingleAction::CustomApplyStatusResult \endcode
@@ -108,7 +108,7 @@ public:
      * @param type 类型
      * @param cb 用于更新UI的回调函数
      */
-    void DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb);
+    void DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb) const;
 
 private:
     /**
@@ -124,7 +124,7 @@ private:
     int32 StatAliveStatus() const;
 
 public:
-    bool IsCharacterExist(const ICharacterBattleDelegate&);
+    bool IsCharacterExist(const ICharacterBattleDelegate&) const;
 
     bool BattleIsOver() const;
     /**

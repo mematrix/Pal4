@@ -97,7 +97,7 @@ void FBattleSystem::ApplyAttackResult(const ISingleAction& action, FBattleCharac
         action.CustomApplyAttackResult(character.GetCharacterDelegate(), model, type);
     }
 
-    action.GetActor()->OnAttackActionFinished(action, character.GetCharacterDelegate(), model, type);
+    action.OnAttackFinished(character.GetCharacterDelegate(), model, type);
     character.GetActionInterceptor().AfterAttackAction(action, model, type);
 }
 
@@ -115,7 +115,7 @@ void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, FBattleChar
         action.CustomApplyRestorerResult(character.GetCharacterDelegate(), model, type);
     }
 
-    action.GetActor()->OnRestorerActionFinished(action, character.GetCharacterDelegate(), model, type);
+    action.OnRestorerFinished(character.GetCharacterDelegate(), model, type);
     character.GetActionInterceptor().AfterRestorerAction(action, model, type);
 }
 
@@ -132,11 +132,11 @@ void FBattleSystem::ApplyStatusResult(const ISingleAction& action, FBattleCharac
         action.CustomApplyStatusResult(character.GetCharacterDelegate(), model, type);
     }
 
-    action.GetActor()->OnStatusActionFinished(action, character.GetCharacterDelegate(), model, type);
+    action.OnStatusFinished(character.GetCharacterDelegate(), model, type);
     character.GetActionInterceptor().AfterStatusAction(action, model, type);
 }
 
-void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb)
+void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
@@ -151,7 +151,7 @@ void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattle
     ApplyAttackResult(action, battleCharacter, model.Get(), type);
 }
 
-void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb)
+void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
@@ -166,7 +166,7 @@ void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBatt
     ApplyRestorerResult(action, battleCharacter, model.Get(), type);
 }
 
-void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb)
+void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
@@ -181,7 +181,7 @@ void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattle
     ApplyStatusResult(action, battleCharacter, model.Get(), type);
 }
 
-bool FBattleSystem::IsCharacterExist(const ICharacterBattleDelegate& characterDelegate)
+bool FBattleSystem::IsCharacterExist(const ICharacterBattleDelegate& characterDelegate) const
 {
     if (!characterDelegate.GetContext())
     {
