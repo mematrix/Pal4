@@ -109,7 +109,7 @@ public:
     /**
      * 执行回合动作。
      * @param shouldSkipAction 指示是否应该跳过当前角色的行动，例如角色处于定、眠状态，
-     * 将会跳过@code IRoundActionHandler::OnAction()\endcode 的执行，但是不会跳过其它方法
+     * 将会跳过@code IRoundActionHandler::DoAction()\endcode 的执行，但是不会跳过其它方法
      */
     void DoRoundAction(bool shouldSkipAction = false);
 

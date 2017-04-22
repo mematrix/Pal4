@@ -1,26 +1,22 @@
 #pragma once
 
-#include <functional>
-
 #include <SharedPointer.h>
-#include <Array.h>
 
 struct FBaseAttackModel;
 struct FBaseRestorerModel;
 struct FBaseStatusModel;
 class ICharacterBattleDelegate;
 
+
 /**
- * 攻击动作的基类。封装了每种攻击（普攻、仙术攻击、技能攻击、物品攻击等）的基本流程
+ * 单次动作的基类。封装了单次动作（伤害型、恢复型、辅助型）的基本数据
  */
 class PAL4_API ISingleAction
 {
 public:
-    typedef TSharedRef<TArray<std::reference_wrapper<ICharacterBattleDelegate>>> FTargetArray;
-
-    ISingleAction(ICharacterBattleDelegate& actor, const FTargetArray& targets) :
+    ISingleAction(ICharacterBattleDelegate& actor, ICharacterBattleDelegate& target) :
         Actor(actor),
-        Targets(targets)
+        Target(target)
     {
     }
 
@@ -31,9 +27,7 @@ public:
 
     ICharacterBattleDelegate& GetActor() const { return Actor; }
 
-    virtual void BeforeDoAction() { }
     virtual void DoAction() = 0;
-    virtual void AfterDoAction() { }
 
     // 计算伤害值（不考虑人物状态，只考虑当前属性。例如忽略镜的反弹效果）
     virtual TSharedRef<FBaseAttackModel> ComputeAttackResult(const ICharacterBattleDelegate&, int32) const = 0;
@@ -56,5 +50,5 @@ protected:
     virtual void OnStatusFinishedOverride(const ICharacterBattleDelegate&, const FBaseStatusModel&, int32) const { }
 
     ICharacterBattleDelegate& Actor;
-    FTargetArray Targets;
+    ICharacterBattleDelegate& Target;
 };

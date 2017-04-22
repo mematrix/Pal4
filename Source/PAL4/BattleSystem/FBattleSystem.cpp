@@ -73,6 +73,7 @@ void FBattleSystem::Run()
             InvokeEvent(CharacterWillActEvent, *this, character.GetCharacterDelegate());
 
             auto& roundManager = character.GetRoundManager();
+            // TODO: 需要判断是否跳过回合
             roundManager.DoRoundAction();
 
             InvokeEvent(CharacterFinishActEvent, *this, character.GetCharacterDelegate());

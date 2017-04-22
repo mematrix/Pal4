@@ -96,7 +96,7 @@ void FCharacterRoundManager::DoRoundAction(bool shouldSkipAction)
     RoundStatus = ECharacterRoundStatus::OnAction;
     if (!shouldSkipAction)
     {
-        RoundAction.OnAction();
+        RoundAction.DoAction();
     }
 
     RoundStatus = ECharacterRoundStatus::PostAction;

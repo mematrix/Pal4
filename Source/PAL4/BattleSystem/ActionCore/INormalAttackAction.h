@@ -6,35 +6,15 @@
 class PAL4_API INormalAttackAction : public ISingleAction
 {
 public:
-    INormalAttackAction(ICharacterBattleDelegate& actor, const FTargetArray& targets, int32 craftGrowth) :
-        ISingleAction(actor, targets),
+    INormalAttackAction(ICharacterBattleDelegate& actor, ICharacterBattleDelegate& target, int32 craftGrowth) :
+        ISingleAction(actor, target),
         CraftGrowthValue(craftGrowth)
     {
     }
 
-    void BeforeDoAction() override final
-    {
-        PrepareHelp();
-        PrepareAttack();
-    }
-
     void DoAction() override final;
 
-    void AfterDoAction() override final
-    {
-        FinishAttack();
-        FinishHelp();
-    }
-
 protected:
-    virtual void PrepareHelp() { }
-
-    virtual void FinishHelp() { }
-
-    virtual void PrepareAttack() = 0;
-
-    virtual void FinishAttack() = 0;
-
     virtual void DoCompleteAttack() = 0;
 
     virtual void UpdateUI(const ICharacterBattleDelegate&, const FBaseAttackModel&, int32) = 0;
