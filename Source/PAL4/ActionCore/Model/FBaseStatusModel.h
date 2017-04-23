@@ -4,7 +4,8 @@
 
 #include "Util/MacroUtil.h"
 #include "CharacterPrimitives/Model/ECharacterStatusType.h"
-#include "../StatusOpWrapper/ITempStatusOpWrapper.h"
+
+class ITempStatusOpWrapper;
 
 
 struct PAL4_API FBaseStatusModel
