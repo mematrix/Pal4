@@ -7,11 +7,11 @@
 #include "Util/EventUtil.h"
 
 #include "FBattleSystem.h"
-#include "CharacterBridge/ICharacterPropertyManager.h"
+#include "BattleDelegate/Character/ICharacterPropertyManager.h"
 #include "Character/FBattleCharacter.h"
-#include "ActionCore/FBaseAttackModel.h"
-#include "ActionCore/FBaseRestorerModel.h"
-#include "ActionCore/FBaseStatusModel.h"
+#include "ActionCore/Model/FBaseAttackModel.h"
+#include "ActionCore/Model/FBaseRestorerModel.h"
+#include "ActionCore/Model/FBaseStatusModel.h"
 #include "ActionCore/ISingleAction.h"
 
 

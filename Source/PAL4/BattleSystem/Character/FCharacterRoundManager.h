@@ -6,7 +6,7 @@
 #include <deque>
 
 #include "Core/PriorityQueue.h"
-#include "../CharacterBridge/ICharacterRoundManager.h"
+#include "BattleDelegate/Character/ICharacterRoundManager.h"
 
 class IRoundActionHandler;
 

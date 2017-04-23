@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BattleSystem/RoundDispatcher/ICharacterRoundDispatcher.h"
+#include "BattleDelegate/RoundDispatcher/ICharacterRoundDispatcher.h"
 #include "FCharacterRoundInfo.h"
 
 
@@ -14,11 +14,11 @@ public:
     FCharacterRoundDispatcher& operator=(const FCharacterRoundDispatcher&) = default;
     FCharacterRoundDispatcher& operator=(FCharacterRoundDispatcher&&) = default;
 
-    void OnBattleBegin(const TArray<TSharedRef<FBattleCharacter>>&) override;
+    void OnBattleBegin(const TArray<TSharedRef<ICharacterBattleDelegate>>&) override;
 
-    void AddCharacter(const TSharedRef<FBattleCharacter>&) override;
+    void AddCharacter(const TSharedRef<ICharacterBattleDelegate>&) override;
 
-    FBattleCharacter& MoveToNext() override;
+    ICharacterBattleDelegate& MoveToNext() override;
 
     void OnBattleFinished() override;
 

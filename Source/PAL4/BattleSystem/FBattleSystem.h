@@ -7,8 +7,8 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "CharacterBridge/ICharacterBattleDelegate.h"
-#include "RoundDispatcher/ICharacterRoundDispatcher.h"
+#include "BattleDelegate/Character/ICharacterBattleDelegate.h"
+#include "BattleDelegate/RoundDispatcher/ICharacterRoundDispatcher.h"
 
 class FBattleCharacter;
 class ISingleAction;

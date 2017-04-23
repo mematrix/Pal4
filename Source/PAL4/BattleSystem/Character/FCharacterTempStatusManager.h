@@ -3,13 +3,14 @@
 #include <Map.h>
 #include <SharedPointer.h>
 
-#include "../CharacterBridge/ICharacterTempStatusAccessor.h"
-#include "../StatusOpWrapper/ICharacterTempStatusOperator.h"
+#include "BattleDelegate/Character/ICharacterTempStatusAccessor.h"
+#include "BattleDelegate/StatusOpWrapper/ICharacterTempStatusOperator.h"
 #include "FCharacterTemporaryStatus.h"
 
 class FBattleCharacter;
 class ICharacterBattleDelegate;
 class ICharacterRoundManager;
+class ITempStatusOpWrapper;
 
 
 class PAL4_API FCharacterTempStatusManager : public ICharacterTempStatusAccessor, public ICharacterTempStatusOperator

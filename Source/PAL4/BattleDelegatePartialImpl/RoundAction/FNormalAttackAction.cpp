@@ -4,7 +4,6 @@
 
 #include "FNormalAttackAction.h"
 #include "BattleSystem/FBattleContext.h"
-#include "BattleSystem/FBattleSystem.h"
 
 
 FNormalAttackAction::FNormalAttackAction(ICharacterBattleDelegate& actor, const FTargetArray& targets, int32 count, int32 craftGrowth) :

@@ -4,7 +4,7 @@
 
 #include <SharedPointer.h>
 
-#include "BattleSystem/RoundAction/IRoundAction.h"
+#include "BattleDelegate/RoundAction/IRoundAction.h"
 
 class ICharacterBattleDelegate;
 

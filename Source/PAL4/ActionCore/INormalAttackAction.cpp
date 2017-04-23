@@ -3,7 +3,6 @@
 #include "PAL4.h"
 
 #include "INormalAttackAction.h"
-#include "BattleSystem/FBattleSystem.h"
 #include "BattleSystem/FBattleContext.h"
 #include "Exception/FMethodNotImplementedException.h"
 

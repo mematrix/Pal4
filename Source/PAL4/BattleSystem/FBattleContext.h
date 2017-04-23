@@ -1,6 +1,7 @@
 #pragma once
 
-class FBattleSystem;
+#include "FBattleSystem.h"
+
 
 /**
  * 提供对战斗时期的一些上下文内容的访问。例如@see FBattleSystem

@@ -1,6 +1,7 @@
 #pragma once
 
-class ICharacterTempStatusOperator;
+#include "ICharacterTempStatusOperator.h"
+
 
 class PAL4_API ITempStatusOpWrapper
 {

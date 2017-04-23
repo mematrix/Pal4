@@ -1,12 +1,16 @@
 #pragma once
 
-#include "BattleSystem/Character/FBattleCharacter.h"
-#include "BattleSystem/CharacterBridge/ICharacterPropertyManager.h"
+#include "BattleDelegate/Character/ICharacterBattleDelegate.h"
+#include "BattleDelegate/Character/ICharacterBattleContext.h"
+#include "BattleDelegate/Character/ICharacterTempStatusAccessor.h"
+#include "BattleDelegate/Character/ICharacterPropertyManager.h"
+#include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
+
 
 class PAL4_API FCharacterRoundInfo
 {
 public:
-    FCharacterRoundInfo(FBattleCharacter& character, int32 position) : 
+    FCharacterRoundInfo(ICharacterBattleDelegate& character, int32 position) :
         Character(character),
         CurrentPosition(position)
     {
@@ -16,25 +20,25 @@ public:
     void SetCurrentPosition(int32 value) { CurrentPosition = value; }
     void AddCurrentPosition(int32 value) { CurrentPosition += value; }
 
-    FBattleCharacter& GetCharacter() { return Character; }
-    const FBattleCharacter& GetCharacter() const { return Character; }
+    ICharacterBattleDelegate& GetCharacter() { return Character; }
+    const ICharacterBattleDelegate& GetCharacter() const { return Character; }
 
     uint32 GetSpeedValue() const
     {
-        return static_cast<uint32>(Character.GetTempStatusManager().GetAccumulatedInfo().SpeedPoint);
+        return static_cast<uint32>(Character.GetContext()->GetTempStatusAccessor().GetAccumulatedInfo().SpeedPoint);
     }
 
     bool IsAlive() const
     {
-        return Character.GetCharacterDelegate().GetPropertyManager().IsAlive();
+        return Character.GetPropertyManager().IsAlive();
     }
 
     int32 GetCharacterId() const
     {
-        return Character.GetCharacterDelegate().GetPropertyManager().GetId();
+        return Character.GetPropertyManager().GetId();
     }
 
 private:
-    FBattleCharacter& Character;
+    ICharacterBattleDelegate& Character;
     int32 CurrentPosition;
 };
