@@ -40,6 +40,8 @@ FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>&
     {
         Characters.Emplace(MakeShared<FBattleCharacter>(characters[i]));
     }
+
+    Dispatcher->Init(characters);
 }
 
 FBattleSystem::~FBattleSystem()
@@ -48,9 +50,8 @@ FBattleSystem::~FBattleSystem()
 
 void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& characterDelegate)
 {
-    auto character = MakeShared<FBattleCharacter>(characterDelegate);
-    Characters.Add(character);
-    Dispatcher->AddCharacter(character);
+    Characters.Add(MakeShared<FBattleCharacter>(characterDelegate));
+    Dispatcher->AddCharacter(characterDelegate);
 }
 
 void FBattleSystem::Run()
@@ -62,21 +63,21 @@ void FBattleSystem::Run()
 
     {
         RoundDispatcherRaii dispatcherRaii(Dispatcher.Get());
-        Dispatcher->OnBattleBegin(Characters);
+        Dispatcher->OnBattleBegin();
 
         FBattleCharacter* characterActLast = nullptr;
         while (!BattleIsOver())
         {
-            FBattleCharacter& character = Dispatcher->MoveToNext();
-            characterActLast = &character;
+            ICharacterBattleDelegate& character = Dispatcher->MoveToNext();
+            characterActLast = static_cast<FBattleCharacter*>(character.GetContext());
 
-            InvokeEvent(CharacterWillActEvent, *this, character.GetCharacterDelegate());
+            InvokeEvent(CharacterWillActEvent, *this, character);
 
-            auto& roundManager = character.GetRoundManager();
+            auto& roundManager = characterActLast->GetRoundManager();
             // TODO: 需要判断是否跳过回合
             roundManager.DoRoundAction();
 
-            InvokeEvent(CharacterFinishActEvent, *this, character.GetCharacterDelegate());
+            InvokeEvent(CharacterFinishActEvent, *this, character);
         }
 
         CharacterActLast = characterActLast;

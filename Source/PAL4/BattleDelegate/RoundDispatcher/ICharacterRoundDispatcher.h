@@ -12,7 +12,9 @@ public:
     {
     }
 
-    virtual void OnBattleBegin(const TArray<TSharedRef<ICharacterBattleDelegate>>&) = 0;
+    virtual void Init(const TArray<TSharedRef<ICharacterBattleDelegate>>&) = 0;
+
+    virtual void OnBattleBegin() = 0;
 
     virtual void AddCharacter(const TSharedRef<ICharacterBattleDelegate>&) = 0;
 

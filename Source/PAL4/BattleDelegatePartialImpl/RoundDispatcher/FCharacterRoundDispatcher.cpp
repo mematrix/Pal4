@@ -11,21 +11,21 @@ std::default_random_engine generator;
 std::uniform_int_distribution<int32> distribution(FCharacterRoundDispatcher::GetMinInitPosition(),
     FCharacterRoundDispatcher::GetMaxInitPosition());
 
-void FCharacterRoundDispatcher::OnBattleBegin(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters)
+void FCharacterRoundDispatcher::Init(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters)
 {
-    auto ondead = std::bind(&FCharacterRoundDispatcher::OnCharacterDead, this, std::placeholders::_1);
-    auto onrevive = std::bind(&FCharacterRoundDispatcher::OnCharacterRevive, this, std::placeholders::_1);
-
     auto count = characters.Num();
     for (int i = 0; i < count; ++i)
     {
         auto& character = characters[i];
         auto position = GetNextRandomNum();
         RoundInfoArray.Emplace(character.Get(), position);
-        character->SetOnDeadCallback(ondead);
-        character->SetOnReviveCallback(onrevive);
+        character->OnCharacterDead().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterDead);
+        character->OnCharacterRevive().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterRevive);
     }
+}
 
+void FCharacterRoundDispatcher::OnBattleBegin()
+{
     UpdateProgressView();
 }
 
@@ -33,8 +33,8 @@ void FCharacterRoundDispatcher::AddCharacter(const TSharedRef<ICharacterBattleDe
 {
     auto position = GetNextRandomNum();
     RoundInfoArray.Emplace(character.Get(), position);
-    character->SetOnDeadCallback(std::bind(&FCharacterRoundDispatcher::OnCharacterDead, this, std::placeholders::_1));
-    character->SetOnReviveCallback(std::bind(&FCharacterRoundDispatcher::OnCharacterRevive, this, std::placeholders::_1));
+    character->OnCharacterDead().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterDead);
+    character->OnCharacterRevive().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterRevive);
 
     if (character->GetPropertyManager().IsAlive())
     {
@@ -177,8 +177,8 @@ void FCharacterRoundDispatcher::OnBattleFinished()
     for (int i = 0; i < count; ++i)
     {
         auto& character = RoundInfoArray[i].GetCharacter();
-        character.SetOnDeadCallback(nullptr);
-        character.SetOnReviveCallback(nullptr);
+        character.OnCharacterDead().RemoveAll(this);
+        character.OnCharacterRevive().RemoveAll(this);
     }
 }
 

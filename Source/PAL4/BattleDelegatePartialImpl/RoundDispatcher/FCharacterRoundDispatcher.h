@@ -14,7 +14,9 @@ public:
     FCharacterRoundDispatcher& operator=(const FCharacterRoundDispatcher&) = default;
     FCharacterRoundDispatcher& operator=(FCharacterRoundDispatcher&&) = default;
 
-    void OnBattleBegin(const TArray<TSharedRef<ICharacterBattleDelegate>>&) override;
+    void Init(const TArray<TSharedRef<ICharacterBattleDelegate>>&) override;
+
+    void OnBattleBegin() override;
 
     void AddCharacter(const TSharedRef<ICharacterBattleDelegate>&) override;
 

@@ -2,8 +2,6 @@
 
 #include "FBaseAttackModel.h"
 
-class ICharacterBattleDelegate;
-
 
 /**
  * 普通攻击额外状态：暴击闪避格挡
@@ -18,7 +16,9 @@ enum class PAL4_API ENormalAttackExtroStatus
     // 格挡
     Block,
     // 免疫
-    Immune
+    Immune,
+    // 援助
+    Aid
 };
 
 /**
@@ -27,13 +27,12 @@ enum class PAL4_API ENormalAttackExtroStatus
 struct PAL4_API FNormalAttackModel : FBaseAttackModel
 {
     explicit FNormalAttackModel(int32 totalDamage = 0, int32 attackDamage = 0, int32 directDamage = 0, int32 elementalDamage = 0,
-        ENormalAttackExtroStatus status = ENormalAttackExtroStatus::None, ICharacterBattleDelegate* aid = nullptr) :
+        ENormalAttackExtroStatus status = ENormalAttackExtroStatus::None) :
         FBaseAttackModel(totalDamage),
         AttackDamageValue(attackDamage),
         DirectDamageValue(directDamage),
         ElementalDamageValue(elementalDamage),
-        ExtroStatus(status),
-        Aid(aid)
+        ExtroStatus(status)
     {
     }
     
@@ -49,6 +48,6 @@ struct PAL4_API FNormalAttackModel : FBaseAttackModel
     // 额外状态
     ENormalAttackExtroStatus ExtroStatus;
     // 援助者。nullptr表示无援助者，否则指向施展援助的对象（而不是被援助的对象）
-    ICharacterBattleDelegate* Aid;
+    // ICharacterBattleDelegate* Aid;
 };
 
