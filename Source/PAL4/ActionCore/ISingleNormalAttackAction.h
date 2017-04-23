@@ -3,10 +3,10 @@
 #include "ISingleAction.h"
 
 
-class PAL4_API INormalAttackAction : public ISingleAction
+class PAL4_API ISingleNormalAttackAction final : public ISingleAction
 {
 public:
-    INormalAttackAction(ICharacterBattleDelegate& actor, ICharacterBattleDelegate& target, int32 craftGrowth) :
+    ISingleNormalAttackAction(ICharacterBattleDelegate& actor, ICharacterBattleDelegate& target, int32 craftGrowth) :
         ISingleAction(actor, target),
         CraftGrowthValue(craftGrowth)
     {
