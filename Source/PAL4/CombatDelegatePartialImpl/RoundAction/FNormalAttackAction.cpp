@@ -6,7 +6,7 @@
 #include "CombatSystem/FCombatContext.h"
 
 
-FNormalAttackAction::FNormalAttackAction(ICharacterBattleDelegate& actor, const FTargetArray& targets, int32 count, int32 craftGrowth) :
+FNormalAttackAction::FNormalAttackAction(ICharacterCombatDelegate& actor, const FTargetArray& targets, int32 count, int32 craftGrowth) :
     Actor(actor),
     Targets(targets),
     Count(count),
@@ -29,9 +29,9 @@ void FNormalAttackAction::DoAction()
         ++attackCount;
         for (int32 i = 0; i < Count; ++i)
         {
-            for (ICharacterBattleDelegate& del : Targets.Get())
+            for (ICharacterCombatDelegate& del : Targets.Get())
             {
-                FBattleContext::GetBattleSystem()->DoAttackAction()
+                FCombatContext::GetBattleSystem()->DoAttackAction()
             }
         }
     }

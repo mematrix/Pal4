@@ -4,8 +4,8 @@
 
 #include "FCombatCharacter.h"
 
-FBattleCharacter::FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>& character) :
-    ICharacterBattleContext(),
+FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterCombatDelegate>& character) :
+    ICharacterCombatContext(),
     CharacterDelegate(character),
     RoundManager(character->GetRoundAction()),
     TempStatusManager(character.Get()),
@@ -13,12 +13,12 @@ FBattleCharacter::FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>& c
 {
 }
 
-void FBattleCharacter::OnBattleBegin()
+void FCombatCharacter::OnBattleBegin()
 {
     CharacterDelegate->BeginBattle(*this);
 }
 
-void FBattleCharacter::OnBattleFinished()
+void FCombatCharacter::OnBattleFinished()
 {
     CharacterDelegate->FinishBattle();
 }

@@ -6,7 +6,7 @@
 class PAL4_API ISingleNormalAttackAction final : public ISingleAction
 {
 public:
-    ISingleNormalAttackAction(ICharacterBattleDelegate& actor, ICharacterBattleDelegate& target, int32 craftGrowth) :
+    ISingleNormalAttackAction(ICharacterCombatDelegate& actor, ICharacterCombatDelegate& target, int32 craftGrowth) :
         ISingleAction(actor, target),
         CraftGrowthValue(craftGrowth)
     {
@@ -17,22 +17,22 @@ public:
 protected:
     virtual void DoCompleteAttack() = 0;
 
-    virtual void UpdateUI(const ICharacterBattleDelegate&, const FBaseAttackModel&, int32) = 0;
+    virtual void UpdateUI(const ICharacterCombatDelegate&, const FBaseAttackModel&, int32) = 0;
 
     /**
      * 是否应该继续攻击（连击）
      */
     virtual bool CanAttackAgain() { return false; }
 
-    void DoOneAttack(ICharacterBattleDelegate&) const;
+    void DoOneAttack(ICharacterCombatDelegate&) const;
 
 public:
-    TSharedRef<FBaseRestorerModel> ComputeRestorerResult(const ICharacterBattleDelegate&, int32) const override;
+    TSharedRef<FBaseRestorerModel> ComputeRestorerResult(const ICharacterCombatDelegate&, int32) const override;
 
-    TSharedRef<FBaseStatusModel> ComputeStatusResult(const ICharacterBattleDelegate&, int32) const override;
+    TSharedRef<FBaseStatusModel> ComputeStatusResult(const ICharacterCombatDelegate&, int32) const override;
 
 protected:
-    void OnAttackFinishedOverride(const ICharacterBattleDelegate&, const FBaseAttackModel&, int32) const override;
+    void OnAttackFinishedOverride(const ICharacterCombatDelegate&, const FBaseAttackModel&, int32) const override;
 
 private:
     // 每次攻击气增量

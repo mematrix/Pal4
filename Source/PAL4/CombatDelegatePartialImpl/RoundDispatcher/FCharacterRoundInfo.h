@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CombatDelegate/Character/ICharacterBattleDelegate.h"
-#include "CombatDelegate/Character/ICharacterBattleContext.h"
+#include "CombatDelegate/Character/ICharacterCombatDelegate.h"
+#include "CombatDelegate/Character/ICharacterCombatContext.h"
 #include "CombatDelegate/Character/ICharacterTempStatusAccessor.h"
 #include "CombatDelegate/Character/ICharacterPropertyManager.h"
 #include "CharacterPrimitives/Model/FCharacterStatusInfo.h"

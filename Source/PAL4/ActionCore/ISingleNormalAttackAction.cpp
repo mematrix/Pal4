@@ -15,22 +15,22 @@ void ISingleNormalAttackAction::DoAction()
     } while (CanAttackAgain());
 }
 
-void ISingleNormalAttackAction::DoOneAttack(ICharacterBattleDelegate& character) const
+void ISingleNormalAttackAction::DoOneAttack(ICharacterCombatDelegate& character) const
 {
-    FBattleContext::GetBattleSystem()->DoAttackAction(*this, character, 0, &ISingleNormalAttackAction::UpdateUI);
+    FCombatContext::GetBattleSystem()->DoAttackAction(*this, character, 0, &ISingleNormalAttackAction::UpdateUI);
 }
 
-TSharedRef<FBaseRestorerModel> ISingleNormalAttackAction::ComputeRestorerResult(const ICharacterBattleDelegate&, int32) const
+TSharedRef<FBaseRestorerModel> ISingleNormalAttackAction::ComputeRestorerResult(const ICharacterCombatDelegate&, int32) const
 {
     throw FMethodNotImplementedException("ISingleNormalAttackAction::ComputeRestorerResult not implemented");
 }
 
-TSharedRef<FBaseStatusModel> ISingleNormalAttackAction::ComputeStatusResult(const ICharacterBattleDelegate&, int32) const
+TSharedRef<FBaseStatusModel> ISingleNormalAttackAction::ComputeStatusResult(const ICharacterCombatDelegate&, int32) const
 {
     throw FMethodNotImplementedException("ISingleNormalAttackAction::ComputeStatusResult not implemented");
 }
 
-void ISingleNormalAttackAction::OnAttackFinishedOverride(const ICharacterBattleDelegate&, const FBaseAttackModel& model, int32 type) const
+void ISingleNormalAttackAction::OnAttackFinishedOverride(const ICharacterCombatDelegate&, const FBaseAttackModel& model, int32 type) const
 {
     //
 }

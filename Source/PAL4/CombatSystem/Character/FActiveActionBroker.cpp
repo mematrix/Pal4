@@ -5,7 +5,7 @@
 #include <utility>
 
 #include "../ActionCore/ISingleAction.h"
-#include "FBattleCharacter.h"
+#include "FCombatCharacter.h"
 #include "FActiveActionBroker.h"
 #include "FPassiveActionInterceptor.h"
 
@@ -14,25 +14,25 @@ using namespace std::placeholders;
 typedef void (FPassiveActionInterceptor::*CallBeforeInterceptor)(ISingleAction&, int32);
 
 void CallBefore(const FActiveActionBroker* broker, CallBeforeInterceptor call,
-    ISingleAction& action, ICharacterBattleDelegate&, int32 type)
+    ISingleAction& action, ICharacterCombatDelegate&, int32 type)
 {
     (broker->GetPassiveCharacter()->GetActionInterceptor().*call)(action, type);
 }
 
 TSharedRef<FBaseAttackModel> CallAttackAfter(const FActiveActionBroker* broker, const ISingleAction& action,
-    const TSharedRef<FBaseAttackModel>& ret, const ICharacterBattleDelegate&, int32 type)
+    const TSharedRef<FBaseAttackModel>& ret, const ICharacterCombatDelegate&, int32 type)
 {
     return broker->GetPassiveCharacter()->GetActionInterceptor().AfterComputeAttackResult(action, ret, type);
 }
 
 TSharedRef<FBaseRestorerModel> CallRestorerAfter(const FActiveActionBroker* broker, const ISingleAction& action,
-    const TSharedRef<FBaseRestorerModel>& ret, const ICharacterBattleDelegate&, int32 type)
+    const TSharedRef<FBaseRestorerModel>& ret, const ICharacterCombatDelegate&, int32 type)
 {
     return broker->GetPassiveCharacter()->GetActionInterceptor().AfterComputeRestorerResult(action, ret, type);
 }
 
 TSharedRef<FBaseStatusModel> CallStatusAfter(const FActiveActionBroker* broker, const ISingleAction& action,
-    const TSharedRef<FBaseStatusModel>& ret, const ICharacterBattleDelegate&, int32 type)
+    const TSharedRef<FBaseStatusModel>& ret, const ICharacterCombatDelegate&, int32 type)
 {
     return broker->GetPassiveCharacter()->GetActionInterceptor().AfterComputeStatusResult(action, ret, type);
 }

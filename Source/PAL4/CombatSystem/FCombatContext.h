@@ -4,20 +4,20 @@
 
 
 /**
- * 提供对战斗时期的一些上下文内容的访问。例如@see FBattleSystem
+ * 提供对战斗时期的一些上下文内容的访问。例如@see FCombatSystem
  */
-class PAL4_API FBattleContext
+class PAL4_API FCombatContext
 {
-    friend class FBattleSystem;
+    friend class FCombatSystem;
 
 public:
-    static const FBattleSystem* GetBattleSystem()
+    static const FCombatSystem* GetBattleSystem()
     {
         return BattleSystem;
     }
 
 private:
-    static void SetBattleSystem(const FBattleSystem* battleSystem)
+    static void SetBattleSystem(const FCombatSystem* battleSystem)
     {
         BattleSystem = battleSystem;
     }
@@ -26,5 +26,5 @@ private:
     /**
      * 当前@see FBattleSystem的实例
      */
-    static const FBattleSystem* BattleSystem;
+    static const FCombatSystem* BattleSystem;
 };

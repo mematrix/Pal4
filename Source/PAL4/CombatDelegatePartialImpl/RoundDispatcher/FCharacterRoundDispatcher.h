@@ -14,13 +14,13 @@ public:
     FCharacterRoundDispatcher& operator=(const FCharacterRoundDispatcher&) = default;
     FCharacterRoundDispatcher& operator=(FCharacterRoundDispatcher&&) = default;
 
-    void Init(const TArray<TSharedRef<ICharacterBattleDelegate>>&) override;
+    void Init(const TArray<TSharedRef<ICharacterCombatDelegate>>&) override;
 
     void OnBattleBegin() override;
 
-    void AddCharacter(const TSharedRef<ICharacterBattleDelegate>&) override;
+    void AddCharacter(const TSharedRef<ICharacterCombatDelegate>&) override;
 
-    ICharacterBattleDelegate& MoveToNext() override;
+    ICharacterCombatDelegate& MoveToNext() override;
 
     void OnBattleFinished() override;
 
@@ -30,8 +30,8 @@ private:
     // 刷新UI上的进度条。在角色数量发生变化（如加入新角色到战场、角色死亡或复活）时调用
     void UpdateProgressView();
 
-    void OnCharacterDead(const ICharacterBattleDelegate&);
-    void OnCharacterRevive(const ICharacterBattleDelegate&);
+    void OnCharacterDead(const ICharacterCombatDelegate&);
+    void OnCharacterRevive(const ICharacterCombatDelegate&);
 
 public:
     constexpr static int32 GetMinInitPosition() { return 10; }

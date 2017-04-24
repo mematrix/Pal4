@@ -5,7 +5,7 @@
 #include <Delegate.h>
 
 class ISingleAction;
-class ICharacterBattleDelegate;
+class ICharacterCombatDelegate;
 struct FBaseStatusModel;
 struct FBaseAttackModel;
 struct FBaseRestorerModel;
@@ -34,7 +34,7 @@ protected:
     FOnStatusActionFinishedEvent OnStatusActionFinishedEvent;
 
 public:
-    explicit IPassiveActionInterceptor(ICharacterBattleDelegate& character) :
+    explicit IPassiveActionInterceptor(ICharacterCombatDelegate& character) :
         Character(character)
     {
     }
@@ -50,12 +50,12 @@ public:
     FOnRestorerActionFinishedEvent& OnRestorerActionFinished() { return OnRestorerActionFinishedEvent; }
     FOnStatusActionFinishedEvent& OnStatusActionFinished() { return OnStatusActionFinishedEvent; }
 
-    ICharacterBattleDelegate& GetCharacter() const { return Character; }
+    ICharacterCombatDelegate& GetCharacter() const { return Character; }
 
     virtual FStatusInterceptorFunc SetStatusInterceptor(const FStatusInterceptorFunc&) = 0;
     virtual FAttackInterceptorFunc SetAttackInterceptor(const FAttackInterceptorFunc&) = 0;
     virtual FRestorerInterceptorFunc SetRestorerInterceptor(const FRestorerInterceptorFunc&) = 0;
 
 private:
-    ICharacterBattleDelegate& Character;
+    ICharacterCombatDelegate& Character;
 };

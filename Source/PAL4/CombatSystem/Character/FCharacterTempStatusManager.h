@@ -7,8 +7,8 @@
 #include "CombatDelegate/StatusOpWrapper/ICharacterTempStatusOperator.h"
 #include "FCharacterTemporaryStatus.h"
 
-class FBattleCharacter;
-class ICharacterBattleDelegate;
+class FCombatCharacter;
+class ICharacterCombatDelegate;
 class ICharacterRoundManager;
 class ITempStatusOpWrapper;
 
@@ -16,12 +16,12 @@ class ITempStatusOpWrapper;
 class PAL4_API FCharacterTempStatusManager : public ICharacterTempStatusAccessor, public ICharacterTempStatusOperator
 {
 public:
-    explicit FCharacterTempStatusManager(ICharacterBattleDelegate&);
+    explicit FCharacterTempStatusManager(ICharacterCombatDelegate&);
 
     MAKE_DEFAULT_COPY_MOVE_CTOR_AND_OP(FCharacterTempStatusManager)
 
-    ICharacterBattleDelegate& GetCharacter() { return Character; }
-    const ICharacterBattleDelegate& GetCharacter() const { return Character; }
+    ICharacterCombatDelegate& GetCharacter() { return Character; }
+    const ICharacterCombatDelegate& GetCharacter() const { return Character; }
 
     ICharacterRoundManager& GetRoundManager() override;
     inline const ICharacterRoundManager& GetRoundManager() const;
@@ -51,7 +51,7 @@ public:
     const FCharacterStatusInfo& GetAccumulatedInfo() const override;
 
 private:
-    ICharacterBattleDelegate& Character;
+    ICharacterCombatDelegate& Character;
     FCharacterTemporaryStatus TempStatus;
     TMap<int32, TSharedRef<ITempStatusOpWrapper>> StatusMap;
 };

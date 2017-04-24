@@ -4,4 +4,4 @@
 
 #include "FCombatContext.h"
 
-const FBattleSystem* FBattleContext::BattleSystem = nullptr;
+const FCombatSystem* FCombatContext::BattleSystem = nullptr;

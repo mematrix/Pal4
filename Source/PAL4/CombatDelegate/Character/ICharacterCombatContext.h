@@ -5,10 +5,10 @@ class ICharacterTempStatusAccessor;
 class IPassiveActionInterceptor;
 
 
-class PAL4_API ICharacterBattleContext
+class PAL4_API ICharacterCombatContext
 {
 public:
-    virtual ~ICharacterBattleContext()
+    virtual ~ICharacterCombatContext()
     {
     }
 

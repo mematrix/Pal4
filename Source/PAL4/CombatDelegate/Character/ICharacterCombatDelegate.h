@@ -12,19 +12,19 @@ class ISingleAction;
 class IRoundActionHandler;
 class ICharacterPropertyManager;
 class FCharacterPersistentStatus;
-class ICharacterBattleContext;
+class ICharacterCombatContext;
 
 
 /*
  * 人物战斗代理基类。作为一个代理，在战斗过程中，提供对人物属性的访问和设置接口；
  * 同时提供战斗过程中需要的信息和回调控制接口
  */
-class PAL4_API ICharacterBattleDelegate
+class PAL4_API ICharacterCombatDelegate
 {
 public:
-    DECLARE_EVENT_TwoParams(ICharacterBattleDelegate, FOnPropertyChangedEvent, const ICharacterBattleDelegate&, ECharacterBasicType)
-    DECLARE_EVENT_OneParam(ICharacterBattleDelegate, FOnCharacterDeadEvent, const ICharacterBattleDelegate&)
-    DECLARE_EVENT_OneParam(ICharacterBattleDelegate, FOnCharacterReviveEvent, const ICharacterBattleDelegate&)
+    DECLARE_EVENT_TwoParams(ICharacterCombatDelegate, FOnPropertyChangedEvent, const ICharacterCombatDelegate&, ECharacterBasicType)
+    DECLARE_EVENT_OneParam(ICharacterCombatDelegate, FOnCharacterDeadEvent, const ICharacterCombatDelegate&)
+    DECLARE_EVENT_OneParam(ICharacterCombatDelegate, FOnCharacterReviveEvent, const ICharacterCombatDelegate&)
 
 protected:
     FOnPropertyChangedEvent OnPropertyChangedEvent;
@@ -32,19 +32,19 @@ protected:
     FOnCharacterReviveEvent OnCharacterReviveEvent;
 
 public:
-    ICharacterBattleDelegate() : Context(nullptr)
+    ICharacterCombatDelegate() : Context(nullptr)
     {
     }
 
-    MAKE_DEFAULT_COPY_MOVE_CTOR_AND_OP(ICharacterBattleDelegate)
+    MAKE_DEFAULT_COPY_MOVE_CTOR_AND_OP(ICharacterCombatDelegate)
 
-    virtual ~ICharacterBattleDelegate() = default;
+    virtual ~ICharacterCombatDelegate() = default;
 
     FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
     FOnCharacterDeadEvent& OnCharacterDead() { return OnCharacterDeadEvent; }
     FOnCharacterReviveEvent& OnCharacterRevive() { return OnCharacterReviveEvent; }
 
-    void BeginBattle(ICharacterBattleContext& context)
+    void BeginBattle(ICharacterCombatContext& context)
     {
         _ASSERT(!Context);
         Context = &context;
@@ -57,7 +57,7 @@ public:
         Context = nullptr;
     }
 
-    ICharacterBattleContext* GetContext() const { return Context; }
+    ICharacterCombatContext* GetContext() const { return Context; }
 
     virtual ICharacterPropertyManager& GetPropertyManager() = 0;
 
@@ -65,11 +65,11 @@ public:
 
     virtual IRoundActionHandler& GetRoundAction() = 0;
 
-    virtual void OnAttackActionFinished(const ISingleAction&, const ICharacterBattleDelegate&, const FBaseAttackModel&, int32) = 0;
+    virtual void OnAttackActionFinished(const ISingleAction&, const ICharacterCombatDelegate&, const FBaseAttackModel&, int32) = 0;
 
-    virtual void OnRestorerActionFinished(const ISingleAction&, const ICharacterBattleDelegate&, const FBaseRestorerModel&, int32) = 0;
+    virtual void OnRestorerActionFinished(const ISingleAction&, const ICharacterCombatDelegate&, const FBaseRestorerModel&, int32) = 0;
 
-    virtual void OnStatusActionFinished(const ISingleAction&, const ICharacterBattleDelegate&, const FBaseStatusModel&, int32) = 0;
+    virtual void OnStatusActionFinished(const ISingleAction&, const ICharacterCombatDelegate&, const FBaseStatusModel&, int32) = 0;
 
     /**
      * 角色是否是由玩家控制的一方，true表示玩家一方，false表示敌方（即AI怪物）
@@ -125,5 +125,5 @@ protected:
     virtual void OnBattleFinished() = 0;
 
 private:
-    ICharacterBattleContext* Context;
+    ICharacterCombatContext* Context;
 };

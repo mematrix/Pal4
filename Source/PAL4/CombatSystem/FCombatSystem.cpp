@@ -25,7 +25,7 @@ public:
 };
 
 
-FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters,
+FCombatSystem::FCombatSystem(const TArray<TSharedRef<ICharacterCombatDelegate>>& characters,
     const TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
     BattleBeginEvent(),
     BattleFinishedEvent(),
@@ -38,23 +38,23 @@ FBattleSystem::FBattleSystem(const TArray<TSharedRef<ICharacterBattleDelegate>>&
     auto count = characters.Num();
     for (int i = 0; i < count; ++i)
     {
-        Characters.Emplace(MakeShared<FBattleCharacter>(characters[i]));
+        Characters.Emplace(MakeShared<FCombatCharacter>(characters[i]));
     }
 
     Dispatcher->Init(characters);
 }
 
-FBattleSystem::~FBattleSystem()
+FCombatSystem::~FCombatSystem()
 {
 }
 
-void FBattleSystem::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& characterDelegate)
+void FCombatSystem::AddCharacter(const TSharedRef<ICharacterCombatDelegate>& characterDelegate)
 {
-    Characters.Add(MakeShared<FBattleCharacter>(characterDelegate));
+    Characters.Add(MakeShared<FCombatCharacter>(characterDelegate));
     Dispatcher->AddCharacter(characterDelegate);
 }
 
-void FBattleSystem::Run()
+void FCombatSystem::Run()
 {
     InvokeEvent(BattleBeginEvent, *this);
 
@@ -65,11 +65,11 @@ void FBattleSystem::Run()
         RoundDispatcherRaii dispatcherRaii(Dispatcher.Get());
         Dispatcher->OnBattleBegin();
 
-        FBattleCharacter* characterActLast = nullptr;
+        FCombatCharacter* characterActLast = nullptr;
         while (!BattleIsOver())
         {
-            ICharacterBattleDelegate& character = Dispatcher->MoveToNext();
-            characterActLast = static_cast<FBattleCharacter*>(character.GetContext());
+            ICharacterCombatDelegate& character = Dispatcher->MoveToNext();
+            characterActLast = static_cast<FCombatCharacter*>(character.GetContext());
 
             InvokeEvent(CharacterWillActEvent, *this, character);
 
@@ -86,7 +86,7 @@ void FBattleSystem::Run()
     InvokeEvent(BattleFinishedEvent, *this);
 }
 
-void FBattleSystem::ApplyAttackResult(const ISingleAction& action, FBattleCharacter& character,
+void FCombatSystem::ApplyAttackResult(const ISingleAction& action, FCombatCharacter& character,
     const FBaseAttackModel& model, int32 type)
 {
     if (static_cast<uint32>(type) <= 3)
@@ -103,7 +103,7 @@ void FBattleSystem::ApplyAttackResult(const ISingleAction& action, FBattleCharac
     character.GetActionInterceptor().AfterAttackAction(action, model, type);
 }
 
-void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, FBattleCharacter& character,
+void FCombatSystem::ApplyRestorerResult(const ISingleAction& action, FCombatCharacter& character,
     const FBaseRestorerModel& model, int32 type)
 {
     if (0 == type)
@@ -121,7 +121,7 @@ void FBattleSystem::ApplyRestorerResult(const ISingleAction& action, FBattleChar
     character.GetActionInterceptor().AfterRestorerAction(action, model, type);
 }
 
-void FBattleSystem::ApplyStatusResult(const ISingleAction& action, FBattleCharacter& character,
+void FCombatSystem::ApplyStatusResult(const ISingleAction& action, FCombatCharacter& character,
     const FBaseStatusModel& model, int32 type)
 {
     if (0 == type)
@@ -138,11 +138,11 @@ void FBattleSystem::ApplyStatusResult(const ISingleAction& action, FBattleCharac
     character.GetActionInterceptor().AfterStatusAction(action, model, type);
 }
 
-void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FAttackCallback cb) const
+void FCombatSystem::DoAttackAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FAttackCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
-    auto& battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto& battleCharacter = static_cast<FCombatCharacter&>(*character.GetContext());
     auto model = battleCharacter.GetActionInterceptor().AfterComputeAttackResult(action, action.ComputeAttackResult(character, type), type);
 
     if (cb)
@@ -153,11 +153,11 @@ void FBattleSystem::DoAttackAction(const ISingleAction& action, ICharacterBattle
     ApplyAttackResult(action, battleCharacter, model.Get(), type);
 }
 
-void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FRestorerCallback cb) const
+void FCombatSystem::DoRestorerAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FRestorerCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
-    auto& battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto& battleCharacter = static_cast<FCombatCharacter&>(*character.GetContext());
     auto model = battleCharacter.GetActionInterceptor().AfterComputeRestorerResult(action, action.ComputeRestorerResult(character, type), type);
 
     if (cb)
@@ -168,11 +168,11 @@ void FBattleSystem::DoRestorerAction(const ISingleAction& action, ICharacterBatt
     ApplyRestorerResult(action, battleCharacter, model.Get(), type);
 }
 
-void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattleDelegate& character, int32 type, FStatusCallback cb) const
+void FCombatSystem::DoStatusAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FStatusCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
-    auto& battleCharacter = static_cast<FBattleCharacter&>(*character.GetContext());
+    auto& battleCharacter = static_cast<FCombatCharacter&>(*character.GetContext());
     auto model = battleCharacter.GetActionInterceptor().AfterComputeStatusResult(action, action.ComputeStatusResult(character, type), type);
 
     if (cb)
@@ -183,7 +183,7 @@ void FBattleSystem::DoStatusAction(const ISingleAction& action, ICharacterBattle
     ApplyStatusResult(action, battleCharacter, model.Get(), type);
 }
 
-bool FBattleSystem::IsCharacterExist(const ICharacterBattleDelegate& characterDelegate) const
+bool FCombatSystem::IsCharacterExist(const ICharacterCombatDelegate& characterDelegate) const
 {
     if (!characterDelegate.GetContext())
     {
@@ -201,7 +201,7 @@ bool FBattleSystem::IsCharacterExist(const ICharacterBattleDelegate& characterDe
     return false;
 }
 
-int32 FBattleSystem::StatAliveStatus() const
+int32 FCombatSystem::StatAliveStatus() const
 {
     int32 playerAlive = 0x0;
     int32 nonPlayerAlive = 0x0;
@@ -224,12 +224,12 @@ int32 FBattleSystem::StatAliveStatus() const
     return playerAlive | nonPlayerAlive;
 }
 
-bool FBattleSystem::BattleIsOver() const
+bool FCombatSystem::BattleIsOver() const
 {
     return StatAliveStatus() != 3;
 }
 
-bool FBattleSystem::IsPlayerWinned() const
+bool FCombatSystem::IsPlayerWinned() const
 {
     if (nullptr == CharacterActLast)
     {

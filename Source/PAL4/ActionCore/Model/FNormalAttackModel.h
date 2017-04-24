@@ -48,6 +48,6 @@ struct PAL4_API FNormalAttackModel : FBaseAttackModel
     // 额外状态
     ENormalAttackExtroStatus ExtroStatus;
     // 援助者。nullptr表示无援助者，否则指向施展援助的对象（而不是被援助的对象）
-    // ICharacterBattleDelegate* Aid;
+    // ICharacterCombatDelegate* Aid;
 };
 
