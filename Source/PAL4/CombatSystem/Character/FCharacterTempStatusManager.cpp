@@ -3,9 +3,9 @@
 #include "PAL4.h"
 
 #include "FCharacterTempStatusManager.h"
-#include "BattleDelegate/Character/ICharacterBattleDelegate.h"
-#include "BattleDelegate/Character/ICharacterBattleContext.h"
-#include "BattleDelegate/StatusOpWrapper/ITempStatusOpWrapper.h"
+#include "CombatDelegate/Character/ICharacterBattleDelegate.h"
+#include "CombatDelegate/Character/ICharacterBattleContext.h"
+#include "CombatDelegate/StatusOpWrapper/ITempStatusOpWrapper.h"
 
 
 FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterBattleDelegate& character) :

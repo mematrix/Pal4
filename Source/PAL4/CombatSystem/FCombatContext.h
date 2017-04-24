@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FBattleSystem.h"
+#include "FCombatSystem.h"
 
 
 /**

@@ -6,9 +6,9 @@
 
 #include "Util/EventUtil.h"
 
-#include "FBattleSystem.h"
-#include "BattleDelegate/Character/ICharacterPropertyManager.h"
-#include "Character/FBattleCharacter.h"
+#include "FCombatSystem.h"
+#include "CombatDelegate/Character/ICharacterPropertyManager.h"
+#include "Character/FCombatCharacter.h"
 #include "ActionCore/Model/FBaseAttackModel.h"
 #include "ActionCore/Model/FBaseRestorerModel.h"
 #include "ActionCore/Model/FBaseStatusModel.h"

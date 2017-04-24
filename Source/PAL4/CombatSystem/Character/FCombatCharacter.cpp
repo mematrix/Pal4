@@ -2,7 +2,7 @@
 
 #include "PAL4.h"
 
-#include "FBattleCharacter.h"
+#include "FCombatCharacter.h"
 
 FBattleCharacter::FBattleCharacter(const TSharedRef<ICharacterBattleDelegate>& character) :
     ICharacterBattleContext(),

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BattleDelegate/RoundDispatcher/ICharacterRoundDispatcher.h"
+#include "CombatDelegate/RoundDispatcher/ICharacterRoundDispatcher.h"
 #include "FCharacterRoundInfo.h"
 
 

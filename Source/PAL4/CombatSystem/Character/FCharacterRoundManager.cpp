@@ -3,7 +3,7 @@
 #include "PAL4.h"
 
 #include "FCharacterRoundManager.h"
-#include "BattleDelegate/RoundAction/IRoundActionHandler.h"
+#include "CombatDelegate/RoundAction/IRoundActionHandler.h"
 
 FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
     ICharacterRoundManager(),

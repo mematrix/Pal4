@@ -1,9 +1,9 @@
 #pragma once
 
-#include "BattleDelegate/Character/ICharacterBattleDelegate.h"
-#include "BattleDelegate/Character/ICharacterBattleContext.h"
-#include "BattleDelegate/Character/ICharacterTempStatusAccessor.h"
-#include "BattleDelegate/Character/ICharacterPropertyManager.h"
+#include "CombatDelegate/Character/ICharacterBattleDelegate.h"
+#include "CombatDelegate/Character/ICharacterBattleContext.h"
+#include "CombatDelegate/Character/ICharacterTempStatusAccessor.h"
+#include "CombatDelegate/Character/ICharacterPropertyManager.h"
 #include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
 
 

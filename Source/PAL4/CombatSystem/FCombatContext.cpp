@@ -2,6 +2,6 @@
 
 #include "PAL4.h"
 
-#include "FBattleContext.h"
+#include "FCombatContext.h"
 
 const FBattleSystem* FBattleContext::BattleSystem = nullptr;

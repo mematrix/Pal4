@@ -2,8 +2,8 @@
 
 #include <SharedPointer.h>
 
-#include "BattleDelegate/Character/ICharacterBattleContext.h"
-#include "BattleDelegate/Character/ICharacterBattleDelegate.h"
+#include "CombatDelegate/Character/ICharacterBattleContext.h"
+#include "CombatDelegate/Character/ICharacterBattleDelegate.h"
 #include "FCharacterRoundManager.h"
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"

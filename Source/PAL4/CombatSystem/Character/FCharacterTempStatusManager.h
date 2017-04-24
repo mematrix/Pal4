@@ -3,8 +3,8 @@
 #include <Map.h>
 #include <SharedPointer.h>
 
-#include "BattleDelegate/Character/ICharacterTempStatusAccessor.h"
-#include "BattleDelegate/StatusOpWrapper/ICharacterTempStatusOperator.h"
+#include "CombatDelegate/Character/ICharacterTempStatusAccessor.h"
+#include "CombatDelegate/StatusOpWrapper/ICharacterTempStatusOperator.h"
 #include "FCharacterTemporaryStatus.h"
 
 class FBattleCharacter;

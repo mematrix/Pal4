@@ -3,7 +3,7 @@
 #include "PAL4.h"
 
 #include "ISingleAction.h"
-#include "BattleDelegate/Character/ICharacterBattleDelegate.h"
+#include "CombatDelegate/Character/ICharacterBattleDelegate.h"
 
 
 void ISingleAction::OnAttackFinished(const ICharacterBattleDelegate& character, const FBaseAttackModel& model, int32 type) const

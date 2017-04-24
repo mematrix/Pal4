@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "BattleDelegate/Character/ICharacterPropertyManager.h"
+#include "CombatDelegate/Character/ICharacterPropertyManager.h"
 #include "CharacterPrimitives/Model/FCharacterBasicInfo.h"
 
 /**
