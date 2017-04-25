@@ -3,7 +3,7 @@
 #include <Delegate.h>
 
 #include "Util/MacroUtil.h"
-#include "CharacterPrimitives/Model/ECharacterBasicType.h"
+#include "Primitives/EnumType/ECharacterBasicType.h"
 
 struct FBaseRestorerModel;
 struct FBaseAttackModel;

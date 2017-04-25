@@ -3,7 +3,7 @@
 #include <Platform.h>
 #include <Delegate.h>
 
-#include "CharacterPrimitives/Model/ECharacterBasicType.h"
+#include "Primitives/EnumType/ECharacterBasicType.h"
 
 class PAL4_API ICharacterPropertyManager
 {

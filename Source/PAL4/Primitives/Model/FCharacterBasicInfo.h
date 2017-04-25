@@ -2,6 +2,7 @@
 
 #include <Platform.h>
 
+
 struct PAL4_API FCharacterBasicInfo
 {
     // 指示是否是玩家阵营的角色

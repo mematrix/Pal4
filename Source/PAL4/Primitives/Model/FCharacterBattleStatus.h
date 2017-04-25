@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ECharacterBattleStatus.h"
+#include "../EnumType/ECharacterBattleStatus.h"
+
 
 // Buff״̬
 struct PAL4_API FCharacterBattleStatus

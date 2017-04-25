@@ -8,7 +8,7 @@
 class PAL4_API FPassiveActionInterceptor : public IPassiveActionInterceptor
 {
 public:
-    explicit FPassiveActionInterceptor(ICharacterBattleDelegate&);
+    explicit FPassiveActionInterceptor(ICharacterCombatDelegate&);
     FPassiveActionInterceptor(const FPassiveActionInterceptor&) = default;
     FPassiveActionInterceptor(FPassiveActionInterceptor&&) = default;
 

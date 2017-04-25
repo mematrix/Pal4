@@ -3,7 +3,7 @@
 #include <SharedPointer.h>
 
 #include "Util/MacroUtil.h"
-#include "CharacterPrimitives/Model/ECharacterStatusType.h"
+#include "Primitives/EnumType/ECharacterStatusType.h"
 
 class ITempStatusOpWrapper;
 

@@ -4,8 +4,8 @@
 
 #include <SharedPointer.h>
 
-#include "CharacterPrimitives/Model/ECharacterStatusType.h"
-#include "CharacterPrimitives/Model/ECharacterBattleStatus.h"
+#include "Primitives/EnumType/ECharacterStatusType.h"
+#include "Primitives/EnumType/ECharacterBattleStatus.h"
 
 class ICharacterRoundManager;
 class ITempStatusOpWrapper;

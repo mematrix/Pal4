@@ -2,9 +2,10 @@
 
 #include <Platform.h>
 
-#include "../Model/ECharacterStatusType.h"
+#include "../EnumType/ECharacterStatusType.h"
 
 struct FCharacterStatusInfo;
+
 
 class PAL4_API FStatusInfoAccessHelper
 {

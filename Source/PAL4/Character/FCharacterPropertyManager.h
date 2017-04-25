@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CombatDelegate/Character/ICharacterPropertyManager.h"
-#include "CharacterPrimitives/Model/FCharacterBasicInfo.h"
+#include "Primitives/Model/FCharacterBasicInfo.h"
+#include "Primitives/EnumType/ECharacterBasicType.h"
+
 
 /**
  * 

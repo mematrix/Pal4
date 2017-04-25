@@ -6,9 +6,9 @@
 #include <Delegate.h>
 
 #include "Core/ValueTransformer.h"
-#include "Helper/FStatusInfoAccessHelper.h"
-#include "Model/ECharacterStatusType.h"
-#include "Model/FCharacterStatusInfo.h"
+#include "Primitives/Helper/FStatusInfoAccessHelper.h"
+#include "Primitives/EnumType/ECharacterStatusType.h"
+#include "Primitives/Model/FCharacterStatusInfo.h"
 
 template ValueTransformer<void*, ECharacterStatusType, int32, int32>;
 typedef ValueTransformer<void*, ECharacterStatusType, int32, int32> FPersistentTransformer;

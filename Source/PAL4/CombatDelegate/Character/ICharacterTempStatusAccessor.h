@@ -3,8 +3,8 @@
 #include <Delegate.h>
 
 #include "Util/MacroUtil.h"
-#include "CharacterPrimitives/Model/ECharacterStatusType.h"
-#include "CharacterPrimitives/Model/ECharacterBattleStatus.h"
+#include "Primitives/EnumType/ECharacterStatusType.h"
+#include "Primitives/EnumType/ECharacterBattleStatus.h"
 
 struct FCharacterBattleStatus;
 struct FCharacterStatusInfo;
