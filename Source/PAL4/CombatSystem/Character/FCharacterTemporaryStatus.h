@@ -5,10 +5,10 @@
 
 #include "Core/ValueTransformer.h"
 
-#include "CharacterPrimitives/FCharacterPersistentStatus.h"
-#include "CharacterPrimitives/Model/ECharacterStatusType.h"
-#include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
-#include "CharacterPrimitives/Model/FCharacterBattleStatus.h"
+#include "Character/FCharacterPersistentStatus.h"
+#include "Primitives/EnumType/ECharacterStatusType.h"
+#include "Primitives/Model/FCharacterStatusInfo.h"
+#include "Primitives/Model/FCharacterBattleStatus.h"
 
 template ValueTransformer<void*, ECharacterStatusType, int32, int32, int32>;
 typedef ValueTransformer<void*, ECharacterStatusType, int32, int32, int32> FTemporaryTransformer;

@@ -2,6 +2,7 @@
 
 #include <Platform.h>
 
+
 enum class PAL4_API ECharacterStatusType
 {
     // Œ‰
