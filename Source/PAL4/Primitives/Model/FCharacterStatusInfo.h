@@ -15,6 +15,19 @@ struct PAL4_API FCharacterStatusInfo
     // 防
     int32 DefencePoint;
 
+    // 直接物理伤害追加
+    int32 PhysicalDamageAttach;
+    // 水系元素伤害追加
+    int32 WaterElementalDamageAttach;
+    // 火系元素伤害追加
+    int32 FireElementalDamageAttach;
+    // 雷系元素伤害追加
+    int32 ThunderElementalDamageAttach;
+    // 风系元素伤害追加
+    int32 WindElementalDamageAttach;
+    // 土系元素伤害追加
+    int32 SoilElementalDamageAttach;
+
     // 物理抗性。实际百分比*100
     int32 AttackResistance;
     // 水系仙术抗性。实际百分比*100
@@ -28,21 +41,18 @@ struct PAL4_API FCharacterStatusInfo
     // 土系仙术抗性。实际百分比*100
     int32 SoilMagicResistance;
 
-    // 直接物理伤害
-    int32 DirectAttackDamage;
-    // 水系元素伤害
-    int32 WaterElementalDamage;
-    // 火系元素伤害
-    int32 FireElementalDamage;
-    // 雷系元素伤害
-    int32 ThunderElementalDamage;
-    // 风系元素伤害
-    int32 WindElementalDamage;
-    // 土系元素伤害
-    int32 SoilElementalDamage;
-
-    // 元素伤害抗性
-    int32 ElementalResistance;
+    // 物理伤害反弹。实际百分比*100
+    int32 PhysicalDamageBounce;
+    // 水属性伤害反弹。实际百分比*100
+    int32 WaterElementalDamageBounce;
+    // 火属性伤害反弹。实际百分比*100
+    int32 FireElementalDamageBounce;
+    // 雷属性伤害反弹。实际百分比*100
+    int32 ThunderElementalDamageBounce;
+    // 风属性伤害反弹。实际百分比*100
+    int32 WindElementalDamageBounce;
+    // 土属性伤害反弹。实际百分比*100
+    int32 SoilElementalDamageBounce;
 
     // 格挡率。实际百分比*100
     int32 BlockRate;

@@ -17,13 +17,14 @@ public:
 
     int32 GetPropertyValue(ECharacterStatusType type) const;
     void SetPropertyValue(ECharacterStatusType type, int32 value) const;
-    // TODO: Ìí¼Ó+=¸³ÖµÂß¼­
+    
+    void AddPropertyValue(ECharacterStatusType type, int32 value) const;
 
     template<ECharacterStatusType Type>
     int32 GetPropertyValue() const
     {
-        static_assert(static_cast<uint32>(Type) < PropertySetCount, 
-            "Value of generic type argument must be less than (uint32)ECharacterProperty::PropertyEnd");
+        static_assert(GetLowBitIndex(Type) < PropertySetCount, 
+            "Shift count of generic type argument value must be less than countof(ECharacterProperty)");
         return InfoModel.*GetPropertyPtr(Type);
     }
 

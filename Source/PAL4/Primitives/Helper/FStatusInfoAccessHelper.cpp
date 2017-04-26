@@ -61,12 +61,18 @@ int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[Propert
 
 int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusType type) const
 {
-    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
+    _ASSERT(static_cast<uint32>(type) < static_cast<uint32>(ECharacterStatusType::PropertyMask));
     return InfoModel.*GetPropertyPtr(type);
 }
 
 void FStatusInfoAccessHelper::SetPropertyValue(ECharacterStatusType type, int32 value) const
 {
-    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
+    _ASSERT(static_cast<uint32>(type) < static_cast<uint32>(ECharacterStatusType::PropertyMask));
     InfoModel.*GetPropertyPtr(type) = value;
+}
+
+void FStatusInfoAccessHelper::AddPropertyValue(ECharacterStatusType type, int32 value) const
+{
+    _ASSERT(static_cast<uint32>(type) < static_cast<uint32>(ECharacterStatusType::PropertyMask));
+
 }
