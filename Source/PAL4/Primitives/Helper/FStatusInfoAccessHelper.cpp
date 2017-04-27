@@ -20,6 +20,19 @@ int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[Propert
     // 防
     &FCharacterStatusInfo::DefencePoint,
 
+    // 直接物理伤害附加
+    &FCharacterStatusInfo::PhysicalDamageAttach,
+    // 水系元素伤害附加
+    &FCharacterStatusInfo::WaterElementalDamageAttach,
+    // 火系元素伤害附加
+    &FCharacterStatusInfo::FireElementalDamageAttach,
+    // 雷系元素伤害附加
+    &FCharacterStatusInfo::ThunderElementalDamageAttach,
+    // 风系元素伤害附加
+    &FCharacterStatusInfo::WindElementalDamageAttach,
+    // 土系元素伤害附加
+    &FCharacterStatusInfo::SoilElementalDamageAttach,
+
     // 物理抗性
     &FCharacterStatusInfo::AttackResistance,
     // 水系仙术抗性
@@ -33,21 +46,18 @@ int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[Propert
     // 土系仙术抗性
     &FCharacterStatusInfo::SoilMagicResistance,
 
-    // 直接物理伤害
-    &FCharacterStatusInfo::DirectAttackDamage,
-    // 水系元素伤害
-    &FCharacterStatusInfo::WaterElementalDamage,
-    // 火系元素伤害
-    &FCharacterStatusInfo::FireElementalDamage,
-    // 雷系元素伤害
-    &FCharacterStatusInfo::ThunderElementalDamage,
-    // 风系元素伤害
-    &FCharacterStatusInfo::WindElementalDamage,
-    // 土系元素伤害
-    &FCharacterStatusInfo::SoilElementalDamage,
-
-    // 元素伤害抗性
-    &FCharacterStatusInfo::ElementalResistance,
+    // 物理伤害反弹
+    &FCharacterStatusInfo::PhysicalDamageBounce,
+    // 水属性伤害反弹
+    &FCharacterStatusInfo::WaterElementalDamageBounce,
+    // 火属性伤害反弹
+    &FCharacterStatusInfo::FireElementalDamageBounce,
+    // 雷属性伤害反弹
+    &FCharacterStatusInfo::ThunderElementalDamageBounce,
+    // 风属性伤害反弹
+    &FCharacterStatusInfo::WindElementalDamageBounce,
+    // 土属性伤害反弹
+    &FCharacterStatusInfo::SoilElementalDamageBounce,
 
     // 格挡率
     &FCharacterStatusInfo::BlockRate,
@@ -61,18 +71,18 @@ int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[Propert
 
 int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusType type) const
 {
-    _ASSERT(static_cast<uint32>(type) < static_cast<uint32>(ECharacterStatusType::PropertyMask));
+    _ASSERT(!ResetLowBit(static_cast<int32>(type)) && LowBitIndex(static_cast<uint32>(type)) < PropertySetCount);
     return InfoModel.*GetPropertyPtr(type);
 }
 
 void FStatusInfoAccessHelper::SetPropertyValue(ECharacterStatusType type, int32 value) const
 {
-    _ASSERT(static_cast<uint32>(type) < static_cast<uint32>(ECharacterStatusType::PropertyMask));
+    _ASSERT(!ResetLowBit(static_cast<int32>(type)) && LowBitIndex(static_cast<uint32>(type)) < PropertySetCount);
     InfoModel.*GetPropertyPtr(type) = value;
 }
 
 void FStatusInfoAccessHelper::AddPropertyValue(ECharacterStatusType type, int32 value) const
 {
-    _ASSERT(static_cast<uint32>(type) < static_cast<uint32>(ECharacterStatusType::PropertyMask));
-
+    _ASSERT(!ResetLowBit(static_cast<int32>(type)) && LowBitIndex(static_cast<uint32>(type)) < PropertySetCount);
+    InfoModel.*GetPropertyPtr(type) += value;
 }

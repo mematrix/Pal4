@@ -30,3 +30,40 @@ constexpr T LowBit(T x)
 {
     return static_cast<T>(LowBit(static_cast<int32>(x)));
 }
+
+// 将最低的bit1位置零，其它不变。原理类似上面 @see LowBit
+constexpr int32 ResetLowBit(int32 x)
+{
+    return x & (x - 1);
+}
+
+// 常规形式计算最低bit1位的索引。适用于变量。
+// TODO：可以与汇编形式（bsf）对比一下实际运行平均速度
+inline int32 LowBitIndex(uint32 x)
+{
+    if (0 == x) return -1;
+
+    int32 n = 1;
+    if (0 == (x & 0x0000ffff))
+    {
+        n += 16;
+        x >>= 16;
+    }
+    if (0 == (x & 0x000000ff))
+    {
+        n += 8;
+        x >>= 8;
+    }
+    if (0 == (x & 0x0000000f))
+    {
+        n += 4;
+        x >>= 4;
+    }
+    if (0 == (x & 0x00000003))
+    {
+        n += 2;
+        x >>= 2;
+    }
+
+    return n - (x & 1);
+}
