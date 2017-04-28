@@ -1,16 +1,18 @@
 #pragma once
 
+
+// 2017-04-29更新：使用拼音，汉语的单字表达的意思实在不好找到匹配而简洁的英文描述
 enum class PAL4_API ECommonBuff
 {
     None = 0,
-    // 镜，反弹普攻和特技
-    ReboundAttackAndSkill = 1,
-    // 壁，普通攻击无效
-    InvalidateAttack = 2,
-    // 界，法术攻击无效
-    InvalidateMagic = 3,
-    // 宁，吸收仙术伤害
-    AbsorbMagicDamage = 4
+    // 镜，反弹普攻和特技。ReboundAttackAndSkill
+    Jing = 1,
+    // 壁，普通攻击无效。InvalidateAttack
+    Bi = 2,
+    // 界，法术攻击无效。InvalidateMagic
+    Jie = 3,
+    // 宁，吸收仙术伤害。AbsorbMagicDamage
+    Ning = 4
 };
 
 /**
