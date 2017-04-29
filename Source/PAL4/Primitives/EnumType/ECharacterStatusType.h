@@ -12,65 +12,65 @@
 enum class PAL4_API ECharacterStatusType : int32
 {
     // 武
-    Attack = 1 << 0,
+    Attack = 0,
     // 运
-    Luck = 1 << 1,
+    Luck,
     // 灵
-    Nimbus = 1 << 2,
+    Nimbus,
     // 速
-    Speed = 1 << 3,
+    Speed,
     // 防
-    Defence = 1 << 4,
+    Defence,
 
     // 直接物理伤害追加
-    PhysicalDamageAttach = 1 << 5,
+    PhysicalDamageAttach,
     // 水系元素伤害追加
-    WaterElementalDamageAttach = 1 << 6,
+    WaterElementalDamageAttach,
     // 火系元素伤害追加
-    FireElementalDamageAttach = 1 << 7,
+    FireElementalDamageAttach,
     // 雷系元素伤害追加
-    ThunderElementalDamageAttach = 1 << 8,
+    ThunderElementalDamageAttach,
     // 风系元素伤害追加
-    WindElementalDamageAttach = 1 << 9,
+    WindElementalDamageAttach,
     // 土系元素伤害追加
-    SoilElementalDamageAttach = 1 << 10,
+    SoilElementalDamageAttach,
 
     // 物理抗性
-    PhysicalResistance = 1 << 11,
+    PhysicalResistance,
     // 水系仙术抗性
-    WaterMagicResistance = 1 << 12,
+    WaterMagicResistance,
     // 火系仙术抗性
-    FireMagicResistance = 1 << 13,
+    FireMagicResistance,
     // 雷系仙术抗性
-    ThunderMagicResistance = 1 << 14,
+    ThunderMagicResistance,
     // 风系仙术抗性
-    WindMagicResistance = 1 << 15,
+    WindMagicResistance,
     // 土系仙术抗性
-    SoilMagicResistance = 1 << 16,
+    SoilMagicResistance,
 
     // 物理伤害反弹
-    PhysicalDamageBounce = 1 << 17,
+    PhysicalDamageBounce,
     // 水属性伤害反弹
-    WaterElementalDamageBounce = 1 << 18,
+    WaterElementalDamageBounce,
     // 火属性伤害反弹
-    FireElementalDamageBounce = 1 << 19,
+    FireElementalDamageBounce,
     // 雷属性伤害反弹
-    ThunderElementalDamageBounce = 1 << 20,
+    ThunderElementalDamageBounce,
     // 风属性伤害反弹
-    WindElementalDamageBounce = 1 << 21,
+    WindElementalDamageBounce,
     // 土属性伤害反弹
-    SoilElementalDamageBounce = 1 << 22,
+    SoilElementalDamageBounce,
 
     // 格挡率
-    BlockRate = 1 << 23,
+    BlockRate,
     // 闪避率
-    DodgeRate = 1 << 24,
+    DodgeRate,
     // 命中率
-    HitRate = 1 << 25,
+    HitRate,
     // 暴击率
-    CritRate = 1 << 26,
+    CritRate,
 
-    PropertyMask = 1 << 27 - 1
+    PropertyEnd
 };
 
-constexpr uint32 PropertySetCount = static_cast<uint32>(GetLowBitIndex(static_cast<int32>(ECharacterStatusType::PropertyMask) + 1));
+constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterStatusType::PropertyEnd);

@@ -8,12 +8,30 @@
 
 struct PAL4_API FCharacterBasicInfo
 {
+    FCharacterBasicInfo(int32 id, const FName& name, ERace race, EPhysicalAttackType type, EPhysicalAttackTarget target)
+        : ID(id),
+        Name(name),
+        Level(0),
+        Experience(0),
+        MaxHealthPoint(0),
+        MaxManaPoint(0),
+        MaxCraftPoint(0),
+        HealthPoint(0),
+        ManaPoint(0),
+        CraftPoint(0),
+        MagicPoints{0},
+        Race(race),
+        PhysicalAttackType(type),
+        PhysicalAttackTarget(target)
+    {
+    }
+
     // 指示是否是玩家阵营的角色
     //bool IsPlayer;
     // 角色ID，用于获取全局信息，例如名称、头像等
-    int32 ID;
+    const int32 ID;
     // 人物名称
-    FName Name;
+    const FName Name;
 
     // 等级
     int32 Level;
@@ -37,9 +55,9 @@ struct PAL4_API FCharacterBasicInfo
     // 五系仙术技能点
     uint8 MagicPoints[5];
     // 种族
-    ERace Race;
+    const ERace Race;
     // 物理攻击类型
-    EPhysicalAttackType PhysicalAttackType;
+    const EPhysicalAttackType PhysicalAttackType;
     // 物理攻击目标
-    EPhysicalAttackTarget PhysicalAttackTarget;
+    const EPhysicalAttackTarget PhysicalAttackTarget;
 };

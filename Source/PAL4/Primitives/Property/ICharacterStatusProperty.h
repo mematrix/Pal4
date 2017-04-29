@@ -29,6 +29,15 @@ public:
 private:
     FOnPropertyChangedEvent OnPropertyChangedEvent;
 
+protected:
+    void NotifyPropertyChanged(ECharacterStatusType type) const
+    {
+        if (OnPropertyChangedEvent.IsBound())
+        {
+            OnPropertyChangedEvent.Broadcast(*this, type);
+        }
+    }
+
 public:
     virtual int32 GetPropertyValue(ECharacterStatusType type) const = 0;
     virtual const FCharacterStatusInfo& GetAccumulateInfo() const = 0;

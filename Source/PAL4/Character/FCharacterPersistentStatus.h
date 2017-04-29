@@ -3,12 +3,10 @@
 #pragma once
 
 #include <Platform.h>
-#include <Delegate.h>
 
 #include "Core/ValueTransformer.h"
+#include "Primitives/Property/ICharacterStatusProperty.h"
 #include "Primitives/Helper/FStatusInfoAccessHelper.h"
-#include "Primitives/EnumType/ECharacterStatusType.h"
-#include "Primitives/Model/FCharacterStatusInfo.h"
 
 template ValueTransformer<void*, ECharacterStatusType, int32, int32>;
 typedef ValueTransformer<void*, ECharacterStatusType, int32, int32> FPersistentTransformer;
@@ -17,46 +15,33 @@ typedef ValueTransformer<void*, ECharacterStatusType, int32, int32> FPersistentT
 /**
  * 用于存储持久化的状态信息，比如装备、被动技能带来的状态信息
  */
-class PAL4_API FCharacterPersistentStatus
+class PAL4_API FCharacterPersistentStatus : ICharacterStatusProperty
 {
 public:
     typedef std::function<int32(void*, ECharacterStatusType, int32)> FTransformAction;
 
-    /**
-     * 当属性值发生变化时调用。第二个参数指示变化的属性类型，若等于@code ECharacterStatusType::PropertyEnd \endcode，
-     * 则说明有多个属性发生了变化。
-     */
-    DECLARE_EVENT_TwoParams(FCharacterPersistentStatus, FOnPropertyChangedEvent, const FCharacterPersistentStatus&, ECharacterStatusType)
-
 public:
-    explicit FCharacterPersistentStatus(const FStatusInfoAccessHelper& base);
+    explicit FCharacterPersistentStatus(const FCharacterStatusInfo& base);
     FCharacterPersistentStatus(const FCharacterPersistentStatus&) = delete;
     FCharacterPersistentStatus(FCharacterPersistentStatus&&) = default;
 
     FCharacterPersistentStatus& operator=(const FCharacterPersistentStatus&) = delete;
     FCharacterPersistentStatus& operator=(FCharacterPersistentStatus&&) = default;
 
-    FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
+    int32 GetPropertyValue(ECharacterStatusType type) const override { return PersistentInfoAccessor.GetPropertyValue(type); }
+    const FCharacterStatusInfo& GetAccumulateInfo() const override { return InfoModel; }
 
-    int32 GetPropertyValue(ECharacterStatusType type) const { return PersistentInfoAccessor.GetPropertyValue(type); }
-    const FCharacterStatusInfo& GetAccumulateInfo() const { return InfoModel; }
-
-    const FStatusInfoAccessHelper& GetBaseAccessor() const { return BaseInfoAccessor; }
-    const FStatusInfoAccessHelper& GetPersistentAccessor() const { return PersistentInfoAccessor; }
-
-    void UpdatePropertyValue(ECharacterStatusType type) const;
-    void UpdateAllProperties() const;
+    void UpdatePropertyValue(ECharacterStatusType type) const override;
+    void UpdateAllProperties() const override;
 
     void AddTransformer(void*, ECharacterStatusType, const FTransformAction&);
 
     void RemoveTransformer(void* key, ECharacterStatusType type);
 
 private:
-    FOnPropertyChangedEvent OnPropertyChangedEvent;
-
     FCharacterStatusInfo InfoModel;
 
-    FStatusInfoAccessHelper BaseInfoAccessor;
+    FStatusInfoReader BaseInfoReader;
     FStatusInfoAccessHelper PersistentInfoAccessor;
 
     FPersistentTransformer Transformer;

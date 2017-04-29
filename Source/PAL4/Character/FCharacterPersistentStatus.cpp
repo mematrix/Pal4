@@ -5,10 +5,10 @@
 #include "Util/EventUtil.h"
 #include "FCharacterPersistentStatus.h"
 
-FCharacterPersistentStatus::FCharacterPersistentStatus(const FStatusInfoAccessHelper& base) :
-    OnPropertyChangedEvent(),
+
+FCharacterPersistentStatus::FCharacterPersistentStatus(const FCharacterStatusInfo& base) :
     InfoModel(),
-    BaseInfoAccessor(base),
+    BaseInfoReader(base),
     PersistentInfoAccessor(InfoModel),
     Transformer()
 {
@@ -22,27 +22,27 @@ void FCharacterPersistentStatus::UpdatePropertyValue(ECharacterStatusType type) 
     }
     else
     {
-        auto base = BaseInfoAccessor.GetPropertyValue(type);
+        auto base = BaseInfoReader.GetPropertyValue(type);
         auto value = Transformer.AccumulateByGroup(base, type, base);
         PersistentInfoAccessor.SetPropertyValue(type, value);
 
-        InvokeEvent(OnPropertyChangedEvent, *this, type);
+        NotifyPropertyChanged(type);
     }
 }
 
 void FCharacterPersistentStatus::UpdateAllProperties() const
 {
     // 首先将值更新为基础值，然后以此为基础进行计算
-    PersistentInfoAccessor.GetModel() = BaseInfoAccessor.GetModel();
+    PersistentInfoAccessor.GetModel() = BaseInfoReader.GetModel();
     Transformer.Traverse([this](void* key, ECharacterStatusType type, const FTransformAction& func)
     {
-        auto base = BaseInfoAccessor.GetPropertyValue(type);
+        auto base = BaseInfoReader.GetPropertyValue(type);
         auto value = PersistentInfoAccessor.GetPropertyValue(type);
         value += func(key, type, base);
         PersistentInfoAccessor.SetPropertyValue(type, value);
     });
 
-    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusType::PropertyEnd);
+    NotifyPropertyChanged(ECharacterStatusType::PropertyEnd);
 }
 
 void FCharacterPersistentStatus::AddTransformer(void* key, ECharacterStatusType type, const FTransformAction& func)

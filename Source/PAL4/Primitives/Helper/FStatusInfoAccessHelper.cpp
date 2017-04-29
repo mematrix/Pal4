@@ -7,7 +7,8 @@
 #include "FStatusInfoAccessHelper.h"
 #include "../Model/FCharacterStatusInfo.h"
 
-int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[PropertySetCount] =
+
+int32 FCharacterStatusInfo::* const PropertySet[PropertySetCount] =
 {
     // Œ‰
     &FCharacterStatusInfo::AttackPoint,
@@ -71,18 +72,24 @@ int32 FCharacterStatusInfo::* const FStatusInfoAccessHelper::PropertySet[Propert
 
 int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusType type) const
 {
-    _ASSERT(!ResetLowBit(static_cast<int32>(type)) && LowBitIndex(static_cast<uint32>(type)) < PropertySetCount);
+    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     return InfoModel.*GetPropertyPtr(type);
 }
 
 void FStatusInfoAccessHelper::SetPropertyValue(ECharacterStatusType type, int32 value) const
 {
-    _ASSERT(!ResetLowBit(static_cast<int32>(type)) && LowBitIndex(static_cast<uint32>(type)) < PropertySetCount);
+    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     InfoModel.*GetPropertyPtr(type) = value;
 }
 
 void FStatusInfoAccessHelper::AddPropertyValue(ECharacterStatusType type, int32 value) const
 {
-    _ASSERT(!ResetLowBit(static_cast<int32>(type)) && LowBitIndex(static_cast<uint32>(type)) < PropertySetCount);
+    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
     InfoModel.*GetPropertyPtr(type) += value;
+}
+
+int32 FStatusInfoReader::GetPropertyValue(ECharacterStatusType type) const
+{
+    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
+    return InfoModel.*GetPropertyPtr(type);
 }
