@@ -4,31 +4,25 @@
 
 #include "Util/EventUtil.h"
 #include "FCharacterTemporaryStatus.h"
+#include "Primitives/Helper/FStatusInfoAccessHelper.h"
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterPersistentStatus& status) :
-    OnPropertyChangedEvent(),
+
+FCharacterTemporaryStatus::FCharacterTemporaryStatus(const ICharacterStatusProperty& status) :
+    ICharacterStatusProperty(),
     OnBattleStatusChangedEvent(),
-    InfoModel{0},
     PersistentStatus(status),
-    BattleStatus(),
-    BaseInfoAccessor(status.GetBaseAccessor()),
-    PersistentInfoAccessor(status.GetPersistentAccessor()),
-    TemporaryInfoAccessor(InfoModel),
-    Transformer()
+    InfoModel{ 0 },
+    BattleStatus()
 {
     PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
 }
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) :
-    OnPropertyChangedEvent(MoveTemp(other.OnPropertyChangedEvent)),
+FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) noexcept :
+    ICharacterStatusProperty(MoveTemp(other)),
     OnBattleStatusChangedEvent(MoveTemp(other.OnBattleStatusChangedEvent)),
-    InfoModel(MoveTemp(other.InfoModel)),
     PersistentStatus(other.PersistentStatus),
-    BattleStatus(other.BattleStatus),
-    BaseInfoAccessor(MoveTemp(other.BaseInfoAccessor)),
-    PersistentInfoAccessor(MoveTemp(other.PersistentInfoAccessor)),
-    TemporaryInfoAccessor(MoveTemp(other.TemporaryInfoAccessor)),
-    Transformer(MoveTemp(other.Transformer))
+    InfoModel(MoveTemp(other.InfoModel)),
+    BattleStatus(other.BattleStatus)
 {
     other.PersistentStatus.OnPropertyChanged().RemoveAll(&other);
     PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
@@ -37,6 +31,44 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &
 FCharacterTemporaryStatus::~FCharacterTemporaryStatus()
 {
     PersistentStatus.OnPropertyChanged().RemoveAll(this);
+}
+
+int32 FCharacterTemporaryStatus::GetPropertyValue(ECharacterStatusType type) const
+{
+    return FStatusInfoReader(InfoModel).GetPropertyValue(type);
+}
+
+void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type)
+{
+    if (type >= ECharacterStatusType::PropertyEnd)
+    {
+        UpdateAllProperties();
+    }
+    else
+    {
+        auto persistent = FStatusInfoReader(PersistentStatus.GetAccumulatedInfo()).GetPropertyValue(type);
+        auto value = Transformer.AccumulateByGroup(persistent, type, persistent);
+        FStatusInfoAccessHelper(InfoModel).SetPropertyValue(type, value);
+
+        NotifyPropertyChanged(type);
+    }
+}
+
+void FCharacterTemporaryStatus::UpdateAllProperties()
+{
+    // 首先将值更新为持久化值，然后以此为基础进行计算
+    InfoModel = PersistentStatus.GetAccumulatedInfo();
+    FStatusInfoReader persistentInfo(PersistentStatus.GetAccumulatedInfo());
+    FStatusInfoAccessHelper infoAccessor(InfoModel);
+    Transformer.Traverse([&persistentInfo, &infoAccessor](void* key, ECharacterStatusType type, const FTransformAction& func)
+    {
+        auto persistent = persistentInfo.GetPropertyValue(type);
+        auto value = infoAccessor.GetPropertyValue(type);
+        value += func(key, type, persistent);
+        infoAccessor.SetPropertyValue(type, value);
+    });
+
+    NotifyPropertyChanged(ECharacterStatusType::PropertyEnd);
 }
 
 void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus status)
@@ -49,54 +81,7 @@ void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus
     InvokeEvent(OnBattleStatusChangedEvent, *this, status);
 }
 
-void FCharacterTemporaryStatus::OnPersistentStatusChanged(const FCharacterPersistentStatus&, ECharacterStatusType type) const
+void FCharacterTemporaryStatus::OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType type)
 {
-    UpdatePropertyValue(type);
-}
-
-void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type) const
-{
-    if (type >= ECharacterStatusType::PropertyEnd)
-    {
-        UpdateAllProperties();
-    }
-    else
-    {
-        auto base = BaseInfoAccessor.GetPropertyValue(type);
-        auto persistent = PersistentInfoAccessor.GetPropertyValue(type);
-        auto value = Transformer.AccumulateByGroup(persistent, type, base, persistent);
-        TemporaryInfoAccessor.SetPropertyValue(type, value);
-
-        InvokeEvent(OnPropertyChangedEvent, *this, type);
-    }
-}
-
-void FCharacterTemporaryStatus::UpdateAllProperties() const
-{
-    // 首先将值更新为持久化值，然后以此为基础进行计算
-    TemporaryInfoAccessor.GetModel() = PersistentInfoAccessor.GetModel();
-    Transformer.Traverse([this](void* key, ECharacterStatusType type, const FTransformAction& func)
-    {
-        auto base = BaseInfoAccessor.GetPropertyValue(type);
-        auto persistent = PersistentInfoAccessor.GetPropertyValue(type);
-        auto value = TemporaryInfoAccessor.GetPropertyValue(type);
-        value += func(key, type, base, persistent);
-        TemporaryInfoAccessor.SetPropertyValue(type, value);
-    });
-
-    InvokeEvent(OnPropertyChangedEvent, *this, ECharacterStatusType::PropertyEnd);
-}
-
-void FCharacterTemporaryStatus::AddTransformer(void* key, ECharacterStatusType type, const FTransformAction& func)
-{
-    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
-    Transformer.AddTransformer(key, type, func);
-    UpdatePropertyValue(type);
-}
-
-void FCharacterTemporaryStatus::RemoveTransformer(void* key, ECharacterStatusType type)
-{
-    _ASSERT(static_cast<uint32>(type) < PropertySetCount);
-    Transformer.RemoveTransformer(key, type);
     UpdatePropertyValue(type);
 }
