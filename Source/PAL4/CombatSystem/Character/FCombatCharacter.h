@@ -8,6 +8,7 @@
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"
 
+
 class PAL4_API FCombatCharacter : public ICharacterCombatContext
 {
 public:
@@ -22,7 +23,7 @@ public:
 
     FPassiveActionInterceptor& GetActionInterceptor() override { return ActionInterceptor; }
 
-    FCharacterTempStatusManager& GetTempStatusAccessor() override { return TempStatusManager; }
+    FCharacterTemporaryStatus& GetTempStatus() override { return TempStatusManager.GetTempStatus(); }
 
     FCharacterRoundManager& GetRoundManager() override { return RoundManager; }
     const FCharacterRoundManager& GetRoundManager() const { return RoundManager; }

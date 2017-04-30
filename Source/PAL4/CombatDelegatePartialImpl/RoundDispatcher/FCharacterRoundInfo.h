@@ -2,7 +2,7 @@
 
 #include "CombatDelegate/Character/ICharacterCombatDelegate.h"
 #include "CombatDelegate/Character/ICharacterCombatContext.h"
-#include "CombatDelegate/Character/ICharacterTempStatusAccessor.h"
+#include "CombatDelegate/Character/ICharacterTempStatus.h"
 #include "CombatDelegate/Character/ICharacterPropertyManager.h"
 #include "CharacterPrimitives/Model/FCharacterStatusInfo.h"
 

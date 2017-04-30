@@ -11,7 +11,7 @@ struct FBaseStatusModel;
 class ISingleAction;
 class IRoundActionHandler;
 class ICharacterPropertyManager;
-class FCharacterPersistentStatus;
+class ICharacterStatusProperty;
 class ICharacterCombatContext;
 
 
@@ -61,7 +61,7 @@ public:
 
     virtual ICharacterPropertyManager& GetPropertyManager() = 0;
 
-    virtual FCharacterPersistentStatus& GetPersistentStatus() = 0;
+    virtual ICharacterStatusProperty& GetPersistentStatus() = 0;
 
     virtual IRoundActionHandler& GetRoundAction() = 0;
 

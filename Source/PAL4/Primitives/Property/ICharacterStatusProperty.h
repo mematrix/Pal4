@@ -43,7 +43,14 @@ public:
 
     FOnPropertyChangedEvent& OnPropertyChanged() const { return OnPropertyChangedEvent; }
 
+    /**
+     * 根据指定的属性类型查询对应属性值。包括武运灵速防等属性
+     * @param type 要查询的属性类型
+     */
     virtual int32 GetPropertyValue(ECharacterStatusType type) const = 0;
+    /**
+     * 获取计算后的人物属性信息
+     */
     virtual const FCharacterStatusInfo& GetAccumulatedInfo() const = 0;
 
     virtual void UpdatePropertyValue(ECharacterStatusType type) = 0;

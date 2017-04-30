@@ -10,7 +10,7 @@
 /**
  * 用于存储持久化的状态信息，比如装备、被动技能带来的状态信息
  */
-class PAL4_API FCharacterPersistentStatus : ICharacterStatusProperty
+class PAL4_API FCharacterPersistentStatus : public ICharacterStatusProperty
 {
     using FStatusTransformer = ValueTransformer<void*, ECharacterStatusType, int32, int32>;
 

@@ -9,7 +9,6 @@
 
 
 FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterCombatDelegate& character) :
-    ICharacterTempStatusAccessor(),
     ICharacterTempStatusOperator(),
     Character(character),
     TempStatus(character.GetPersistentStatus()),
@@ -51,52 +50,7 @@ void FCharacterTempStatusManager::RemoveTemporaryStatus(ECharacterStatusType typ
     }
 }
 
-void FCharacterTempStatusManager::AddTransformer(void* key, ECharacterStatusType type, const FTransformAction& action)
+FCharacterTemporaryStatus& FCharacterTempStatusManager::GetTempStatus()
 {
-    TempStatus.AddTransformer(key, type, action);
-}
-
-void FCharacterTempStatusManager::RemoveTransformer(void* key, ECharacterStatusType type)
-{
-    TempStatus.RemoveTransformer(key, type);
-}
-
-void FCharacterTempStatusManager::SetCommonBuffStatus(ECommonBuff value)
-{
-    TempStatus.SetCommonBuffStatus(value);
-}
-
-void FCharacterTempStatusManager::SetPoisonStatus(EPoison value)
-{
-    TempStatus.SetPoisonStatus(value);
-}
-
-void FCharacterTempStatusManager::SetControlledDebuffStatus(EControlledDebuff value)
-{
-    TempStatus.SetControlledDebuffStatus(value);
-}
-
-void FCharacterTempStatusManager::SetInVisibleStatus(bool value)
-{
-    TempStatus.SetInVisibleStatus(value);
-}
-
-void FCharacterTempStatusManager::SetReviveStatus(bool value)
-{
-    TempStatus.SetReviveStatus(value);
-}
-
-const FCharacterBattleStatus& FCharacterTempStatusManager::GetBattleStatus() const
-{
-    return TempStatus.GetBattleStatus();
-}
-
-int32 FCharacterTempStatusManager::GetPropertyValue(ECharacterStatusType type) const
-{
-    return TempStatus.GetPropertyValue(type);
-}
-
-const FCharacterStatusInfo& FCharacterTempStatusManager::GetAccumulatedInfo() const
-{
-    return TempStatus.GetAccumulatedInfo();
+    return TempStatus;
 }

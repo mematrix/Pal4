@@ -3,7 +3,6 @@
 #include <Map.h>
 #include <SharedPointer.h>
 
-#include "CombatDelegate/Character/ICharacterTempStatusAccessor.h"
 #include "CombatDelegate/StatusOpWrapper/ICharacterTempStatusOperator.h"
 #include "FCharacterTemporaryStatus.h"
 
@@ -13,12 +12,16 @@ class ICharacterRoundManager;
 class ITempStatusOpWrapper;
 
 
-class PAL4_API FCharacterTempStatusManager : public ICharacterTempStatusAccessor, public ICharacterTempStatusOperator
+class PAL4_API FCharacterTempStatusManager : public ICharacterTempStatusOperator
 {
 public:
     explicit FCharacterTempStatusManager(ICharacterCombatDelegate&);
 
-    MAKE_DEFAULT_COPY_MOVE_CTOR_AND_OP(FCharacterTempStatusManager)
+    FCharacterTempStatusManager(const FCharacterTempStatusManager&) = default;
+    FCharacterTempStatusManager(FCharacterTempStatusManager&&) = default;
+    
+    FCharacterTempStatusManager& operator=(const FCharacterTempStatusManager&) = default;
+    FCharacterTempStatusManager& operator=(FCharacterTempStatusManager&&) = default;
 
     ICharacterCombatDelegate& GetCharacter() { return Character; }
     const ICharacterCombatDelegate& GetCharacter() const { return Character; }
@@ -30,25 +33,7 @@ public:
 
     void RemoveTemporaryStatus(ECharacterStatusType, ITempStatusOpWrapper&) override;
 
-    void AddTransformer(void*, ECharacterStatusType, const FTransformAction&) override;
-
-    void RemoveTransformer(void* key, ECharacterStatusType type) override;
-
-    void SetCommonBuffStatus(ECommonBuff value) override;
-
-    void SetPoisonStatus(EPoison value) override;
-
-    void SetControlledDebuffStatus(EControlledDebuff value) override;
-
-    void SetInVisibleStatus(bool value) override;
-
-    void SetReviveStatus(bool value) override;
-
-    const FCharacterBattleStatus& GetBattleStatus() const override;
-
-    int32 GetPropertyValue(ECharacterStatusType type) const override;
-
-    const FCharacterStatusInfo& GetAccumulatedInfo() const override;
+    FCharacterTemporaryStatus& GetTempStatus() override;
 
 private:
     ICharacterCombatDelegate& Character;

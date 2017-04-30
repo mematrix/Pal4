@@ -8,8 +8,7 @@
 
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(const ICharacterStatusProperty& status) :
-    ICharacterStatusProperty(),
-    OnBattleStatusChangedEvent(),
+    ICharacterTempStatus(),
     PersistentStatus(status),
     InfoModel{ 0 },
     BattleStatus()
@@ -18,8 +17,7 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(const ICharacterStatusPrope
 }
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) noexcept :
-    ICharacterStatusProperty(MoveTemp(other)),
-    OnBattleStatusChangedEvent(MoveTemp(other.OnBattleStatusChangedEvent)),
+    ICharacterTempStatus(MoveTemp(other)),
     PersistentStatus(other.PersistentStatus),
     InfoModel(MoveTemp(other.InfoModel)),
     BattleStatus(other.BattleStatus)
@@ -71,14 +69,14 @@ void FCharacterTemporaryStatus::UpdateAllProperties()
     NotifyPropertyChanged(ECharacterStatusType::PropertyEnd);
 }
 
-void FCharacterTemporaryStatus::NotifyBattleStatusChanged(ECharacterBattleStatus status)
+void FCharacterTemporaryStatus::OnCombatStatusChanged(ECharacterBattleStatus status) const
 {
     if (status == ECharacterBattleStatus::Property || status > ECharacterBattleStatus::ControlledDebuff)
     {
         return;
     }
 
-    InvokeEvent(OnBattleStatusChangedEvent, *this, status);
+    NotifyCombatStatusChanged(status);
 }
 
 void FCharacterTemporaryStatus::OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType type)

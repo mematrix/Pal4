@@ -1,7 +1,7 @@
 #pragma once
 
 class ICharacterRoundManager;
-class ICharacterTempStatusAccessor;
+class ICharacterTempStatus;
 class IPassiveActionInterceptor;
 
 
@@ -14,7 +14,7 @@ public:
 
     virtual ICharacterRoundManager& GetRoundManager() = 0;
 
-    virtual ICharacterTempStatusAccessor& GetTempStatusAccessor() = 0;
+    virtual ICharacterTempStatus& GetTempStatus() = 0;
 
     virtual IPassiveActionInterceptor& GetActionInterceptor() = 0;
 };
