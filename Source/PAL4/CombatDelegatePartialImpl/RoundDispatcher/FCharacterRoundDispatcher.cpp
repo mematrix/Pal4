@@ -11,7 +11,7 @@ std::default_random_engine generator;
 std::uniform_int_distribution<int32> distribution(FCharacterRoundDispatcher::GetMinInitPosition(),
     FCharacterRoundDispatcher::GetMaxInitPosition());
 
-void FCharacterRoundDispatcher::Init(const TArray<TSharedRef<ICharacterBattleDelegate>>& characters)
+void FCharacterRoundDispatcher::Init(const TArray<TSharedRef<ICharacterCombatDelegate>>& characters)
 {
     auto count = characters.Num();
     for (int i = 0; i < count; ++i)
@@ -29,7 +29,7 @@ void FCharacterRoundDispatcher::OnBattleBegin()
     UpdateProgressView();
 }
 
-void FCharacterRoundDispatcher::AddCharacter(const TSharedRef<ICharacterBattleDelegate>& character)
+void FCharacterRoundDispatcher::AddCharacter(const TSharedRef<ICharacterCombatDelegate>& character)
 {
     auto position = GetNextRandomNum();
     RoundInfoArray.Emplace(character.Get(), position);
@@ -53,7 +53,7 @@ inline int32 GetAdvanceTime(const FCharacterRoundInfo& info)
     return time * (100 - info.GetCurrentPosition());
 }
 
-ICharacterBattleDelegate& FCharacterRoundDispatcher::MoveToNext()
+ICharacterCombatDelegate& FCharacterRoundDispatcher::MoveToNext()
 {
     // 首先取出所有存错的角色信息
     TArray<FCharacterRoundInfo*> infoArray;
@@ -192,12 +192,12 @@ void FCharacterRoundDispatcher::UpdateProgressView()
 {
 }
 
-void FCharacterRoundDispatcher::OnCharacterDead(const ICharacterBattleDelegate &)
+void FCharacterRoundDispatcher::OnCharacterDead(const ICharacterCombatDelegate &)
 {
     UpdateProgressView();
 }
 
-void FCharacterRoundDispatcher::OnCharacterRevive(const ICharacterBattleDelegate& character)
+void FCharacterRoundDispatcher::OnCharacterRevive(const ICharacterCombatDelegate& character)
 {
     // 复活后行动进度置零
     for (auto& info : RoundInfoArray)

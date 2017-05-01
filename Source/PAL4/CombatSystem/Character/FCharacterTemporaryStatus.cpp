@@ -69,9 +69,9 @@ void FCharacterTemporaryStatus::UpdateAllProperties()
     NotifyPropertyChanged(ECharacterStatusType::PropertyEnd);
 }
 
-void FCharacterTemporaryStatus::OnCombatStatusChanged(ECharacterBattleStatus status) const
+void FCharacterTemporaryStatus::OnCombatStatusChanged(ECharacterCombatStatus status) const
 {
-    if (status == ECharacterBattleStatus::Property || status > ECharacterBattleStatus::ControlledDebuff)
+    if (status == ECharacterCombatStatus::Property || status > ECharacterCombatStatus::ControlledDebuff)
     {
         return;
     }

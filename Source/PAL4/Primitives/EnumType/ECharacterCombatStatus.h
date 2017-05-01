@@ -55,7 +55,7 @@ enum class PAL4_API EControlledDebuff
     Chaos = 6
 };
 
-enum class PAL4_API ECharacterBattleStatus
+enum class PAL4_API ECharacterCombatStatus
 {
     // ≥£πÊ Ù–‘
     Property,

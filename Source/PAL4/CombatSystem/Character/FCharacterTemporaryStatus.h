@@ -2,7 +2,7 @@
 
 #include <Platform.h>
 
-#include "Primitives/Model/FCharacterBattleStatus.h"
+#include "Primitives/Model/FCharacterCombatStatus.h"
 #include "CombatDelegate/Character/ICharacterTempStatus.h"
 
 
@@ -28,45 +28,45 @@ public:
     void UpdatePropertyValue(ECharacterStatusType type) override;
     void UpdateAllProperties() override;
 
-    const FCharacterBattleStatus& GetBattleStatus() const override { return BattleStatus; }
+    const FCharacterCombatStatus& GetBattleStatus() const override { return BattleStatus; }
 
 private:
-    void OnCombatStatusChanged(ECharacterBattleStatus) const;
+    void OnCombatStatusChanged(ECharacterCombatStatus) const;
     void OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType);
 
 public:
     void SetCommonBuffStatus(ECommonBuff value) override
     {
         BattleStatus.CommonBuff = value;
-        OnCombatStatusChanged(ECharacterBattleStatus::CommonBuff);
+        OnCombatStatusChanged(ECharacterCombatStatus::CommonBuff);
     }
 
     void SetPoisonStatus(EPoison value) override
     {
         BattleStatus.Poison = value;
-        OnCombatStatusChanged(ECharacterBattleStatus::Poison);
+        OnCombatStatusChanged(ECharacterCombatStatus::Poison);
     }
 
     void SetControlledDebuffStatus(EControlledDebuff value) override
     {
         BattleStatus.ControlledDebuff = value;
-        OnCombatStatusChanged(ECharacterBattleStatus::ControlledDebuff);
+        OnCombatStatusChanged(ECharacterCombatStatus::ControlledDebuff);
     }
 
     void SetInVisibleStatus(bool value) override
     {
         BattleStatus.IsInvisible = value;
-        OnCombatStatusChanged(ECharacterBattleStatus::Invisible);
+        OnCombatStatusChanged(ECharacterCombatStatus::Invisible);
     }
 
     void SetReviveStatus(bool value) override
     {
         BattleStatus.CanRevive = value;
-        OnCombatStatusChanged(ECharacterBattleStatus::CanRevive);
+        OnCombatStatusChanged(ECharacterCombatStatus::CanRevive);
     }
 
 private:
     const ICharacterStatusProperty& PersistentStatus;
     FCharacterStatusInfo InfoModel;
-    FCharacterBattleStatus BattleStatus;
+    FCharacterCombatStatus BattleStatus;
 };
