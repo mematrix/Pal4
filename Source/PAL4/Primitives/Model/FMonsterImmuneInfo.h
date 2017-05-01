@@ -11,5 +11,5 @@ struct PAL4_API FMonsterImmuneInfo
 
     bool GetImmuneInfo(EImmune info) const { return ImmuneInfo & static_cast<int32>(info); }
 
-    void SetImmuneInfo(EImmune info) { ImmuneInfo = ImmuneInfo & static_cast<int32>(info); }
+    void SetImmuneInfo(EImmune info) { ImmuneInfo |= static_cast<int32>(info); }
 };
