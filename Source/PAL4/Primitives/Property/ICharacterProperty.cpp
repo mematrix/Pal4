@@ -6,9 +6,9 @@
 #include "ICharacterProperty.h"
 
 
-ICharacterProperty::ICharacterProperty(int32 id, const FName& name, ERace race, EPhysicalAttackType type, EPhysicalAttackTarget target) :
-    BasicInfo(id, name, race, type, target),
-    OnBasicInfoChangedEvent()
+ICharacterProperty::ICharacterProperty() :
+    OnBasicInfoChangedEvent(),
+    BasicInfo{ 0 }
 {
 }
 

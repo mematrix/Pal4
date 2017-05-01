@@ -6,6 +6,7 @@
 #include "../EnumType/ECharacterBasicType.h"
 #include "../Model/FCharacterBasicInfo.h"
 
+struct FCharacterInherentInfo;
 class ICharacterStatusProperty;
 
 
@@ -15,7 +16,7 @@ public:
     DECLARE_EVENT_TwoParams(ICharacterProperty, FOnBasicInfoChangedEvent, const ICharacterProperty&, ECharacterBasicType)
 
 protected:
-    ICharacterProperty(int32 id, const FName& name, ERace race, EPhysicalAttackType type, EPhysicalAttackTarget target);
+    ICharacterProperty();
 
     ICharacterProperty(const ICharacterProperty&) = default;
     ICharacterProperty(ICharacterProperty&&) = default;
@@ -29,6 +30,8 @@ public:
     FOnBasicInfoChangedEvent& OnBasicInfoChanged() const { return OnBasicInfoChangedEvent; }
 
     virtual bool IsDebuffImmune(EImmune) = 0;
+
+    virtual const FCharacterInherentInfo& GetCharacterInherentInfo() const = 0;
 
     virtual ICharacterStatusProperty& GetStatusProperty() = 0;
     virtual const ICharacterStatusProperty& GetStatusProperty() const = 0;

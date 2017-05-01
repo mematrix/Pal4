@@ -35,4 +35,6 @@ struct PAL4_API FMonsterInherentInfo
     int32 DropMoneyMaxValue;
     // 气初始化值
     int32 CraftInitPoint;
+    // Debuff免疫信息
+    int32 ImmuneFlags;
 };
