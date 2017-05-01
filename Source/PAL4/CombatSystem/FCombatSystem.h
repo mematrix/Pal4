@@ -40,13 +40,13 @@ public:
     FCombatSystem& operator=(const FCombatSystem&) = delete;
 
     // 战斗开始事件
-    FBattleBeginEvent& OnBattleBegin() { return BattleBeginEvent; }
+    FBattleBeginEvent& OnBattleBegin() const { return BattleBeginEvent; }
     // 战斗结束事件
-    FBattleFinishedEvent& OnBattleFinished() { return BattleFinishedEvent; }
+    FBattleFinishedEvent& OnBattleFinished() const { return BattleFinishedEvent; }
     // 人物即将行动
-    FCharacterWillActEvent& OnCharacterWillAct() { return CharacterWillActEvent; }
+    FCharacterWillActEvent& OnCharacterWillAct() const { return CharacterWillActEvent; }
     // 人物结束行动
-    FCharacterFinishActEvent& OnCharacterFinishAct() { return CharacterFinishActEvent; }
+    FCharacterFinishActEvent& OnCharacterFinishAct() const { return CharacterFinishActEvent; }
 
     // TArray<TSharedRef<ICharacterCombatDelegate>>& GetCharacters() { return Characters; }
     const TArray<TSharedRef<FCombatCharacter>>& GetCharacters() const { return Characters; }
@@ -134,10 +134,10 @@ public:
     bool IsPlayerWinned() const;
 
 private:
-    FBattleBeginEvent BattleBeginEvent;
-    FBattleFinishedEvent BattleFinishedEvent;
-    FCharacterWillActEvent CharacterWillActEvent;
-    FCharacterFinishActEvent CharacterFinishActEvent;
+    mutable FBattleBeginEvent BattleBeginEvent;
+    mutable FBattleFinishedEvent BattleFinishedEvent;
+    mutable FCharacterWillActEvent CharacterWillActEvent;
+    mutable FCharacterFinishActEvent CharacterFinishActEvent;
 
     TArray<TSharedRef<FCombatCharacter>> Characters;
     TSharedRef<ICharacterRoundDispatcher> Dispatcher;

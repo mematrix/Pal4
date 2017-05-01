@@ -26,7 +26,7 @@ protected:
 public:
     virtual ~ICharacterProperty() = default;
 
-    FOnBasicInfoChangedEvent& OnBasicInfoChanged() { return OnBasicInfoChangedEvent; }
+    FOnBasicInfoChangedEvent& OnBasicInfoChanged() const { return OnBasicInfoChangedEvent; }
 
     virtual bool IsDebuffImmune(EImmune) = 0;
 
@@ -37,9 +37,7 @@ public:
     int32 GetBasicInfo(ECharacterBasicType) const;
     void SetBasicInfo(ECharacterBasicType, int32);
 
-protected:
-    FCharacterBasicInfo BasicInfo;
-
 private:
-    FOnBasicInfoChangedEvent OnBasicInfoChangedEvent;
+    mutable FOnBasicInfoChangedEvent OnBasicInfoChangedEvent;
+    FCharacterBasicInfo BasicInfo;
 };

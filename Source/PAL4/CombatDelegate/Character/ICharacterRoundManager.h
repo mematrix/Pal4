@@ -34,17 +34,15 @@ public:
     ICharacterRoundManager(const ICharacterRoundManager&) = default;
     ICharacterRoundManager(ICharacterRoundManager&&) = default;
 
-    virtual ~ICharacterRoundManager()
-    {
-    }
+    virtual ~ICharacterRoundManager() = default;
 
     ICharacterRoundManager& operator=(const ICharacterRoundManager&) = default;
     ICharacterRoundManager& operator=(ICharacterRoundManager&&) = default;
 
     // 新回合开始事件
-    FRoundBeginEvent& OnNewRoundBegin() { return RoundBeginEvent; }
+    FRoundBeginEvent& OnNewRoundBegin() const { return RoundBeginEvent; }
     // 当前回合结束事件
-    FRoundFinishedEvent& OnRoundFinished() { return RoundFinishedEvent; }
+    FRoundFinishedEvent& OnRoundFinished() const { return RoundFinishedEvent; }
 
     uint32 GetCurrentRoundNum() const { return RoundNum; }
 
@@ -77,9 +75,9 @@ public:
 
 protected:
     // 回合开始事件
-    FRoundBeginEvent RoundBeginEvent;
+    mutable FRoundBeginEvent RoundBeginEvent;
     // 回合结束事件
-    FRoundFinishedEvent RoundFinishedEvent;
+    mutable FRoundFinishedEvent RoundFinishedEvent;
 
     // 当前回合数
     uint32 RoundNum;

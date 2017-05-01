@@ -29,9 +29,9 @@ public:
         const ISingleAction&, const FBaseStatusModel&, int32)
 
 protected:
-    FOnAttackActionFinishedEvent OnAttackActionFinishedEvent;
-    FOnRestorerActionFinishedEvent OnRestorerActionFinishedEvent;
-    FOnStatusActionFinishedEvent OnStatusActionFinishedEvent;
+    mutable FOnAttackActionFinishedEvent OnAttackActionFinishedEvent;
+    mutable FOnRestorerActionFinishedEvent OnRestorerActionFinishedEvent;
+    mutable FOnStatusActionFinishedEvent OnStatusActionFinishedEvent;
 
 public:
     explicit IPassiveActionInterceptor(ICharacterCombatDelegate& character) :
@@ -46,9 +46,9 @@ public:
     IPassiveActionInterceptor& operator=(const IPassiveActionInterceptor&) = default;
     IPassiveActionInterceptor& operator=(IPassiveActionInterceptor&&) = default;
 
-    FOnAttackActionFinishedEvent& OnAttackActionFinished() { return OnAttackActionFinishedEvent; }
-    FOnRestorerActionFinishedEvent& OnRestorerActionFinished() { return OnRestorerActionFinishedEvent; }
-    FOnStatusActionFinishedEvent& OnStatusActionFinished() { return OnStatusActionFinishedEvent; }
+    FOnAttackActionFinishedEvent& OnAttackActionFinished() const { return OnAttackActionFinishedEvent; }
+    FOnRestorerActionFinishedEvent& OnRestorerActionFinished() const { return OnRestorerActionFinishedEvent; }
+    FOnStatusActionFinishedEvent& OnStatusActionFinished() const { return OnStatusActionFinishedEvent; }
 
     ICharacterCombatDelegate& GetCharacter() const { return Character; }
 

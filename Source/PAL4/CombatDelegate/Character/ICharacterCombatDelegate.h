@@ -27,9 +27,9 @@ public:
     DECLARE_EVENT_OneParam(ICharacterCombatDelegate, FOnCharacterReviveEvent, const ICharacterCombatDelegate&)
 
 protected:
-    FOnPropertyChangedEvent OnPropertyChangedEvent;
-    FOnCharacterDeadEvent OnCharacterDeadEvent;
-    FOnCharacterReviveEvent OnCharacterReviveEvent;
+    mutable FOnPropertyChangedEvent OnPropertyChangedEvent;
+    mutable FOnCharacterDeadEvent OnCharacterDeadEvent;
+    mutable FOnCharacterReviveEvent OnCharacterReviveEvent;
 
 public:
     ICharacterCombatDelegate() : Context(nullptr)
@@ -40,9 +40,9 @@ public:
 
     virtual ~ICharacterCombatDelegate() = default;
 
-    FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
-    FOnCharacterDeadEvent& OnCharacterDead() { return OnCharacterDeadEvent; }
-    FOnCharacterReviveEvent& OnCharacterRevive() { return OnCharacterReviveEvent; }
+    FOnPropertyChangedEvent& OnPropertyChanged() const { return OnPropertyChangedEvent; }
+    FOnCharacterDeadEvent& OnCharacterDead() const { return OnCharacterDeadEvent; }
+    FOnCharacterReviveEvent& OnCharacterRevive() const { return OnCharacterReviveEvent; }
 
     void BeginBattle(ICharacterCombatContext& context)
     {

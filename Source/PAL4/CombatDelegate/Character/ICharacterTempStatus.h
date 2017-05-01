@@ -15,10 +15,10 @@ public:
     /**
      * 当属性值发生变化时调用。第二个参数指示变化的属性类型
      */
-    DECLARE_EVENT_TwoParams(ICharacterTempStatus, FOnBattleStatusChangedEvent, const ICharacterTempStatus&, ECharacterCombatStatus)
+    DECLARE_EVENT_TwoParams(ICharacterTempStatus, FOnCombatStatusChangedEvent, const ICharacterTempStatus&, ECharacterCombatStatus)
 
 private:
-    mutable FOnBattleStatusChangedEvent OnBattleStatusChangedEvent;
+    mutable FOnCombatStatusChangedEvent OnBattleStatusChangedEvent;
 
 protected:
     void NotifyCombatStatusChanged(ECharacterCombatStatus status) const
@@ -37,7 +37,7 @@ public:
     ICharacterTempStatus& operator=(const ICharacterTempStatus&) = default;
     ICharacterTempStatus& operator=(ICharacterTempStatus&&) = default;
 
-    FOnBattleStatusChangedEvent& OnBattleStatusChanged() const { return OnBattleStatusChangedEvent; }
+    FOnCombatStatusChangedEvent& OnBattleStatusChanged() const { return OnBattleStatusChangedEvent; }
 
     /**
      * 获取状态信息（Buff、Debuff、中毒等）

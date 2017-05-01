@@ -13,9 +13,9 @@ public:
     DECLARE_EVENT_OneParam(ICharacterPropertyManager, FOnCharacterReviveEvent, const ICharacterPropertyManager&)
 
 protected:
-    FOnPropertyChangedEvent OnPropertyChangedEvent;
-    FOnCharacterDeadEvent OnCharacterDeadEvent;
-    FOnCharacterReviveEvent OnCharacterReviveEvent;
+    mutable FOnPropertyChangedEvent OnPropertyChangedEvent;
+    mutable FOnCharacterDeadEvent OnCharacterDeadEvent;
+    mutable FOnCharacterReviveEvent OnCharacterReviveEvent;
 
 public:
     ICharacterPropertyManager() = default;
@@ -27,9 +27,9 @@ public:
     ICharacterPropertyManager& operator=(const ICharacterPropertyManager&) = default;
     ICharacterPropertyManager& operator=(ICharacterPropertyManager&&) = default;
 
-    FOnPropertyChangedEvent& OnPropertyChanged() { return OnPropertyChangedEvent; }
-    FOnCharacterDeadEvent& OnCharacterDead() { return OnCharacterDeadEvent; }
-    FOnCharacterReviveEvent& OnCharacterRevive() { return OnCharacterReviveEvent; }
+    FOnPropertyChangedEvent& OnPropertyChanged() const { return OnPropertyChangedEvent; }
+    FOnCharacterDeadEvent& OnCharacterDead() const { return OnCharacterDeadEvent; }
+    FOnCharacterReviveEvent& OnCharacterRevive() const { return OnCharacterReviveEvent; }
 
     /**
      * 角色是否是由玩家控制的一方，true表示玩家一方，false表示敌方（即AI怪物）
