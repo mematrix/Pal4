@@ -17,7 +17,7 @@ protected:
     IMonsterProperty& operator=(IMonsterProperty&&) = default;
 
 public:
-    bool IsDebuffImmune(EImmune) override final;
+    bool IsDebuffImmune(EImmune) const override final;
 
     FMonsterImmuneInfo& AttachedImmuneInfo() { return ImmuneInfo; }
     const FMonsterImmuneInfo& AttachedImmuneInfo() const { return ImmuneInfo; }

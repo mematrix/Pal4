@@ -29,12 +29,12 @@ public:
 
     FOnBasicInfoChangedEvent& OnBasicInfoChanged() const { return OnBasicInfoChangedEvent; }
 
-    virtual bool IsDebuffImmune(EImmune) = 0;
+    virtual bool IsDebuffImmune(EImmune) const = 0;
 
     virtual const FCharacterInherentInfo& GetCharacterInherentInfo() const = 0;
 
-    virtual ICharacterStatusProperty& GetStatusProperty() = 0;
-    virtual const ICharacterStatusProperty& GetStatusProperty() const = 0;
+    virtual ICharacterStatusProperty& StatusProperty() = 0;
+    virtual const ICharacterStatusProperty& StatusProperty() const = 0;
 
     const FCharacterBasicInfo& GetBasicInfo() const { return BasicInfo; }
     int32 GetBasicInfo(ECharacterBasicType) const;

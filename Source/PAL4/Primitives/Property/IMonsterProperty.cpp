@@ -12,7 +12,7 @@ IMonsterProperty::IMonsterProperty() :
 {
 }
 
-bool IMonsterProperty::IsDebuffImmune(EImmune m)
+bool IMonsterProperty::IsDebuffImmune(EImmune m) const
 {
     return (GetMonsterInherentInfo().ImmuneFlags | ImmuneInfo.ImmuneFlags) & static_cast<int32>(m);
 }
