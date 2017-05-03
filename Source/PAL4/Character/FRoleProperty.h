@@ -16,9 +16,9 @@ class PAL4_API FRoleProperty : public ICharacterProperty
 public:
 	FRoleProperty(const TSharedRef<FCharacterInherentInfo>&, const FCharacterStatusInfo&);
 
-    void UpdateStatusInfo(ECharacterStatusType, int32);
+    void UpdateStatusInfo(ECharacterStatusType, int32) override;
 
-    void UpdateStatusInfo(const FCharacterStatusInfo&);
+    void UpdateStatusInfo(const FCharacterStatusInfo&) override;
 
     bool IsDebuffImmune(EImmune) const override final { return false; }
 

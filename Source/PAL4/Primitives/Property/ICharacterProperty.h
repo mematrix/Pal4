@@ -4,8 +4,10 @@
 
 #include "../EnumType/EImmune.h"
 #include "../EnumType/ECharacterBasicType.h"
+#include "../EnumType/ECharacterStatusType.h"
 #include "../Model/FCharacterBasicInfo.h"
 
+struct FCharacterStatusInfo;
 struct FCharacterInherentInfo;
 class ICharacterStatusProperty;
 
@@ -28,6 +30,10 @@ public:
     virtual ~ICharacterProperty() = default;
 
     FOnBasicInfoChangedEvent& OnBasicInfoChanged() const { return OnBasicInfoChangedEvent; }
+
+    virtual void UpdateStatusInfo(ECharacterStatusType, int32) = 0;
+
+    virtual void UpdateStatusInfo(const FCharacterStatusInfo&) = 0;
 
     virtual bool IsDebuffImmune(EImmune) const = 0;
 
