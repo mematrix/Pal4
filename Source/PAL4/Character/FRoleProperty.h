@@ -4,23 +4,22 @@
 
 #include <SharedPointer.h>
 
-#include "Primitives/Property/ICharacterProperty.h"
+#include "Primitives/Property/IRoleProperty.h"
 #include "Primitives/EnumType/ERole.h"
 #include "FCharacterPersistentStatus.h"
+
 
 /**
  * 主角属性对象
  */
-class PAL4_API FRoleProperty : public ICharacterProperty
+class PAL4_API FRoleProperty : public IRoleProperty
 {
 public:
 	FRoleProperty(const TSharedRef<FCharacterInherentInfo>&, const FCharacterStatusInfo&);
 
-    void UpdateStatusInfo(ECharacterStatusType, int32) override;
+    void UpdateStatusInfo(ECharacterStatusType, int32) override final;
 
-    void UpdateStatusInfo(const FCharacterStatusInfo&) override;
-
-    bool IsDebuffImmune(EImmune) const override final { return false; }
+    void UpdateStatusInfo(const FCharacterStatusInfo&) override final;
 
     const FCharacterInherentInfo& GetCharacterInherentInfo() const override final
     {
@@ -31,9 +30,9 @@ public:
 
     const FCharacterPersistentStatus& StatusProperty() const override final { return PersistentStatus; }
 
-    void SetRoleFavor(ERole, int32);
-    void AddRoleFavor(ERole, int32);
-    int32 GetRoleFavor(ERole) const;
+    void SetRoleFavor(ERole, int32) override final;
+    void AddRoleFavor(ERole, int32) override final;
+    int32 GetRoleFavor(ERole) const override final;
 
 private:
     // 人物固有属性信息（包括ID、名称、种族、普攻类型等）
