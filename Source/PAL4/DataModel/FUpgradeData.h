@@ -51,7 +51,7 @@ struct PAL4_API FUpgradeData
     int32 SoilElementalDamageAttach;
 
     // 物理抗性。实际百分比*100
-    int32 AttackResistance;
+    int32 PhysicalResistance;
     // 水系仙术抗性。实际百分比*100
     int32 WaterMagicResistance;
     // 火系仙术抗性。实际百分比*100
