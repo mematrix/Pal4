@@ -140,6 +140,40 @@ void ICharacterProperty::SetBasicInfo(ECharacterBasicType type, int32 value)
 
     if (oldValue != value)
     {
-        InvokeEvent(OnBasicInfoChangedEvent, *this, type);
+        if (type == ECharacterBasicType::Level)
+        {
+            InvokeEvent(OnLevelUpgradedEvent, *this, BasicInfo.Level);
+        }
+        InvokeEvent(OnBasicInfoChangedEvent, *this, static_cast<int32>(type));
+    }
+}
+
+void ICharacterProperty::SetBasicInfo(const FCharacterBasicInfo& info)
+{
+    int32 diff = 0;
+    diff |= BasicInfo.Level != info.Level ? static_cast<int32>(ECharacterBasicType::Level) : 0;
+    diff |= BasicInfo.Experience != info.Experience ? static_cast<int32>(ECharacterBasicType::Experience) : 0;
+    diff |= BasicInfo.MaxHealthPoint != info.MaxHealthPoint ? static_cast<int32>(ECharacterBasicType::MaxHealth) : 0;
+    diff |= BasicInfo.MaxManaPoint != info.MaxManaPoint ? static_cast<int32>(ECharacterBasicType::MaxMana) : 0;
+    diff |= BasicInfo.MaxCraftPoint != info.MaxCraftPoint ? static_cast<int32>(ECharacterBasicType::MaxCraft) : 0;
+    diff |= BasicInfo.HealthPoint != info.HealthPoint ? static_cast<int32>(ECharacterBasicType::Health) : 0;
+    diff |= BasicInfo.ManaPoint != info.ManaPoint ? static_cast<int32>(ECharacterBasicType::Mana) : 0;
+    diff |= BasicInfo.CraftPoint != info.CraftPoint ? static_cast<int32>(ECharacterBasicType::Craft) : 0;
+    for (int32 i = 0; i < 5; ++i)
+    {
+        if (BasicInfo.MagicPoints[i] != info.MagicPoints[i])
+        {
+            diff |= static_cast<int32>(ECharacterBasicType::WaterPoint) << i;
+        }
+    }
+
+    if (0 != diff)
+    {
+        BasicInfo = info;
+        if (diff & static_cast<int32>(ECharacterBasicType::Level))
+        {
+            InvokeEvent(OnLevelUpgradedEvent, *this, BasicInfo.Level);
+        }
+        InvokeEvent(OnBasicInfoChangedEvent, *this, diff);
     }
 }

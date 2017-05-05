@@ -35,7 +35,7 @@ int32 FCharacterStatusInfo::* const PropertySet[PropertySetCount] =
     &FCharacterStatusInfo::SoilElementalDamageAttach,
 
     // 物理抗性
-    &FCharacterStatusInfo::AttackResistance,
+    &FCharacterStatusInfo::PhysicalResistance,
     // 水系仙术抗性
     &FCharacterStatusInfo::WaterMagicResistance,
     // 火系仙术抗性
@@ -62,12 +62,12 @@ int32 FCharacterStatusInfo::* const PropertySet[PropertySetCount] =
 
     // 格挡率
     &FCharacterStatusInfo::BlockRate,
-    // 闪避率
-    &FCharacterStatusInfo::DodgeRate,
     // 命中率
     &FCharacterStatusInfo::HitRate,
     // 暴击率
-    &FCharacterStatusInfo::CritRate,
+    &FCharacterStatusInfo::CritRate //,
+    // 闪避率
+    //&FCharacterStatusInfo::DodgeRate,
 };
 
 int32 FStatusInfoAccessHelper::GetPropertyValue(ECharacterStatusType type) const

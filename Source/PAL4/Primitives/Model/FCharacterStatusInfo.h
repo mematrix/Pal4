@@ -2,6 +2,7 @@
 
 #include <Platform.h>
 
+
 struct PAL4_API FCharacterStatusInfo
 {
     // 武
@@ -29,7 +30,7 @@ struct PAL4_API FCharacterStatusInfo
     int32 SoilElementalDamageAttach;
 
     // 物理抗性。实际百分比*100
-    int32 AttackResistance;
+    int32 PhysicalResistance;
     // 水系仙术抗性。实际百分比*100
     int32 WaterMagicResistance;
     // 火系仙术抗性。实际百分比*100
@@ -56,10 +57,10 @@ struct PAL4_API FCharacterStatusInfo
 
     // 格挡率。实际百分比*100
     int32 BlockRate;
-    // 闪避率。实际百分比*100
-    int32 DodgeRate;
     // 命中率。实际百分比*100
     int32 HitRate;
     // 暴击率。实际百分比*100
     int32 CritRate;
+    // 闪避率。实际百分比*100
+    //int32 DodgeRate;
 };

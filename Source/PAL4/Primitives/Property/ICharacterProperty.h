@@ -15,7 +15,10 @@ class ICharacterStatusProperty;
 class PAL4_API ICharacterProperty
 {
 public:
-    DECLARE_EVENT_TwoParams(ICharacterProperty, FOnBasicInfoChangedEvent, const ICharacterProperty&, ECharacterBasicType)
+    /*
+     * 当人物基本属性值发生变化后触发。第二个参数是一个flag，指示了所有变化属性
+     */
+    DECLARE_EVENT_TwoParams(ICharacterProperty, FOnBasicInfoChangedEvent, const ICharacterProperty&, int32)
     /**
      * 当人物等级升级之后触发事件
      */
@@ -51,6 +54,7 @@ public:
     const FCharacterBasicInfo& GetBasicInfo() const { return BasicInfo; }
     int32 GetBasicInfo(ECharacterBasicType) const;
     void SetBasicInfo(ECharacterBasicType, int32);
+    void SetBasicInfo(const FCharacterBasicInfo&);
 
 private:
     mutable FOnBasicInfoChangedEvent OnBasicInfoChangedEvent;

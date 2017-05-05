@@ -63,14 +63,14 @@ enum class PAL4_API ECharacterStatusType : int32
 
     // 格挡率
     BlockRate,
-    // 闪避率
-    DodgeRate,
     // 命中率
     HitRate,
     // 暴击率
     CritRate,
 
     PropertyEnd
+    // 闪避率
+    //DodgeRate,
 };
 
 constexpr uint32 PropertySetCount = static_cast<uint32>(ECharacterStatusType::PropertyEnd);
