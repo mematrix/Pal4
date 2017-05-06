@@ -12,11 +12,14 @@ struct FCharacterInherentInfo;
 class ICharacterStatusProperty;
 
 
+/**
+ * 人物属性基类。包括主角和怪物基本属性接口
+ */
 class PAL4_API ICharacterProperty
 {
 public:
-    /*
-     * 当人物基本属性值发生变化后触发。第二个参数是一个flag，指示了所有变化属性
+    /**
+     * 当人物基本属性值发生变化后触发。第二个参数是一个flag，指示了所有变化的属性
      */
     DECLARE_EVENT_TwoParams(ICharacterProperty, FOnBasicInfoChangedEvent, const ICharacterProperty&, int32)
     /**
@@ -25,7 +28,7 @@ public:
     DECLARE_EVENT_TwoParams(ICharacterProperty, FOnLevelUpgradedEvent, const ICharacterProperty&, int32)
 
 protected:
-    ICharacterProperty();
+    explicit ICharacterProperty(const FCharacterBasicInfo&);
 
     ICharacterProperty(const ICharacterProperty&) = default;
     ICharacterProperty(ICharacterProperty&&) = default;
@@ -53,6 +56,7 @@ public:
 
     const FCharacterBasicInfo& GetBasicInfo() const { return BasicInfo; }
     int32 GetBasicInfo(ECharacterBasicType) const;
+
     void SetBasicInfo(ECharacterBasicType, int32);
     void SetBasicInfo(const FCharacterBasicInfo&);
 

@@ -6,9 +6,10 @@
 #include "ICharacterProperty.h"
 
 
-ICharacterProperty::ICharacterProperty() :
+ICharacterProperty::ICharacterProperty(const FCharacterBasicInfo& info) :
     OnBasicInfoChangedEvent(),
-    BasicInfo{ 0 }
+    OnLevelUpgradedEvent(),
+    BasicInfo(info)
 {
 }
 

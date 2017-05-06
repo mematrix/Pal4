@@ -6,10 +6,13 @@
 struct FMonsterInherentInfo;
 
 
+/**
+ * 怪物属性基类
+ */
 class PAL4_API IMonsterProperty : public ICharacterProperty
 {
 protected:
-    IMonsterProperty();
+    IMonsterProperty(const FCharacterBasicInfo&, const FMonsterImmuneInfo&);
     IMonsterProperty(const IMonsterProperty&) = default;
     IMonsterProperty(IMonsterProperty&&) = default;
     

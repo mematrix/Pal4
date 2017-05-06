@@ -6,9 +6,9 @@
 #include "../Model/FMonsterInherentInfo.h"
 
 
-IMonsterProperty::IMonsterProperty() :
-    ICharacterProperty(),
-    ImmuneInfo{ 0 }
+IMonsterProperty::IMonsterProperty(const FCharacterBasicInfo& info, const FMonsterImmuneInfo& immuneInfo) :
+    ICharacterProperty(info),
+    ImmuneInfo(immuneInfo)
 {
 }
 

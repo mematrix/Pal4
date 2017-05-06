@@ -1,34 +1,37 @@
 #pragma once
 
 
+/**
+ * УтвпаХЯЂУЖОйЁЃЖЈЗтНћУпПёТвЃЌЮхЖОЃЌЮќбЊЃЌБиЫРзчжф
+ */
 enum class PAL4_API EImmune
 {
     // ЖЈУтвп
-    Root = 1 << 0,
+    Root = 1 << 12,
     // ЗтУтвп
-    SealMagic = 1 << 1,
+    SealMagic = 1 << 11,
     // НћУтвп
-    BanProp = 1 << 2,
+    BanProp = 1 << 10,
     // УпУтвп
-    Sleep = 1 << 3,
+    Sleep = 1 << 9,
     // ПёУтвп
-    Crazy = 1 << 4,
+    Crazy = 1 << 8,
     // ТвУтвп
-    Chaos = 1 << 5,
+    Chaos = 1 << 7,
 
     // ЫЎЖОУтвп
     Water = 1 << 6,
     // Л№ЖОУтвп
-    Fire = 1 << 7,
+    Fire = 1 << 5,
     // РзЖОУтвп
-    Thunder = 1 << 8,
+    Thunder = 1 << 4,
     // ЗчЖОУтвп
-    Wind = 1 << 9,
+    Wind = 1 << 3,
     // ЭСЖОУтвп
-    Soil = 1 << 10,
+    Soil = 1 << 2,
 
     // ЮќбЊУтвп
-    SuckBlook = 1 << 11,
+    SuckBlook = 1 << 1,
     // БиЫРУтвп
-    Death = 1 << 12
+    Death = 1 << 0
 };
