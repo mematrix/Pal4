@@ -5,7 +5,6 @@
 #include <SharedPointer.h>
 
 #include "Primitives/Property/IRoleProperty.h"
-#include "Primitives/EnumType/ERole.h"
 #include "FCharacterPersistentStatus.h"
 
 
@@ -15,7 +14,12 @@
 class PAL4_API FRoleProperty : public IRoleProperty
 {
 public:
-	FRoleProperty(const TSharedRef<FCharacterInherentInfo>&, const FCharacterStatusInfo&);
+	FRoleProperty(const TSharedRef<FCharacterInherentInfo>&, const FCharacterBasicInfo&, const FCharacterStatusInfo&, int32[4]);
+    FRoleProperty(const FRoleProperty&) = default;
+    FRoleProperty(FRoleProperty&&) = default;
+
+    FRoleProperty& operator=(const FRoleProperty&) = default;
+    FRoleProperty& operator=(FRoleProperty&&) = default;
 
     void UpdateStatusInfo(ECharacterStatusType, int32) override final;
 
@@ -30,10 +34,6 @@ public:
 
     const FCharacterPersistentStatus& StatusProperty() const override final { return PersistentStatus; }
 
-    void SetRoleFavor(ERole, int32) override final;
-    void AddRoleFavor(ERole, int32) override final;
-    int32 GetRoleFavor(ERole) const override final;
-
 private:
     // 人物固有属性信息（包括ID、名称、种族、普攻类型等）
     TSharedRef<FCharacterInherentInfo> InherentInfo;
@@ -41,13 +41,4 @@ private:
     FCharacterStatusInfo StatusInfo;
     // 人物属性对象。计算了状态加成（装备等）之后的值
     FCharacterPersistentStatus PersistentStatus;
-
-    // 对天河好感度
-    int32 FavorOfTianhe;
-    // 对菱纱好感度
-    int32 FavorOfLingsha;
-    // 对梦璃好感度
-    int32 FavorOfMengli;
-    // 对紫英好感度
-    int32 FavorOfZiying;
 };
