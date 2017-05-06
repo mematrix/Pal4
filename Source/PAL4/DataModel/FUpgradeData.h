@@ -3,6 +3,9 @@
 #include <Platform.h>
 
 
+/**
+ * 升级数据
+ */
 struct PAL4_API FUpgradeData
 {
     // 等级
@@ -11,10 +14,10 @@ struct PAL4_API FUpgradeData
     int32 Experience;
     // 精最大值
     int32 MaxHealthPoint;
-    // 神最大值
-    int32 MaxManaPoint;
     // 气增加量
     int32 CraftIncreaseValue;
+    // 神最大值
+    int32 MaxManaPoint;
 
     // 武
     int32 AttackPoint;
@@ -76,10 +79,10 @@ struct PAL4_API FUpgradeData
     // 土属性伤害反弹。实际百分比*100
     int32 SoilElementalDamageBounce;
 
-    // 格挡率。实际百分比*100
-    int32 BlockRate;
-    // 命中率。实际百分比*100
-    int32 HitRate;
-    // 暴击率。实际百分比*100
+    // 暴击率附加。实际百分比*100
     int32 CritRate;
+    // 格挡率附加。实际百分比*100
+    int32 BlockRate;
+    // 命中率附加。实际百分比*100
+    int32 HitRate;
 };
