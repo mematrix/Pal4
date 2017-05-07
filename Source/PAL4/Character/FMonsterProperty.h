@@ -9,7 +9,7 @@
 class PAL4_API FMonsterProperty : public IMonsterProperty
 {
 public:
-    FMonsterProperty(const TSharedRef<FCharacterInherentInfo>&, const TSharedRef<FMonsterInherentInfo>&, const FCharacterBasicInfo&, const FCharacterStatusInfo&, const FMonsterImmuneInfo&);
+    FMonsterProperty(const TSharedRef<FCharacterInherentInfo>&, const TSharedRef<FMonsterInherentInfo>&, const FCharacterBasicInfo&, const FCharacterStatusInfo&, const FMonsterTypicalInfo&);
     FMonsterProperty(const FMonsterProperty&) = default;
     FMonsterProperty(FMonsterProperty&&) = default;
 

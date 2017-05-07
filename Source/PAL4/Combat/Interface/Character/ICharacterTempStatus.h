@@ -3,9 +3,9 @@
 #include <Delegate.h>
 
 #include "Primitives/Property/ICharacterStatusProperty.h"
-#include "Primitives/EnumType/ECharacterCombatStatus.h"
+#include "Primitives/EnumType/ECombatStatus.h"
 
-struct FCharacterCombatStatus;
+struct FCombatStatus;
 struct FCharacterStatusInfo;
 
 
@@ -15,13 +15,13 @@ public:
     /**
      * 当属性值发生变化时调用。第二个参数指示变化的属性类型
      */
-    DECLARE_EVENT_TwoParams(ICharacterTempStatus, FOnCombatStatusChangedEvent, const ICharacterTempStatus&, ECharacterCombatStatus)
+    DECLARE_EVENT_TwoParams(ICharacterTempStatus, FOnCombatStatusChangedEvent, const ICharacterTempStatus&, ECombatStatus)
 
 private:
     mutable FOnCombatStatusChangedEvent OnBattleStatusChangedEvent;
 
 protected:
-    void NotifyCombatStatusChanged(ECharacterCombatStatus status) const
+    void NotifyCombatStatusChanged(ECombatStatus status) const
     {
         if (OnBattleStatusChangedEvent.IsBound())
         {
@@ -42,7 +42,7 @@ public:
     /**
      * 获取状态信息（Buff、Debuff、中毒等）
      */
-    virtual const FCharacterCombatStatus& GetBattleStatus() const = 0;
+    virtual const FCombatStatus& GetBattleStatus() const = 0;
 
     virtual void SetCommonBuffStatus(ECommonBuff value) = 0;
 

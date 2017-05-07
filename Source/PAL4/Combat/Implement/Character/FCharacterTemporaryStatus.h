@@ -28,45 +28,45 @@ public:
     void UpdatePropertyValue(ECharacterStatusType type) override;
     void UpdateAllProperties() override;
 
-    const FCharacterCombatStatus& GetBattleStatus() const override { return BattleStatus; }
+    const FCombatStatus& GetBattleStatus() const override { return BattleStatus; }
 
 private:
-    void OnCombatStatusChanged(ECharacterCombatStatus) const;
+    void OnCombatStatusChanged(ECombatStatus) const;
     void OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType);
 
 public:
     void SetCommonBuffStatus(ECommonBuff value) override
     {
         BattleStatus.CommonBuff = value;
-        OnCombatStatusChanged(ECharacterCombatStatus::CommonBuff);
+        OnCombatStatusChanged(ECombatStatus::CommonBuff);
     }
 
     void SetPoisonStatus(EPoison value) override
     {
         BattleStatus.Poison = value;
-        OnCombatStatusChanged(ECharacterCombatStatus::Poison);
+        OnCombatStatusChanged(ECombatStatus::Poison);
     }
 
     void SetControlledDebuffStatus(EControlledDebuff value) override
     {
         BattleStatus.ControlledDebuff = value;
-        OnCombatStatusChanged(ECharacterCombatStatus::ControlledDebuff);
+        OnCombatStatusChanged(ECombatStatus::ControlledDebuff);
     }
 
     void SetInVisibleStatus(bool value) override
     {
         BattleStatus.IsInvisible = value;
-        OnCombatStatusChanged(ECharacterCombatStatus::Invisible);
+        OnCombatStatusChanged(ECombatStatus::Invisible);
     }
 
     void SetReviveStatus(bool value) override
     {
         BattleStatus.CanRevive = value;
-        OnCombatStatusChanged(ECharacterCombatStatus::CanRevive);
+        OnCombatStatusChanged(ECombatStatus::CanRevive);
     }
 
 private:
     const ICharacterStatusProperty& PersistentStatus;
     FCharacterStatusInfo InfoModel;
-    FCharacterCombatStatus BattleStatus;
+    FCombatStatus BattleStatus;
 };

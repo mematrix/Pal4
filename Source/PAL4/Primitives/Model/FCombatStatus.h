@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../EnumType/ECharacterCombatStatus.h"
+#include "../EnumType/ECombatStatus.h"
 
 
 // Buff状态
-struct PAL4_API FCharacterCombatStatus
+struct PAL4_API FCombatStatus
 {
     // 通用Buff：镜壁界宁
     ECommonBuff CommonBuff;
@@ -17,7 +17,7 @@ struct PAL4_API FCharacterCombatStatus
     // 是否可在死亡后立即复活。“生”状态
     bool CanRevive;
 
-    FCharacterCombatStatus() :
+    FCombatStatus() :
         CommonBuff(ECommonBuff::None),
         Poison(EPoison::None),
         ControlledDebuff(EControlledDebuff::None),

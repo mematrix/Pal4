@@ -168,10 +168,6 @@ struct PAL4_API FMonsterData
     std::string InjuredSound2;
     // 受伤音效3
     std::string InjuredSound3;
-    // 受伤音效4
-    std::string InjuredSound4;
-    // 受伤音效5
-    std::string InjuredSound5;
     // 死亡音效
     std::string DeathSound;
 };

@@ -37,4 +37,7 @@ struct PAL4_API FMonsterInherentInfo
     int32 CraftInitPoint;
     // Debuff√‚“ﬂ–≈œ¢
     int32 ImmuneFlags;
+
+    // À¿Õˆ“Ù–ß
+    FName DeathSound;
 };

@@ -5,8 +5,11 @@
 #include "../EnumType/EImmune.h"
 
 
-struct PAL4_API FMonsterImmuneInfo
+struct PAL4_API FMonsterTypicalInfo
 {
+    // 反击率追加
+    int32 HitbackRate;
+    // 免疫信息
     int32 ImmuneFlags;
 
     bool GetImmuneInfo(EImmune info) const { return ImmuneFlags & static_cast<int32>(info); }

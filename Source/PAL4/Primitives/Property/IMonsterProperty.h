@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ICharacterProperty.h"
-#include "../Model/FMonsterImmuneInfo.h"
+#include "../Model/FMonsterTypicalInfo.h"
 
 struct FMonsterInherentInfo;
 
@@ -12,7 +12,7 @@ struct FMonsterInherentInfo;
 class PAL4_API IMonsterProperty : public ICharacterProperty
 {
 protected:
-    IMonsterProperty(const FCharacterBasicInfo&, const FMonsterImmuneInfo&);
+    IMonsterProperty(const FCharacterBasicInfo&, const FMonsterTypicalInfo&);
     IMonsterProperty(const IMonsterProperty&) = default;
     IMonsterProperty(IMonsterProperty&&) = default;
     
@@ -22,11 +22,11 @@ protected:
 public:
     bool IsDebuffImmune(EImmune) const override final;
 
-    FMonsterImmuneInfo& AttachedImmuneInfo() { return ImmuneInfo; }
-    const FMonsterImmuneInfo& AttachedImmuneInfo() const { return ImmuneInfo; }
+    FMonsterTypicalInfo& AttachedImmuneInfo() { return ImmuneInfo; }
+    const FMonsterTypicalInfo& AttachedImmuneInfo() const { return ImmuneInfo; }
 
     virtual const FMonsterInherentInfo& GetMonsterInherentInfo() const = 0;
 
 private:
-    FMonsterImmuneInfo ImmuneInfo;
+    FMonsterTypicalInfo ImmuneInfo;
 };

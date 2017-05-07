@@ -18,4 +18,17 @@ struct PAL4_API FCharacterInherentInfo
     EPhysicalAttackType PhysicalAttackType;
     // 物理攻击目标
     EPhysicalAttackTarget PhysicalAttackTarget;
+
+    // 二维图标
+    int32 IconID2D;
+    // 三维模型编号
+    int32 ModelID3D;
+    // 三维贴图编号
+    int32 MapID3D;
+    // 受伤音效1
+    FName InjuredSound1;
+    // 受伤音效2
+    FName InjuredSound2;
+    // 受伤音效3
+    FName InjuredSound3;
 };
