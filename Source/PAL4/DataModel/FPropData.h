@@ -8,7 +8,7 @@
 /**
  * 物品数据
  */
-struct PAL4_API FPropertyData
+struct PAL4_API FPropData
 {
     // 物品ID
     int32 ID;
