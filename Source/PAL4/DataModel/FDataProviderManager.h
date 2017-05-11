@@ -2,7 +2,7 @@
 
 #include <SharedPointer.h>
 
-class IUpgradeDataProvider;
+class IRoleDataProvider;
 
 
 /**
@@ -12,5 +12,5 @@ class PAL4_API FDataProviderManager
 {
 public:
     // TODO: 需要改成非静态方法调用
-    static TSharedRef<IUpgradeDataProvider> GetUpgradeDataProvider();
+    static TSharedRef<IRoleDataProvider> GetUpgradeDataProvider();
 };

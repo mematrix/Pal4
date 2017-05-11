@@ -2,18 +2,27 @@
 
 #include <vector>
 
+#include "FRoleData.h"
 #include "FUpgradeData.h"
 
 
-class PAL4_API IUpgradeDataProvider
+/**
+ * 角色属性数据提供类
+ */
+class PAL4_API IRoleDataProvider
 {
 public:
-    virtual ~IUpgradeDataProvider() = default;
+    virtual ~IRoleDataProvider() = default;
+
+    /**
+     * 获取指定角色固有属性信息
+     */
+    virtual const FRoleData& GetRoleBaseData(int32 id) = 0;
 
     /**
      * 获取指定角色所有等级数据
      */
-    virtual const std::vector<FUpgradeData>& GetRoleData(int32 id) = 0;
+    virtual const std::vector<FUpgradeData>& GetRoleAllData(int32 id) = 0;
 
     /**
      * 获取指定等级的基础属性数据

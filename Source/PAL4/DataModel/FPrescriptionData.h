@@ -5,39 +5,60 @@
 #include <Platform.h>
 
 
-/**
- * 装备数据
- */
-struct PAL4_API FEquipData
+struct PAL4_API FPrescriptionData
 {
-    // 装备ID
+    // 配方ID
     int32 ID;
-    // 装备名称
+    // 配方名称
     std::string Name;
-    // 装备信息描述
+    // 配方描述
     std::string Description;
+    // 配方属性说明
+    std::string EffectDescription;
 
-    // 装备类型
-    uint8 Class;
-    // 是否双手武器
-    bool TwoHandedWeapon;
-    // 天河穿戴等级下限。0表示不适合穿戴
-    int32 LevelLimitOfTianhe;
-    // 菱纱穿戴等级下限。0表示不适合穿戴
-    int32 LevelLimitOfLingsha;
-    // 梦璃穿戴等级下限。0表示不适合穿戴
-    int32 LevelLimitOfMengli;
-    // 紫英穿戴等级下限。0表示不适合穿戴
-    int32 LevelLimitOfZiying;
+    uint8 Type;
+    //
+    bool CanUseOnSword;
+    //
+    bool CanUseOnDoubleSword;
+    //
+    bool CanUseOnInstrument;
+    //
+    bool CanUseOnHeadArmor;
+    //
+    bool CanUseOnBodyArmor;
+    //
+    bool CanUseOnFootArmor;
+    //
+    bool CanUseOnOrnament;
 
-    // 金钱价格
-    int32 Price;
-    // 挂载技能ID
+    //
+    int32 SynthesisPropID;
+    //
+    uint8 PotentialExpectedValue;
+    //
+    uint8 NimbusRequiredValue;
+    //
     int32 SkillID;
-    // 灵容量
-    uint8 NimbusValue;
-    // 潜力
-    uint8 PotentialValue;
+
+    //
+    int32 Price;
+    //
+    int32 Material1ID;
+    //
+    int32 Material1Count;
+    //
+    int32 Material2ID;
+    //
+    int32 Material2Count;
+    //
+    int32 Material3ID;
+    //
+    int32 Material3Count;
+    //
+    int32 Material4ID;
+    //
+    int32 Material4Count;
 
     // 精最大值
     int32 MaxHealthChange;
@@ -112,11 +133,4 @@ struct PAL4_API FEquipData
     int32 BlockRate;
     // 命中率附加。实际百分比*100
     int32 HitRate;
-
-    // 二维图标
-    int32 IconID2D;
-    // 三维模型编号
-    int32 ModelID3D;
-    // 三维贴图编号
-    int32 MapID3D;
 };

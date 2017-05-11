@@ -1,15 +1,17 @@
 #pragma once
 
-#include "../IUpgradeDataProvider.h"
+#include "../IRoleDataProvider.h"
 
 
 /**
- * @code IUpgradeDataProvider \endcode 实现类。（预计）初始化时从sqlite读取数据
+ * @code IRoleDataProvider \endcode 实现类。（预计）初始化时从sqlite读取数据
  */
-class PAL4_API FUpgradeDataProvider : public IUpgradeDataProvider
+class PAL4_API FRoleDataProvider : public IRoleDataProvider
 {
 public:
-    const std::vector<FUpgradeData>& GetRoleData(int32 id) override;
+    const FRoleData& GetRoleBaseData(int32 id) override;
+
+    const std::vector<FUpgradeData>& GetRoleAllData(int32 id) override;
 
     const FUpgradeData& GetRoleLevelData(int32 id, int32 level) override;
 
