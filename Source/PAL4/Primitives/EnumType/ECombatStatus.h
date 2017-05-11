@@ -41,18 +41,18 @@ enum class PAL4_API EPoison
 enum class PAL4_API EControlledDebuff
 {
     None = 0,
-    // 定，角色处于不可操作状态
-    Root = 1,
-    // 封，角色不可使用仙术和物品
-    SealMagic = 2,
-    // 禁，角色不可使用物品和特技，不可使用逃跑
-    BanProp = 3,
-    // 眠，角色处于不可操作状态，受攻击可解除
-    Sleep = 4,
-    // 狂，角色无法控制，不分敌我的进行普通攻击，攻击力加倍
-    Crazy = 5,
-    // 乱，角色无法控制，不分敌我，可做战斗中除了使用物品以外的任意事情
-    Chaos = 6
+    // 定，角色处于不可操作状态。Root
+    Ding = 1,
+    // 封，角色不可使用仙术和物品。SealMagic
+    Feng = 2,
+    // 禁，角色不可使用物品和特技，不可使用逃跑。BanProp
+    Jin = 3,
+    // 眠，角色处于不可操作状态，受攻击可解除。Sleep
+    Mian = 4,
+    // 狂，角色无法控制，不分敌我的进行普通攻击，攻击力加倍。Crazy
+    Kuang = 5,
+    // 乱，角色无法控制，不分敌我，可做战斗中除了使用物品以外的任意事情。Chaos
+    Luan = 6
 };
 
 enum class PAL4_API ECombatStatus
@@ -64,7 +64,7 @@ enum class PAL4_API ECombatStatus
     // 隐身状态
     Invisible,
     // “生”状态
-    CanRevive,
+    Resurrection,
     // 中毒属性
     Poison,
     // 控制性Debuff
