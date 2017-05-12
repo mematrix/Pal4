@@ -7,7 +7,7 @@
 #include "Primitives/Model/FCharacterInherentInfo.h"
 #include "Primitives/Model/FCharacterStatusInfo.h"
 #include "DataModel/FDataProviderManager.h"
-#include "DataModel/IUpgradeDataProvider.h"
+#include "DataModel/IRoleDataProvider.h"
 
 
 void FLevelManager::AddRoleExperience(IRoleProperty& role, int32 exp)
