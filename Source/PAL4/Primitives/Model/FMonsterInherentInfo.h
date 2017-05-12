@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <NameTypes.h>
 
 #include "../EnumType/EAIType.h"
@@ -39,5 +41,5 @@ struct PAL4_API FMonsterInherentInfo
     int32 ImmuneFlags;
 
     // À¿Õˆ“Ù–ß
-    FName DeathSound;
+    std::string DeathSound;
 };

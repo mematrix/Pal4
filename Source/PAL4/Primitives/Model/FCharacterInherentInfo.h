@@ -1,6 +1,9 @@
 #pragma once
 
+#include <string>
+
 #include <NameTypes.h>
+
 #include "Primitives/EnumType/ERace.h"
 #include "Primitives/EnumType/EPhysicalAttack.h"
 
@@ -26,9 +29,9 @@ struct PAL4_API FCharacterInherentInfo
     // 三维贴图编号
     int32 MapID3D;
     // 受伤音效1
-    FName InjuredSound1;
+    std::string InjuredSound1;
     // 受伤音效2
-    FName InjuredSound2;
+    std::string InjuredSound2;
     // 受伤音效3
-    FName InjuredSound3;
+    std::string InjuredSound3;
 };
