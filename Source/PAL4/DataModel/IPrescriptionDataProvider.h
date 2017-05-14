@@ -14,5 +14,5 @@ public:
     /**
      * 获取配方数据
      */
-    virtual const FPrescriptionData& GetPrescriptionData(int32 id) = 0;
+    virtual const FPrescriptionData& GetPrescriptionData(int32 id) const = 0;
 };

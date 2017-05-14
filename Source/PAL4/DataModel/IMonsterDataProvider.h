@@ -14,5 +14,5 @@ public:
     /**
      * 获取指定ID的怪物属性
      */
-    virtual const FMonsterData& GetMonsterData(int32 id) = 0;
+    virtual const FMonsterData& GetMonsterData(int32 id) const = 0;
 };
