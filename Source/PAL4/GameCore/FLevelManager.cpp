@@ -6,13 +6,13 @@
 #include "Primitives/Property/IRoleProperty.h"
 #include "Primitives/Model/FCharacterInherentInfo.h"
 #include "Primitives/Model/FCharacterStatusInfo.h"
-#include "DataModel/FDataProviderManager.h"
+#include "DataModel/IDataProviderManager.h"
 #include "DataModel/IRoleDataProvider.h"
 
 
 void FLevelManager::AddRoleExperience(IRoleProperty& role, int32 exp)
 {
-    auto provider = FDataProviderManager::GetUpgradeDataProvider();
+    auto provider = IDataProviderManager::GetUpgradeDataProvider();
 
     auto& info = role.GetBasicInfo();
     int32 id = role.GetCharacterInherentInfo().ID;
