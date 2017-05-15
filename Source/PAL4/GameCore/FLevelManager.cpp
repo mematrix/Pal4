@@ -3,6 +3,7 @@
 #include "PAL4.h"
 
 #include "FLevelManager.h"
+#include "FCoreGame.h"
 #include "Primitives/Property/IRoleProperty.h"
 #include "Primitives/Model/FCharacterInherentInfo.h"
 #include "Primitives/Model/FCharacterStatusInfo.h"
@@ -12,20 +13,21 @@
 
 void FLevelManager::AddRoleExperience(IRoleProperty& role, int32 exp)
 {
-    auto provider = IDataProviderManager::GetUpgradeDataProvider();
+    auto& game = FCoreGame::SharedInstance();
+    auto& provider = game.GetDataProviderManager().GetRoleDataProvider();
 
     auto& info = role.GetBasicInfo();
     int32 id = role.GetCharacterInherentInfo().ID;
 
-    int32 curExp = provider->GetLeastExperienceOfLevel(id, info.Level) + info.Experience;
-    int32 newLevel = provider->ComputeLevelByExperience(id, curExp + exp);
+    int32 curExp = provider.GetLeastExperienceOfLevel(id, info.Level) + info.Experience;
+    int32 newLevel = provider.ComputeLevelByExperience(id, curExp + exp);
 
     // Éý¼¶ÁË
     if (newLevel != info.Level)
     {
-        int32 baseExp = provider->GetLeastExperienceOfLevel(id, newLevel);
+        int32 baseExp = provider.GetLeastExperienceOfLevel(id, newLevel);
         int32 restExp = curExp + exp - baseExp;
-        auto& data = provider->GetRoleLevelData(id, newLevel);
+        auto& data = provider.GetRoleLevelData(id, newLevel);
 
         FCharacterBasicInfo basicInfo;
         basicInfo.Level = newLevel;

@@ -8,5 +8,5 @@ class IRoleProperty;
 class PAL4_API FLevelManager
 {
 public:
-    void AddRoleExperience(IRoleProperty&, int32);
+    static void AddRoleExperience(IRoleProperty&, int32);
 };

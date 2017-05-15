@@ -14,6 +14,9 @@ public:
 private:
     FCoreGame();
 
+    FCoreGame(const FCoreGame&) = default;
+    FCoreGame& operator=(const FCoreGame&) = default;
+
 public:
     IGameArchiveManager& GetArchiveManager();
     IDataProviderManager& GetDataProviderManager();
