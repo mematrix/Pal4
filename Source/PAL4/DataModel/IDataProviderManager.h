@@ -1,8 +1,11 @@
 #pragma once
 
-#include <SharedPointer.h>
-
 class IRoleDataProvider;
+class IMonsterDataProvider;
+class ISkillDataProvider;
+class IPropDataProvider;
+class IEquipDataProvider;
+class IPrescriptionDataProvider;
 
 
 /**
@@ -11,6 +14,17 @@ class IRoleDataProvider;
 class PAL4_API IDataProviderManager
 {
 public:
-    // TODO: 需要改成非静态方法调用
-    static TSharedRef<IRoleDataProvider> GetUpgradeDataProvider();
+    virtual ~IDataProviderManager() = default;
+
+    virtual const IRoleDataProvider& GetRoleDataProvider() const = 0;
+
+    virtual const IMonsterDataProvider& GetMonsterDataProvider() const = 0;
+
+    virtual const ISkillDataProvider& GetSkillDataProvider() const = 0;
+
+    virtual const IPropDataProvider& GetPropDataProvider() const = 0;
+
+    virtual const IEquipDataProvider& GetEquipDataProvider() const = 0;
+
+    virtual const IPrescriptionDataProvider& GetPrescriptionDataProvider() const = 0;
 };
