@@ -14,5 +14,5 @@ public:
     /**
      * 获取装备信息
      */
-    virtual const FEquipData& GetEquipData(int32 id) = 0;
+    virtual const FEquipData& GetEquipData(int32 id) const = 0;
 };

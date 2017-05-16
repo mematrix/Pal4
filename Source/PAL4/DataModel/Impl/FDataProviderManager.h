@@ -10,20 +10,22 @@
 class PAL4_API FDataProviderManager : public IDataProviderManager
 {
 public:
-    FDataProviderManager() = default;
+    FDataProviderManager() : DataProvider(MakeShared<FDataProvider>())
+    {
+    }
 
-    const IRoleDataProvider& GetRoleDataProvider() const override final { return DataProvider; }
+    const TSharedRef<IRoleDataProvider>& GetRoleDataProvider() const override final { return DataProvider; }
 
-    const IMonsterDataProvider& GetMonsterDataProvider() const override final { return DataProvider; }
+    const TSharedRef<IMonsterDataProvider>& GetMonsterDataProvider() const override final { return DataProvider; }
 
-    const ISkillDataProvider& GetSkillDataProvider() const override final { return DataProvider; }
+    const TSharedRef<ISkillDataProvider>& GetSkillDataProvider() const override final { return DataProvider; }
 
-    const IPropDataProvider& GetPropDataProvider() const override final { return DataProvider; }
+    const TSharedRef<IPropDataProvider>& GetPropDataProvider() const override final { return DataProvider; }
 
-    const IEquipDataProvider& GetEquipDataProvider() const override final { return DataProvider; }
+    const TSharedRef<IEquipDataProvider>& GetEquipDataProvider() const override final { return DataProvider; }
 
-    const IPrescriptionDataProvider& GetPrescriptionDataProvider() const override final { return DataProvider; }
+    const TSharedRef<IPrescriptionDataProvider>& GetPrescriptionDataProvider() const override final { return DataProvider; }
 
 private:
-    FDataProvider DataProvider;
+    TSharedRef<FDataProvider> DataProvider;
 };

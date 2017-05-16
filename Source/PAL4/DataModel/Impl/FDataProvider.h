@@ -47,7 +47,7 @@ public:
 
     const FPropData& GetPropData(int32 id) const override;
 
-    const FEquipData& GetEquipData(int32 id) override;
+    const FEquipData& GetEquipData(int32 id) const override;
 
     const FPrescriptionData& GetPrescriptionData(int32 id) const override;
 };

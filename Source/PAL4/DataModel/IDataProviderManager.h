@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SharedPointer.h>
+
 class IRoleDataProvider;
 class IMonsterDataProvider;
 class ISkillDataProvider;
@@ -16,15 +18,15 @@ class PAL4_API IDataProviderManager
 public:
     virtual ~IDataProviderManager() = default;
 
-    virtual const IRoleDataProvider& GetRoleDataProvider() const = 0;
+    virtual const TSharedRef<IRoleDataProvider>& GetRoleDataProvider() const = 0;
 
-    virtual const IMonsterDataProvider& GetMonsterDataProvider() const = 0;
+    virtual const TSharedRef<IMonsterDataProvider>& GetMonsterDataProvider() const = 0;
 
-    virtual const ISkillDataProvider& GetSkillDataProvider() const = 0;
+    virtual const TSharedRef<ISkillDataProvider>& GetSkillDataProvider() const = 0;
 
-    virtual const IPropDataProvider& GetPropDataProvider() const = 0;
+    virtual const TSharedRef<IPropDataProvider>& GetPropDataProvider() const = 0;
 
-    virtual const IEquipDataProvider& GetEquipDataProvider() const = 0;
+    virtual const TSharedRef<IEquipDataProvider>& GetEquipDataProvider() const = 0;
 
-    virtual const IPrescriptionDataProvider& GetPrescriptionDataProvider() const = 0;
+    virtual const TSharedRef<IPrescriptionDataProvider>& GetPrescriptionDataProvider() const = 0;
 };
