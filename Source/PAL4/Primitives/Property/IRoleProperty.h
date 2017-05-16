@@ -10,7 +10,7 @@
 class PAL4_API IRoleProperty : public ICharacterProperty
 {
 protected:
-    IRoleProperty(const FCharacterBasicInfo&, int32[4]);
+    IRoleProperty(const FCharacterBasicInfo&, int32[4], int32 initMagicPoint);
     IRoleProperty(const IRoleProperty&) = default;
     IRoleProperty(IRoleProperty&&) = default;
 
@@ -35,4 +35,6 @@ private:
     int32 FavorOfMengli;
     // 对紫英好感度
     int32 FavorOfZiying;
+    // 初始仙灵点数（即0级仙灵点数，角色当前仙灵点总数=等级+初始仙灵点数）
+    uint8 InitMagicPoint;
 };

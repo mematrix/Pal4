@@ -14,7 +14,7 @@
 class PAL4_API FRoleProperty : public IRoleProperty
 {
 public:
-	FRoleProperty(const TSharedRef<FCharacterInherentInfo>&, const FCharacterBasicInfo&, const FCharacterStatusInfo&, int32[4]);
+	FRoleProperty(const TSharedRef<FCharacterInherentInfo>&, const FCharacterBasicInfo&, const FCharacterStatusInfo&, int32[4], int32);
     FRoleProperty(const FRoleProperty&) = default;
     FRoleProperty(FRoleProperty&&) = default;
 

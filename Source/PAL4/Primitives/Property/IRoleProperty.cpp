@@ -5,12 +5,13 @@
 #include "IRoleProperty.h"
 
 
-IRoleProperty::IRoleProperty(const FCharacterBasicInfo& info, int32 favors[4]) :
+IRoleProperty::IRoleProperty(const FCharacterBasicInfo& info, int32 favors[4], int32 initMagicPoint) :
     ICharacterProperty(info),
     FavorOfTianhe(favors[0]),
     FavorOfLingsha(favors[1]),
     FavorOfMengli(favors[2]),
-    FavorOfZiying(favors[3])
+    FavorOfZiying(favors[3]),
+    InitMagicPoint(initMagicPoint)
 {
 }
 
