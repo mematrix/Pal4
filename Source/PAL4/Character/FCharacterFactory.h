@@ -7,8 +7,9 @@ class IRoleProperty;
 class IMonsterProperty;
 class IRoleDataProvider;
 class IMonsterDataProvider;
-class FCharacterInherentInfo;
-class FMonsterInherentInfo;
+struct FCharacterInherentInfo;
+struct FMonsterInherentInfo;
+struct FCharacterArchive;
 
 
 class PAL4_API FCharacterFactory
@@ -16,7 +17,7 @@ class PAL4_API FCharacterFactory
 public:
     explicit FCharacterFactory(const TSharedRef<IRoleDataProvider>&, const TSharedRef<IMonsterDataProvider>&);
 
-    TSharedRef<IRoleProperty> CreateRole(int32 id, int32 level, int32 experience) const;
+    TSharedRef<IRoleProperty> CreateRole(int32 id, const FCharacterArchive& archive) const;
 
     TSharedRef<IMonsterProperty> CreateMonster(int32 id) const;
 

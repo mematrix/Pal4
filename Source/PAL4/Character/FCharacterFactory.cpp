@@ -5,6 +5,7 @@
 #include "FCharacterFactory.h"
 #include "DataModel/IRoleDataProvider.h"
 #include "DataModel/IMonsterDataProvider.h"
+#include "DataModel/FGameArchive.h"
 #include "FRoleProperty.h"
 #include "FMonsterProperty.h"
 #include "Primitives/Model/FCharacterInherentInfo.h"
@@ -18,7 +19,7 @@ FCharacterFactory::FCharacterFactory(const TSharedRef<IRoleDataProvider>& role, 
 {
 }
 
-TSharedRef<IRoleProperty> FCharacterFactory::CreateRole(int32 id, int32 level, int32 experience) const
+TSharedRef<IRoleProperty> FCharacterFactory::CreateRole(int32 id, const FCharacterArchive& archive) const
 {
     if (!CharacterInherentInfos.Contains(id))
     {
@@ -42,12 +43,20 @@ TSharedRef<IRoleProperty> FCharacterFactory::CreateRole(int32 id, int32 level, i
 
     auto& inherentInfo = CharacterInherentInfos[id];
 
-    auto& roleData = RoleDataProvider->GetRoleLevelData(id, level);
+    auto& roleData = RoleDataProvider->GetRoleLevelData(id, archive.Level);
     FCharacterBasicInfo basicInfo;
-    basicInfo.Level = level;
-    basicInfo.Experience = experience;
-    // TODO: 使用存档数据
-    basicInfo.HealthPoint = roleData.MaxHealthPoint;
+    basicInfo.Level = archive.Level;
+    basicInfo.Experience = archive.Experience;
+    basicInfo.HealthPoint = archive.HealthPoint;
+    basicInfo.ManaPoint = archive.ManaPoint;
+    basicInfo.CraftPoint = archive.CraftPoint;
+    for (int i = 0; i < 5; ++i)
+    {
+        basicInfo.MagicPoints[i] = archive.MagicPoints[i];
+    }
+    basicInfo.MaxHealthPoint = roleData.MaxHealthPoint;
+    basicInfo.MaxManaPoint = roleData.MaxManaPoint;
+    basicInfo.MaxCraftPoint = 100;
 }
 
 TSharedRef<IMonsterProperty> FCharacterFactory::CreateMonster(int32 id) const

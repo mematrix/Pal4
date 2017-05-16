@@ -18,8 +18,8 @@ private:
     FCoreGame& operator=(const FCoreGame&) = default;
 
 public:
-    IGameArchiveManager& GetArchiveManager();
-    IDataProviderManager& GetDataProviderManager();
+    IGameArchiveManager& GetArchiveManager() const { return ArchiveManager.Get(); }
+    IDataProviderManager& GetDataProviderManager() const { return DataProviderManager.Get(); }
 
 private:
     TSharedRef<IGameArchiveManager> ArchiveManager;

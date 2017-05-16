@@ -5,6 +5,8 @@
 #include <mutex>
 
 #include "FCoreGame.h"
+#include "DataModel/Impl/FDataProviderManager.h"
+#include "DataModel/Impl/FGameArchiveManager.h"
 
 
 static TSharedPtr<FCoreGame> Instance = nullptr;
@@ -20,3 +22,8 @@ FCoreGame& FCoreGame::SharedInstance()
     return *Instance;
 }
 
+FCoreGame::FCoreGame() :
+    ArchiveManager(MakeShared<FGameArchiveManager>()),
+    DataProviderManager(MakeShared<FDataProviderManager>())
+{
+}
