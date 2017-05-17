@@ -5,17 +5,17 @@
 #include "IRoleProperty.h"
 
 
-IRoleProperty::IRoleProperty(const FCharacterBasicInfo& info, int32 favors[4], int32 initMagicPoint) :
+IRoleProperty::IRoleProperty(const FCharacterBasicInfo& info, uint32 favors, uint8 initMagicPoint) :
     ICharacterProperty(info),
-    FavorOfTianhe(favors[0]),
-    FavorOfLingsha(favors[1]),
-    FavorOfMengli(favors[2]),
-    FavorOfZiying(favors[3]),
+    FavorOfTianhe(static_cast<uint8>(favors >> 24)),
+    FavorOfLingsha(static_cast<uint8>((favors & 0x00ff0000) >> 16)),
+    FavorOfMengli(static_cast<uint8>((favors & 0x0000ff00) >> 8)),
+    FavorOfZiying(static_cast<uint8>(favors & 0x000000ff)),
     InitMagicPoint(initMagicPoint)
 {
 }
 
-void IRoleProperty::SetRoleFavor(ERole role, int32 value)
+void IRoleProperty::SetRoleFavor(ERole role, uint8 value)
 {
     switch (role)
     {
@@ -29,7 +29,7 @@ void IRoleProperty::SetRoleFavor(ERole role, int32 value)
     }
 }
 
-void IRoleProperty::AddRoleFavor(ERole role, int32 value)
+void IRoleProperty::AddRoleFavor(ERole role, uint8 value)
 {
     switch (role)
     {
@@ -45,7 +45,7 @@ void IRoleProperty::AddRoleFavor(ERole role, int32 value)
     }
 }
 
-int32 IRoleProperty::GetRoleFavor(ERole role) const
+uint8 IRoleProperty::GetRoleFavor(ERole role) const
 {
     switch (role)
     {

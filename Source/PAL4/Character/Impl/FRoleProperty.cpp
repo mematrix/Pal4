@@ -7,7 +7,7 @@
 
 
 FRoleProperty::FRoleProperty(const TSharedRef<FCharacterInherentInfo>& inherent, const FCharacterBasicInfo& info,
-    const FCharacterStatusInfo& status, int32 favors[4], int32 initMagicPoint) :
+    const FCharacterStatusInfo& status, uint32 favors, uint8 initMagicPoint) :
     IRoleProperty(info, favors, initMagicPoint),
     InherentInfo(inherent),
     StatusInfo(status),

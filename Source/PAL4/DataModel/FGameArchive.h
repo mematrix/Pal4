@@ -12,6 +12,8 @@ struct PAL4_API FCharacterArchive
     int32 HealthPoint;
     int32 ManaPoint;
     int32 CraftPoint;
+    // 对他人好感度
+    uint32 Favors;
     uint8 MagicPoints[5];
 };
 

@@ -21,6 +21,8 @@ struct PAL4_API FRoleData
     int8 PhysicalAttackTarget;
     // 物理攻击类型
     int8 PhysicalAttackType;
+    // 初始仙灵点数
+    uint8 InitMagicPoint;
 
     // 对天河好感度
     int32 FavorOfTianhe;

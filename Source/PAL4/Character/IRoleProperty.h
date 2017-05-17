@@ -10,7 +10,7 @@
 class PAL4_API IRoleProperty : public ICharacterProperty
 {
 protected:
-    IRoleProperty(const FCharacterBasicInfo&, int32[4], int32 initMagicPoint);
+    IRoleProperty(const FCharacterBasicInfo&, uint32, uint8 initMagicPoint);
     IRoleProperty(const IRoleProperty&) = default;
     IRoleProperty(IRoleProperty&&) = default;
 
@@ -20,21 +20,23 @@ protected:
 public:
     bool IsDebuffImmune(EImmune) const override final { return false; }
 
-    void SetRoleFavor(ERole, int32);
+    void SetRoleFavor(ERole, uint8);
 
-    void AddRoleFavor(ERole, int32);
+    void AddRoleFavor(ERole, uint8);
 
-    int32 GetRoleFavor(ERole) const;
+    uint8 GetRoleFavor(ERole) const;
+
+    uint8 GetInitMagicPoint() const { return InitMagicPoint; }
 
 private:
     // 对天河好感度
-    int32 FavorOfTianhe;
+    uint8 FavorOfTianhe;
     // 对菱纱好感度
-    int32 FavorOfLingsha;
+    uint8 FavorOfLingsha;
     // 对梦璃好感度
-    int32 FavorOfMengli;
+    uint8 FavorOfMengli;
     // 对紫英好感度
-    int32 FavorOfZiying;
+    uint8 FavorOfZiying;
     // 初始仙灵点数（即0级仙灵点数，角色当前仙灵点总数=等级+初始仙灵点数）
     uint8 InitMagicPoint;
 };
