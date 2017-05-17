@@ -2,10 +2,10 @@
 
 #include <Delegate.h>
 
-#include "../EnumType/EImmune.h"
-#include "../EnumType/ECharacterBasicType.h"
-#include "../EnumType/ECharacterStatusType.h"
-#include "../Model/FCharacterBasicInfo.h"
+#include "Primitives/EnumType/EImmune.h"
+#include "Primitives/EnumType/ECharacterBasicType.h"
+#include "Primitives/EnumType/ECharacterStatusType.h"
+#include "Primitives/Model/FCharacterBasicInfo.h"
 
 struct FCharacterStatusInfo;
 struct FCharacterInherentInfo;

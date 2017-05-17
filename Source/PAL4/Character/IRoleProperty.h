@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ICharacterProperty.h"
-#include "../EnumType/ERole.h"
+#include "Primitives/EnumType/ERole.h"
 
 
 /**

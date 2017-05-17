@@ -4,7 +4,7 @@
 
 #include <SharedPointer.h>
 
-#include "Primitives/Property/IRoleProperty.h"
+#include "../IRoleProperty.h"
 #include "FCharacterPersistentStatus.h"
 
 

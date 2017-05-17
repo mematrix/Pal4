@@ -4,7 +4,7 @@
 
 #include <Platform.h>
 
-#include "Primitives/Property/ICharacterStatusProperty.h"
+#include "../ICharacterStatusProperty.h"
 
 
 /**

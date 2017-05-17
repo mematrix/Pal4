@@ -3,7 +3,7 @@
 #include "PAL4.h"
 
 #include "IMonsterProperty.h"
-#include "../Model/FMonsterInherentInfo.h"
+#include "Primitives/Model/FMonsterInherentInfo.h"
 
 
 IMonsterProperty::IMonsterProperty(const FCharacterBasicInfo& info, const FMonsterTypicalInfo& immuneInfo) :

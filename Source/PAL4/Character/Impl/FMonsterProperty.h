@@ -2,7 +2,7 @@
 
 #include <SharedPointer.h>
 
-#include "Primitives/Property/IMonsterProperty.h"
+#include "../IMonsterProperty.h"
 #include "FCharacterPersistentStatus.h"
 
 

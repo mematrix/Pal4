@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ICharacterProperty.h"
-#include "../Model/FMonsterTypicalInfo.h"
+#include "Primitives/Model/FMonsterTypicalInfo.h"
 
 struct FMonsterInherentInfo;
 
