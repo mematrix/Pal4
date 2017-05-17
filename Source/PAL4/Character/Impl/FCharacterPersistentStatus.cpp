@@ -9,7 +9,7 @@
 FCharacterPersistentStatus::FCharacterPersistentStatus(const FCharacterStatusInfo& info) :
     ICharacterStatusProperty(),
     BaseInfo(info),
-    InfoModel{ 0 }
+    InfoModel(info)
 {
 }
 

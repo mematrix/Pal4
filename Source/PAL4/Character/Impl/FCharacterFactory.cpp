@@ -21,10 +21,10 @@ FCharacterFactory::FCharacterFactory(const TSharedRef<IRoleDataProvider>& role, 
 
 TSharedRef<IRoleProperty> FCharacterFactory::CreateRole(int32 id, const FCharacterArchive& archive) const
 {
+    auto& basicData = RoleDataProvider->GetRoleBaseData(id);
+
     if (!CharacterInherentInfos.Contains(id))
     {
-        auto& basicData = RoleDataProvider->GetRoleBaseData(id);
-
         auto info = MakeShared<FCharacterInherentInfo>();
         info->ID = basicData.ID;
         info->Name = FName(UTF8_TO_TCHAR(basicData.Name.c_str()));
@@ -44,6 +44,7 @@ TSharedRef<IRoleProperty> FCharacterFactory::CreateRole(int32 id, const FCharact
     auto& inherentInfo = CharacterInherentInfos[id];
 
     auto& roleData = RoleDataProvider->GetRoleLevelData(id, archive.Level);
+
     FCharacterBasicInfo basicInfo;
     basicInfo.Level = archive.Level;
     basicInfo.Experience = archive.Experience;
@@ -57,6 +58,37 @@ TSharedRef<IRoleProperty> FCharacterFactory::CreateRole(int32 id, const FCharact
     basicInfo.MaxHealthPoint = roleData.MaxHealthPoint;
     basicInfo.MaxManaPoint = roleData.MaxManaPoint;
     basicInfo.MaxCraftPoint = 100;
+
+    FCharacterStatusInfo statusInfo;
+    statusInfo.AttackPoint = roleData.AttackPoint;
+    statusInfo.LuckPoint = roleData.LuckPoint;
+    statusInfo.NimbusPoint = roleData.NimbusPoint;
+    statusInfo.SpeedPoint = roleData.SpeedPoint;
+    statusInfo.DefencePoint = roleData.DefencePoint;
+    statusInfo.PhysicalDamageAttach = roleData.PhysicalDamageAttach;
+    statusInfo.WaterElementalDamageAttach = roleData.WaterElementalDamageAttach;
+    statusInfo.FireElementalDamageAttach = roleData.FireElementalDamageAttach;
+    statusInfo.ThunderElementalDamageAttach = roleData.ThunderElementalDamageAttach;
+    statusInfo.WindElementalDamageAttach = roleData.WindElementalDamageAttach;
+    statusInfo.SoilElementalDamageAttach = roleData.SoilElementalDamageAttach;
+
+    statusInfo.PhysicalResistance = roleData.PhysicalResistance;
+    statusInfo.WaterMagicResistance = roleData.WaterMagicResistance;
+    statusInfo.FireMagicResistance = roleData.FireMagicResistance;
+    statusInfo.ThunderMagicResistance = roleData.ThunderMagicResistance;
+    statusInfo.WindMagicResistance = roleData.WindMagicResistance;
+    statusInfo.SoilMagicResistance = roleData.SoilMagicResistance;
+    statusInfo.PhysicalDamageBounce = roleData.PhysicalDamageBounce;
+    statusInfo.WaterElementalDamageBounce = roleData.WaterElementalDamageBounce;
+    statusInfo.FireElementalDamageBounce = roleData.FireElementalDamageBounce;
+    statusInfo.ThunderElementalDamageBounce = roleData.ThunderElementalDamageBounce;
+    statusInfo.WindElementalDamageBounce = roleData.WindElementalDamageBounce;
+    statusInfo.SoilElementalDamageBounce = roleData.SoilElementalDamageBounce;
+    statusInfo.BlockRate = roleData.BlockRate;
+    statusInfo.HitRate = roleData.HitRate;
+    statusInfo.CritRate = roleData.CritRate;
+
+    return MakeShared<FRoleProperty>(inherentInfo, basicInfo, statusInfo, archive.Favors, basicData.InitMagicPoint);
 }
 
 TSharedRef<IMonsterProperty> FCharacterFactory::CreateMonster(int32 id) const

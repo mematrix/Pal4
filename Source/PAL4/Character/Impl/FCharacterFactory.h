@@ -1,25 +1,24 @@
 #pragma once
 
-#include <SharedPointer.h>
 #include <Map.h>
 
-class IRoleProperty;
-class IMonsterProperty;
+#include "../ICharacterFactory.h"
+
+
 class IRoleDataProvider;
 class IMonsterDataProvider;
 struct FCharacterInherentInfo;
 struct FMonsterInherentInfo;
-struct FCharacterArchive;
 
 
-class PAL4_API FCharacterFactory
+class PAL4_API FCharacterFactory : public ICharacterFactory
 {
 public:
     explicit FCharacterFactory(const TSharedRef<IRoleDataProvider>&, const TSharedRef<IMonsterDataProvider>&);
 
-    TSharedRef<IRoleProperty> CreateRole(int32 id, const FCharacterArchive& archive) const;
+    TSharedRef<IRoleProperty> CreateRole(int32 id, const FCharacterArchive& archive) const override;
 
-    TSharedRef<IMonsterProperty> CreateMonster(int32 id) const;
+    TSharedRef<IMonsterProperty> CreateMonster(int32 id) const override;
 
 private:
     TSharedRef<IRoleDataProvider> RoleDataProvider;

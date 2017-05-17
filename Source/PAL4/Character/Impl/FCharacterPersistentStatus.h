@@ -12,8 +12,6 @@
  */
 class PAL4_API FCharacterPersistentStatus : public ICharacterStatusProperty
 {
-    using FStatusTransformer = ValueTransformer<void*, ECharacterStatusType, int32, int32>;
-
 public:
     explicit FCharacterPersistentStatus(const FCharacterStatusInfo&);
     FCharacterPersistentStatus(const FCharacterPersistentStatus&) = delete;
