@@ -21,6 +21,8 @@ struct PAL4_API FCharacterInherentInfo
     EPhysicalAttackType PhysicalAttackType;
     // 物理攻击目标
     EPhysicalAttackTarget PhysicalAttackTarget;
+    // 物理攻击命中后气增量
+    uint8 CraftIncreaseValue;
 
     // 二维图标
     int32 IconID2D;

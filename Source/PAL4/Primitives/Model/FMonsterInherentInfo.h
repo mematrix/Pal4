@@ -21,6 +21,7 @@ struct PAL4_API FMonsterInherentInfo
     // 数组值是单调非递减的，相邻两个值构成一个左闭右开的区间，其中第一个值与0构成技能1的概率。
     // 区间不存在的情况（比如[20, 20)这样的)表示技能不会被使用（也就是技能ID为0，不存在）。
     // 最后一位始终为10000，代表普通攻击。
+    // TODO: 存储到怪物自身控制属性中
     int32 SkillUsingProbability[7];
     // 可偷窃物品ID。注：物品ID为金钱ID时代表可偷窃金钱。
     // 因为仙剑四数据库中数据显示没有怪物可以同时偷窃到金钱与物品，因此此处将其合并了
@@ -35,8 +36,6 @@ struct PAL4_API FMonsterInherentInfo
     int32 DropMoneyMinValue;
     // 掉落金钱最大值
     int32 DropMoneyMaxValue;
-    // 气初始化值
-    int32 CraftInitPoint;
     // Debuff免疫信息
     int32 ImmuneFlags;
 
