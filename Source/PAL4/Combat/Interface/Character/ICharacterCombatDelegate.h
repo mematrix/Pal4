@@ -1,5 +1,7 @@
 #pragma once
 
+#include <crtdbg.h>
+
 #include <Delegate.h>
 
 #include "Util/MacroUtil.h"
@@ -10,7 +12,6 @@ struct FBaseAttackModel;
 struct FBaseStatusModel;
 class ISingleAction;
 class IRoundActionHandler;
-class ICharacterPropertyManager;
 class ICharacterStatusProperty;
 class ICharacterCombatContext;
 
@@ -58,8 +59,6 @@ public:
     }
 
     ICharacterCombatContext* GetContext() const { return Context; }
-
-    virtual ICharacterPropertyManager& GetPropertyManager() = 0;
 
     virtual ICharacterStatusProperty& GetPersistentStatus() = 0;
 
@@ -117,7 +116,7 @@ public:
      * 获取指定类别的仙术属性点数
      * @return 指定系仙术的属性点数
      */
-    virtual int32 GetMagicPoint(EMagicCategory) = 0;
+    //virtual int32 GetMagicPoint(EMagicCategory) = 0;
 
 protected:
     virtual void OnBattleBegin() = 0;

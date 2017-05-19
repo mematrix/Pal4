@@ -141,11 +141,23 @@ void ICharacterProperty::SetBasicInfo(ECharacterBasicType type, int32 value)
 
     if (oldValue != value)
     {
-        if (type == ECharacterBasicType::Level)
+        if (ECharacterBasicType::Level == type)
         {
             InvokeEvent(OnLevelUpgradedEvent, *this, BasicInfo.Level);
         }
         InvokeEvent(OnBasicInfoChangedEvent, *this, static_cast<int32>(type));
+
+        if (ECharacterBasicType::Health == type)
+        {
+            if (!oldValue) // old == 0，说明人物复活
+            {
+                InvokeEvent(OnResurrectionEvent, *this);
+            }
+            else if (!BasicInfo.HealthPoint) // HealthPoint == 0，说明角色死亡
+            {
+                InvokeEvent(OnDeadEvent, *this);
+            }
+        }
     }
 }
 
@@ -170,11 +182,24 @@ void ICharacterProperty::SetBasicInfo(const FCharacterBasicInfo& info)
 
     if (0 != diff)
     {
+        int32 oldValue = BasicInfo.HealthPoint;
         BasicInfo = info;
         if (diff & static_cast<int32>(ECharacterBasicType::Level))
         {
             InvokeEvent(OnLevelUpgradedEvent, *this, BasicInfo.Level);
         }
         InvokeEvent(OnBasicInfoChangedEvent, *this, diff);
+
+        if (diff & static_cast<int32>(ECharacterBasicType::Health))
+        {
+            if (!oldValue) // old == 0，说明人物复活
+            {
+                InvokeEvent(OnResurrectionEvent, *this);
+            }
+            else if (!BasicInfo.HealthPoint) // HealthPoint == 0，说明角色死亡
+            {
+                InvokeEvent(OnDeadEvent, *this);
+            }
+        }
     }
 }

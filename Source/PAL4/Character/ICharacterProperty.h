@@ -26,6 +26,14 @@ public:
      * 当人物等级升级之后触发事件
      */
     DECLARE_EVENT_TwoParams(ICharacterProperty, FOnLevelUpgradedEvent, const ICharacterProperty&, int32)
+    /**
+     * 当人物死亡时触发事件
+     */
+    DECLARE_EVENT_OneParam(ICharacterProperty, FOnDeadEvent, const ICharacterProperty&)
+    /**
+     * 当人物复活时触发事件
+     */
+    DECLARE_EVENT_OneParam(ICharacterProperty, FOnResurrectionEvent, const ICharacterProperty&)
 
 protected:
     explicit ICharacterProperty(const FCharacterBasicInfo&);
@@ -42,6 +50,10 @@ public:
     FOnBasicInfoChangedEvent& OnBasicInfoChanged() const { return OnBasicInfoChangedEvent; }
 
     FOnLevelUpgradedEvent& OnLevenUpgraded() const { return OnLevelUpgradedEvent; }
+
+    FOnDeadEvent& OnDead() const { return OnDeadEvent; }
+
+    FOnResurrectionEvent& OnResurrection() const { return OnResurrectionEvent; }
 
     virtual void UpdateStatusInfo(ECharacterStatusType, int32) = 0;
 
@@ -63,5 +75,7 @@ public:
 private:
     mutable FOnBasicInfoChangedEvent OnBasicInfoChangedEvent;
     mutable FOnLevelUpgradedEvent OnLevelUpgradedEvent;
+    mutable FOnDeadEvent OnDeadEvent;
+    mutable FOnResurrectionEvent OnResurrectionEvent;
     FCharacterBasicInfo BasicInfo;
 };
