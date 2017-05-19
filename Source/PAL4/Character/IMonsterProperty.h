@@ -22,11 +22,11 @@ protected:
 public:
     bool IsDebuffImmune(EImmune) const override final;
 
-    FMonsterTypicalInfo& AttachedImmuneInfo() { return ImmuneInfo; }
-    const FMonsterTypicalInfo& AttachedImmuneInfo() const { return ImmuneInfo; }
+    FMonsterTypicalInfo& TypicalInfo() { return MonsterTypicalInfo; }
+    const FMonsterTypicalInfo& TypicalInfo() const { return MonsterTypicalInfo; }
 
     virtual const FMonsterInherentInfo& GetMonsterInherentInfo() const = 0;
 
 private:
-    FMonsterTypicalInfo ImmuneInfo;
+    FMonsterTypicalInfo MonsterTypicalInfo;
 };

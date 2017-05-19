@@ -16,13 +16,27 @@ public:
     FMonsterProperty& operator=(const FMonsterProperty&) = default;
     FMonsterProperty& operator=(FMonsterProperty&&) = default;
 
-    const FCharacterInherentInfo& GetCharacterInherentInfo() const override;
-    ICharacterStatusProperty& StatusProperty() override;
-    const ICharacterStatusProperty& StatusProperty() const override;
-    const FMonsterInherentInfo& GetMonsterInherentInfo() const override;
+    void UpdateStatusInfo(ECharacterStatusType, int32) override final;
+
+    void UpdateStatusInfo(const FCharacterStatusInfo&) override final;
+
+    const FCharacterInherentInfo& GetCharacterInherentInfo() const override final
+    {
+        return CharacterInherentInfo.Get();
+    }
+
+    ICharacterStatusProperty& StatusProperty() override final { return PersistentStatus; }
+
+    const ICharacterStatusProperty& StatusProperty() const override final { return PersistentStatus; }
+
+    const FMonsterInherentInfo& GetMonsterInherentInfo() const override final
+    {
+        return MonsterInherentInfo.Get();
+    }
 
 private:
     TSharedRef<FCharacterInherentInfo> CharacterInherentInfo;
     TSharedRef<FMonsterInherentInfo> MonsterInherentInfo;
-
+    FCharacterStatusInfo StatusInfo;
+    FCharacterPersistentStatus PersistentStatus;
 };

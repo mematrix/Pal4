@@ -6,13 +6,13 @@
 #include "Primitives/Model/FMonsterInherentInfo.h"
 
 
-IMonsterProperty::IMonsterProperty(const FCharacterBasicInfo& info, const FMonsterTypicalInfo& immuneInfo) :
+IMonsterProperty::IMonsterProperty(const FCharacterBasicInfo& info, const FMonsterTypicalInfo& typicalInfo) :
     ICharacterProperty(info),
-    ImmuneInfo(immuneInfo)
+    MonsterTypicalInfo(typicalInfo)
 {
 }
 
 bool IMonsterProperty::IsDebuffImmune(EImmune m) const
 {
-    return (GetMonsterInherentInfo().ImmuneFlags | ImmuneInfo.ImmuneFlags) & static_cast<int32>(m);
+    return (GetMonsterInherentInfo().ImmuneFlags | MonsterTypicalInfo.ImmuneFlags) & static_cast<int32>(m);
 }
