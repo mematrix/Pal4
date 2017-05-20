@@ -4,9 +4,6 @@
 
 #include <Delegate.h>
 
-#include "Util/MacroUtil.h"
-#include "Primitives/EnumType/ECharacterBasicType.h"
-
 struct FBaseRestorerModel;
 struct FBaseAttackModel;
 struct FBaseStatusModel;
@@ -16,34 +13,24 @@ class ICharacterStatusProperty;
 class ICharacterCombatContext;
 
 
-/*
+/**
  * 人物战斗代理基类。作为一个代理，在战斗过程中，提供对人物属性的访问和设置接口；
  * 同时提供战斗过程中需要的信息和回调控制接口
  */
 class PAL4_API ICharacterCombatDelegate
 {
 public:
-    DECLARE_EVENT_TwoParams(ICharacterCombatDelegate, FOnPropertyChangedEvent, const ICharacterCombatDelegate&, ECharacterBasicType)
-    DECLARE_EVENT_OneParam(ICharacterCombatDelegate, FOnCharacterDeadEvent, const ICharacterCombatDelegate&)
-    DECLARE_EVENT_OneParam(ICharacterCombatDelegate, FOnCharacterReviveEvent, const ICharacterCombatDelegate&)
-
-protected:
-    mutable FOnPropertyChangedEvent OnPropertyChangedEvent;
-    mutable FOnCharacterDeadEvent OnCharacterDeadEvent;
-    mutable FOnCharacterReviveEvent OnCharacterReviveEvent;
-
-public:
     ICharacterCombatDelegate() : Context(nullptr)
     {
     }
 
-    MAKE_DEFAULT_COPY_MOVE_CTOR_AND_OP(ICharacterCombatDelegate)
+    ICharacterCombatDelegate(const ICharacterCombatDelegate&) = default;
+    ICharacterCombatDelegate(ICharacterCombatDelegate&&) = default;
+    
+    ICharacterCombatDelegate& operator=(const ICharacterCombatDelegate&) = default;
+    ICharacterCombatDelegate& operator=(ICharacterCombatDelegate&&) = default;
 
     virtual ~ICharacterCombatDelegate() = default;
-
-    FOnPropertyChangedEvent& OnPropertyChanged() const { return OnPropertyChangedEvent; }
-    FOnCharacterDeadEvent& OnCharacterDead() const { return OnCharacterDeadEvent; }
-    FOnCharacterReviveEvent& OnCharacterRevive() const { return OnCharacterReviveEvent; }
 
     void BeginBattle(ICharacterCombatContext& context)
     {
@@ -111,12 +98,6 @@ public:
      * @return 实际增加或减少的气属性值
      */
     virtual int32 AddCraftValue(int32) = 0;
-
-    /**
-     * 获取指定类别的仙术属性点数
-     * @return 指定系仙术的属性点数
-     */
-    //virtual int32 GetMagicPoint(EMagicCategory) = 0;
 
 protected:
     virtual void OnBattleBegin() = 0;
