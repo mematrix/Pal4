@@ -4,7 +4,7 @@
 /**
  * 技能触发条件
  */
-enum class PAL4_API ESkillTrigerType
+enum class PAL4_API ESkillTriggerType
 {
     // 被仙术击中
     HitByMagic,
