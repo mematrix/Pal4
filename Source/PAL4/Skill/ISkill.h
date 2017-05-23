@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include <map>
+#include <list>
 
 #include "FSkillResult.h"
 
@@ -19,14 +19,14 @@ public:
     /**
      * 计算技能执行预期结果。此结果将会继续由后续管道过程修正
      */
-    virtual void ComputeResult(std::map<std::reference_wrapper<ICharacterCombatDelegate>, FSkillResult>&) = 0;
+    virtual void ComputeResult(std::list<FSkillResult>&) = 0;
 
     virtual void BeforeAction() = 0;
 
     /**
      * 执行技能过程。传入一个回调函数，此函数接受三个参数：攻击者、被攻击对象以及伤害模型对象
      */
-    virtual void DoAction(const std::map<std::reference_wrapper<ICharacterCombatDelegate>, FSkillResult>&,
+    virtual void DoAction(const std::list<std::reference_wrapper<ICharacterCombatDelegate>, FSkillResult>&, /*TODO: 需修改*/
         const std::function<void(ICharacterCombatDelegate&, ICharacterCombatDelegate&, const FSkillResult&)>&) = 0;
 
     virtual void AfterAction() = 0;

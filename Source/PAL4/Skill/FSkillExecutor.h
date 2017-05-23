@@ -9,5 +9,6 @@
  */
 class PAL4_API FSkillExecutor
 {
-    //
+public:
+    static void Execute(ISkill& skill);
 };

@@ -8,6 +8,9 @@
 
 #include "Primitives/EnumType/ECharacterStatusType.h"
 #include "Primitives/EnumType/ESkillTriggerType.h"
+#include "Primitives/EnumType/ECombatStatus.h"
+
+class ICharacterCombatDelegate;
 
 
 /**
@@ -38,22 +41,45 @@ struct PAL4_API FStatusInfoResult
 };
 
 
+/**
+ * 触发类型结果信息
+ */
 struct PAL4_API FTriggerResult
 {
     // 技能触发类型
     ESkillTriggerType TriggerType;
     // 触发回调函数
+    std::function<void(ICharacterCombatDelegate&, ICharacterCombatDelegate&)> TriggerFunc;
 };
 
 
+/**
+ * 战斗状态结果信息
+ */
 struct PAL4_API FCombatStatusResult
 {
-    //
+    // 战斗状态类型，Buff、Debuff
+    ECombatStatus StatusType;
+    // 战斗状态值，根据类型取对应值
+    union
+    {
+        ECommonBuff CommonBuff;
+        EPoison Poison;
+        EControlledDebuff Debuff;
+        bool CanResurrect;
+        bool Invisible;
+    } Status;
+    // 状态效果持续最大回合数
+    uint32 MaxEffectRoundNum;
 };
 
 
+/**
+ * 技能释放结果描述
+ */
 struct PAL4_API FSkillResult
 {
+    //std::reference_wrapper<ICharacterCombatDelegate> Target;
     // 基本信息结果。通常为0或1个数据，只有分次伤害时才会有多个数据
     std::vector<FBasicInfoResult> BasicInfoResult;
     // 状态信息结果。每一种状态一个数据
