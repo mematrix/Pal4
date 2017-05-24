@@ -79,13 +79,12 @@ struct PAL4_API FCombatStatusResult
  */
 struct PAL4_API FSkillResult
 {
-    //std::reference_wrapper<ICharacterCombatDelegate> Target;
     // 基本信息结果。通常为0或1个数据，只有分次伤害时才会有多个数据
-    std::vector<FBasicInfoResult> BasicInfoResult;
+    TSharedPtr<std::vector<FBasicInfoResult>> BasicInfoResult;
     // 状态信息结果。每一种状态一个数据
-    std::vector<FStatusInfoResult> StatusInfoResult;
+    TSharedPtr<std::vector<FStatusInfoResult>> StatusInfoResult;
     // 触发信息结果。每一种情况一个数据
-    std::vector<FTriggerResult> TriggerResult;
+    TSharedPtr<std::vector<FTriggerResult>> TriggerResult;
     // 战斗Buff和Debuff结果。无改变则为nullptr
     TSharedPtr<FCombatStatusResult> CombatStatusResult;
 };
