@@ -3,6 +3,9 @@
 #include "PAL4.h"
 
 #include "FSkillExecutor.h"
+#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
+#include "Combat/Interface/Character/ICharacterCombatContext.h"
+#include "Character/Util/FCharacterHelper.h"
 
 using namespace std;
 using ResultPair = pair<reference_wrapper<ICharacterCombatDelegate>, FSkillResult>;
@@ -15,8 +18,26 @@ public:
     {
     }
 
-    void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FBasicInfoResult&) override
+    void ApplyResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FBasicInfoResult& result) override
     {
+        auto& prop = target.GetProperty();
+        if (result.HealthValue)
+        {
+            FCharacterHelper::AddHealthValue(prop, result.HealthValue);
+        }
+        if (result.ManaValue)
+        {
+            FCharacterHelper::AddManaValue(prop, result.ManaValue);
+        }
+        if (result.CraftValue)
+        {
+            FCharacterHelper::AddCraftValue(prop, result.CraftValue);
+        }
+
+        if (Skill.CanTriggerPassiveSkill())
+        {
+            target.GetContext()->OnSkillSubstepFinished(actor, result);
+        }
     }
 
     void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FStatusInfoResult&) override

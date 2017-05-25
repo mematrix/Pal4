@@ -24,6 +24,7 @@ struct PAL4_API FBasicInfoResult
     int32 ManaValue;
     // 气变化量
     int32 CraftValue;
+    // 异常状态：暴击闪避格挡
 };
 
 

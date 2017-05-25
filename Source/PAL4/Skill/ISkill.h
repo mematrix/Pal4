@@ -36,7 +36,15 @@ public:
     virtual int32 GetID() const = 0;
 
     // TODO: using enum as ret value
-    virtual int32 GetType() const = 0;
+    /**
+     * 获取技能特性。五灵属性、攻击辅助等
+     */
+    virtual int32 GetAttribute() const = 0;
+
+    /**
+     * 是否可以触发被攻击者被动技能
+     */
+    virtual bool CanTriggerPassiveSkill() const = 0;
 
     /**
      * 计算技能执行预期结果。此结果将会继续由后续管道过程修正
