@@ -40,8 +40,9 @@ public:
         }
     }
 
-    void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FStatusInfoResult&) override
+    void ApplyResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FStatusInfoResult& result) override
     {
+
     }
 
     void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) override

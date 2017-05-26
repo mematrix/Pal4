@@ -9,6 +9,7 @@
 #include "Primitives/EnumType/ECharacterStatusType.h"
 #include "Primitives/EnumType/ESkillTriggerType.h"
 #include "Primitives/EnumType/ECombatStatus.h"
+#include "Primitives/EnumType/EAttackSpecialStatus.h"
 
 class ICharacterCombatDelegate;
 
@@ -25,6 +26,7 @@ struct PAL4_API FBasicInfoResult
     // 气变化量
     int32 CraftValue;
     // 异常状态：暴击闪避格挡
+    EAttackSpecialStatus SpecialStatus;
 };
 
 

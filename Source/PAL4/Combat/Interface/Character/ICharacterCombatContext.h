@@ -28,6 +28,9 @@ public:
 
     virtual IPassiveActionInterceptor& GetActionInterceptor() = 0;
 
+    /**
+     * 分段攻击的技能每段攻击结果结束时触发
+     */
     virtual void OnSkillSubstepFinished(ICharacterCombatDelegate*, const FBasicInfoResult&) = 0;
 
     virtual void OnSkillSubstepFinished(ICharacterCombatDelegate*, const FStatusInfoResult&) = 0;

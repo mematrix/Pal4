@@ -16,8 +16,8 @@ public:
      */
     DECLARE_EVENT_TwoParams(ICharacterStatusProperty, FOnPropertyChangedEvent, const ICharacterStatusProperty&, ECharacterStatusType)
 
-    using FStatusTransformer = ValueTransformer<void*, ECharacterStatusType, int32, int32>;
-    typedef std::function<int32(void*, ECharacterStatusType, int32)> FTransformAction;
+    using FStatusTransformer = ValueTransformer<int32, ECharacterStatusType, int32, int32>;
+    typedef std::function<int32(int32)> FTransformAction;
 
 private:
     mutable FOnPropertyChangedEvent OnPropertyChangedEvent;
@@ -56,7 +56,7 @@ public:
     virtual void UpdatePropertyValue(ECharacterStatusType type) = 0;
     virtual void UpdateAllProperties() = 0;
 
-    void AddTransformer(void* key, ECharacterStatusType type, const FTransformAction& func)
+    void AddTransformer(int32 key, ECharacterStatusType type, const FTransformAction& func)
     {
         _ASSERT(static_cast<uint32>(type) < PropertySetCount);
 
@@ -64,7 +64,7 @@ public:
         UpdatePropertyValue(type);
     }
 
-    void RemoveTransformer(void* key, ECharacterStatusType type)
+    void RemoveTransformer(int32 key, ECharacterStatusType type)
     {
         _ASSERT(static_cast<uint32>(type) < PropertySetCount);
 
