@@ -6,7 +6,7 @@
 
 #include "Primitives/EnumType/ECharacterStatusType.h"
 
-class ICharacterRoundManager;
+class IRoundManager;
 class ICharacterTempStatus;
 class ITempStatusOpWrapper;
 
@@ -18,7 +18,7 @@ public:
 
     virtual ~ICharacterTempStatusOperator() = default;
 
-    virtual ICharacterRoundManager& GetRoundManager() = 0;
+    virtual IRoundManager& GetRoundManager() = 0;
 
     virtual void AddTemporaryStatus(ECharacterStatusType, const TSharedRef<ITempStatusOpWrapper>&) = 0;
 

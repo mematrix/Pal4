@@ -16,13 +16,13 @@ FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterCombatDelegat
 {
 }
 
-ICharacterRoundManager& FCharacterTempStatusManager::GetRoundManager()
+IRoundManager& FCharacterTempStatusManager::GetRoundManager()
 {
     _ASSERT(Character.GetContext());
     return Character.GetContext()->GetRoundManager();
 }
 
-const ICharacterRoundManager& FCharacterTempStatusManager::GetRoundManager() const
+const IRoundManager& FCharacterTempStatusManager::GetRoundManager() const
 {
     _ASSERT(Character.GetContext());
     return Character.GetContext()->GetRoundManager();

@@ -1,7 +1,7 @@
 #pragma once
 
 class ICharacterCombatDelegate;
-class ICharacterRoundManager;
+class IRoundManager;
 class ICharacterTempStatus;
 class IPassiveActionInterceptor;
 struct FBasicInfoResult;
@@ -22,7 +22,7 @@ public:
 
     virtual ICharacterCombatDelegate& GetCharacter() = 0;
 
-    virtual ICharacterRoundManager& GetRoundManager() = 0;
+    virtual IRoundManager& GetRoundManager() = 0;
 
     virtual ICharacterTempStatus& GetTempStatus() = 0;
 

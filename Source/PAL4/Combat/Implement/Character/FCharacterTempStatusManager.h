@@ -8,7 +8,7 @@
 
 class FCombatCharacter;
 class ICharacterCombatDelegate;
-class ICharacterRoundManager;
+class IRoundManager;
 class ITempStatusOpWrapper;
 
 
@@ -26,8 +26,8 @@ public:
     ICharacterCombatDelegate& GetCharacter() { return Character; }
     const ICharacterCombatDelegate& GetCharacter() const { return Character; }
 
-    ICharacterRoundManager& GetRoundManager() override;
-    inline const ICharacterRoundManager& GetRoundManager() const;
+    IRoundManager& GetRoundManager() override;
+    inline const IRoundManager& GetRoundManager() const;
 
     void AddTemporaryStatus(ECharacterStatusType, const TSharedRef<ITempStatusOpWrapper>&) override;
 

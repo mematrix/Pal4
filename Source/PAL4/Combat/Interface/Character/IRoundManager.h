@@ -17,27 +17,27 @@ enum class PAL4_API ECharacterRoundStatus
     PostAction
 };
 
-class PAL4_API ICharacterRoundManager
+class PAL4_API IRoundManager
 {
 public:
-    DECLARE_EVENT_TwoParams(ICharacterRoundManager, FRoundBeginEvent, const ICharacterRoundManager&, uint32)
-    DECLARE_EVENT_OneParam(ICharacterRoundManager, FRoundFinishedEvent, const ICharacterRoundManager&)
+    DECLARE_EVENT_TwoParams(IRoundManager, FRoundBeginEvent, const IRoundManager&, uint32)
+    DECLARE_EVENT_OneParam(IRoundManager, FRoundFinishedEvent, const IRoundManager&)
 
 public:
-    ICharacterRoundManager() : 
+    IRoundManager() : 
         RoundBeginEvent(),
         RoundFinishedEvent(),
         RoundNum(0),
         RoundStatus(ECharacterRoundStatus::NoAction)
     {
     }
-    ICharacterRoundManager(const ICharacterRoundManager&) = default;
-    ICharacterRoundManager(ICharacterRoundManager&&) = default;
+    IRoundManager(const IRoundManager&) = default;
+    IRoundManager(IRoundManager&&) = default;
 
-    virtual ~ICharacterRoundManager() = default;
+    virtual ~IRoundManager() = default;
 
-    ICharacterRoundManager& operator=(const ICharacterRoundManager&) = default;
-    ICharacterRoundManager& operator=(ICharacterRoundManager&&) = default;
+    IRoundManager& operator=(const IRoundManager&) = default;
+    IRoundManager& operator=(IRoundManager&&) = default;
 
     // 新回合开始事件
     FRoundBeginEvent& OnNewRoundBegin() const { return RoundBeginEvent; }
