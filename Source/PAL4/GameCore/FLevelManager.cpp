@@ -4,7 +4,7 @@
 
 #include "FLevelManager.h"
 #include "FCoreGame.h"
-#include "Primitives/Property/IRoleProperty.h"
+#include "Character/IRoleProperty.h"
 #include "Primitives/Model/FCharacterInherentInfo.h"
 #include "Primitives/Model/FCharacterStatusInfo.h"
 #include "DataModel/IDataProviderManager.h"
