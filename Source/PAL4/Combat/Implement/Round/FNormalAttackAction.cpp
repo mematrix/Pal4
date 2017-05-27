@@ -3,7 +3,7 @@
 #include "PAL4.h"
 
 #include "FNormalAttackAction.h"
-#include "CombatSystem/FCombatContext.h"
+#include "Combat/Core/FCombatContext.h"
 
 
 FNormalAttackAction::FNormalAttackAction(ICharacterCombatDelegate& actor, const FTargetArray& targets, int32 count, int32 craftGrowth) :
@@ -31,10 +31,10 @@ void FNormalAttackAction::DoAction()
         {
             for (ICharacterCombatDelegate& del : Targets.Get())
             {
-                FCombatContext::GetBattleSystem()->DoAttackAction()
+                //FCombatContext::GetBattleSystem()->DoAttackAction()
             }
         }
-    }
+    } while (0);
 }
 
 void FNormalAttackAction::AfterDoAction()

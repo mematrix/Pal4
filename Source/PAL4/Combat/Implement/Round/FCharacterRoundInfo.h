@@ -1,10 +1,11 @@
 #pragma once
 
-#include "CombatDelegate/Character/ICharacterCombatDelegate.h"
-#include "CombatDelegate/Character/ICharacterCombatContext.h"
-#include "CombatDelegate/Character/ICharacterTempStatus.h"
-#include "CombatDelegate/Character/ICharacterPropertyManager.h"
+#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
+#include "Combat/Interface/Character/ICharacterCombatContext.h"
+#include "Combat/Interface/Character/ICharacterTempStatus.h"
 #include "Primitives/Model/FCharacterStatusInfo.h"
+#include "Primitives/Model/FCharacterInherentInfo.h"
+#include "Character/Util/FCharacterHelper.h"
 
 
 class PAL4_API FCharacterRoundInfo
@@ -30,12 +31,12 @@ public:
 
     bool IsAlive() const
     {
-        return Character.GetPropertyManager().IsAlive();
+        return FCharacterHelper::IsAlive(Character.GetProperty());
     }
 
     int32 GetCharacterId() const
     {
-        return Character.GetPropertyManager().GetId();
+        return Character.GetProperty().GetCharacterInherentInfo().ID;
     }
 
 private:

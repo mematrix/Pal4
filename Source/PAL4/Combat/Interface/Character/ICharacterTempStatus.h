@@ -2,8 +2,8 @@
 
 #include <Delegate.h>
 
-#include "Primitives/Property/ICharacterStatusProperty.h"
 #include "Primitives/EnumType/ECombatStatus.h"
+#include "Character/ICharacterStatusProperty.h"
 
 struct FCombatStatus;
 struct FCharacterStatusInfo;
@@ -44,11 +44,11 @@ public:
      */
     virtual const FCombatStatus& GetBattleStatus() const = 0;
 
-    virtual void SetCommonBuffStatus(ECommonBuff value) = 0;
+    virtual void SetCommonBuffStatus(EBuff value) = 0;
 
     virtual void SetPoisonStatus(EPoison value) = 0;
 
-    virtual void SetControlledDebuffStatus(EControlledDebuff value) = 0;
+    virtual void SetControlledDebuffStatus(EDebuff value) = 0;
 
     virtual void SetInVisibleStatus(bool value) = 0;
 

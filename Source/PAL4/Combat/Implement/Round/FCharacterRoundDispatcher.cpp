@@ -7,6 +7,7 @@
 
 #include "FCharacterRoundDispatcher.h"
 
+
 std::default_random_engine generator;
 std::uniform_int_distribution<int32> distribution(FCharacterRoundDispatcher::GetMinInitPosition(),
     FCharacterRoundDispatcher::GetMaxInitPosition());

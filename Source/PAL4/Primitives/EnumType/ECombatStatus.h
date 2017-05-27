@@ -2,7 +2,7 @@
 
 
 // 2017-04-29更新：使用拼音，汉语的单字表达的意思实在不好找到匹配而简洁的英文描述
-enum class PAL4_API ECommonBuff
+enum class PAL4_API EBuff
 {
     None = 0,
     // 镜，反弹普攻和特技。ReboundAttackAndSkill
@@ -38,7 +38,7 @@ enum class PAL4_API EPoison
     Soil = 5
 };
 
-enum class PAL4_API EControlledDebuff
+enum class PAL4_API EDebuff
 {
     None = 0,
     // 定，角色处于不可操作状态。Root
@@ -60,7 +60,7 @@ enum class PAL4_API ECombatStatus
     // 常规属性
     Property,
     // 通用Buff
-    CommonBuff,
+    Buff,
     // 隐身状态
     Invisible,
     // “生”状态
@@ -68,5 +68,5 @@ enum class PAL4_API ECombatStatus
     // 中毒属性
     Poison,
     // 控制性Debuff
-    ControlledDebuff
+    Debuff
 };
