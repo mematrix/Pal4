@@ -2,7 +2,7 @@
 
 #include <SharedPointer.h>
 
-#include "CombatDelegate/Character/IPassiveActionInterceptor.h"
+#include "Combat/Interface/Character/IPassiveActionInterceptor.h"
 
 
 class PAL4_API FPassiveActionInterceptor : public IPassiveActionInterceptor

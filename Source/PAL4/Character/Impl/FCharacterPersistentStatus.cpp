@@ -40,11 +40,11 @@ void FCharacterPersistentStatus::UpdateAllProperties()
     InfoModel = BaseInfo;
     FStatusInfoReader baseInfoReader(BaseInfo);
     FStatusInfoAccessHelper infoAccessor(InfoModel);
-    Transformer.Traverse([&baseInfoReader, &infoAccessor](void* key, ECharacterStatusType type, const FTransformAction& func)
+    Transformer.Traverse([&baseInfoReader, &infoAccessor](int32 key, ECharacterStatusType type, const FTransformAction& func)
     {
         auto base = baseInfoReader.GetPropertyValue(type);
         auto value = infoAccessor.GetPropertyValue(type);
-        value += func(key, type, base);
+        value += func(base);
         infoAccessor.SetPropertyValue(type, value);
     });
 

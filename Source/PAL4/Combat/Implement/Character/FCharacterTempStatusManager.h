@@ -3,7 +3,7 @@
 #include <Map.h>
 #include <SharedPointer.h>
 
-#include "CombatDelegate/StatusOpWrapper/ICharacterTempStatusOperator.h"
+#include "Combat/Interface/Character/ICharacterTempStatusOperator.h"
 #include "FCharacterTemporaryStatus.h"
 
 class FCombatCharacter;

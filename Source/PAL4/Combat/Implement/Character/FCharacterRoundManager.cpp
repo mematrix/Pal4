@@ -3,10 +3,10 @@
 #include "PAL4.h"
 
 #include "FCharacterRoundManager.h"
-#include "CombatDelegate/RoundAction/IRoundActionHandler.h"
+#include "Combat/Interface/Round/IRoundActionHandler.h"
 
 FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
-    ICharacterRoundManager(),
+    IRoundManager(),
     RoundAction(action),
     RoundFunc(),
     DelayFuncKey(0)

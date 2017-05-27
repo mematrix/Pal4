@@ -2,8 +2,8 @@
 
 #include <SharedPointer.h>
 
-#include "CombatDelegate/Character/ICharacterCombatContext.h"
-#include "CombatDelegate/Character/ICharacterCombatDelegate.h"
+#include "Combat/Interface/Character/ICharacterCombatContext.h"
+#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
 #include "FCharacterRoundManager.h"
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"
@@ -19,7 +19,7 @@ public:
 
     ICharacterCombatDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
 
-    ICharacterPropertyManager& GetPropertyManager() const { return CharacterDelegate->GetPropertyManager(); }
+    //IPropertyManager& GetPropertyManager() const { return CharacterDelegate->GetPropertyManager(); }
 
     FPassiveActionInterceptor& GetActionInterceptor() override { return ActionInterceptor; }
 

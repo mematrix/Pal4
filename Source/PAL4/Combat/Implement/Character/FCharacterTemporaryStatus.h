@@ -2,8 +2,8 @@
 
 #include <Platform.h>
 
-#include "Primitives/Model/FCharacterCombatStatus.h"
-#include "CombatDelegate/Character/ICharacterTempStatus.h"
+#include "Primitives/Model/FCombatStatus.h"
+#include "Combat/Interface/Character/ICharacterTempStatus.h"
 
 
 /**
@@ -35,10 +35,10 @@ private:
     void OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType);
 
 public:
-    void SetCommonBuffStatus(ECommonBuff value) override
+    void SetCommonBuffStatus(EBuff value) override
     {
         BattleStatus.CommonBuff = value;
-        OnCombatStatusChanged(ECombatStatus::CommonBuff);
+        OnCombatStatusChanged(ECombatStatus::Buff);
     }
 
     void SetPoisonStatus(EPoison value) override
@@ -47,10 +47,10 @@ public:
         OnCombatStatusChanged(ECombatStatus::Poison);
     }
 
-    void SetControlledDebuffStatus(EControlledDebuff value) override
+    void SetControlledDebuffStatus(EDebuff value) override
     {
         BattleStatus.ControlledDebuff = value;
-        OnCombatStatusChanged(ECombatStatus::ControlledDebuff);
+        OnCombatStatusChanged(ECombatStatus::Debuff);
     }
 
     void SetInVisibleStatus(bool value) override
@@ -62,7 +62,7 @@ public:
     void SetReviveStatus(bool value) override
     {
         BattleStatus.CanRevive = value;
-        OnCombatStatusChanged(ECombatStatus::CanRevive);
+        OnCombatStatusChanged(ECombatStatus::Resurrection);
     }
 
 private:

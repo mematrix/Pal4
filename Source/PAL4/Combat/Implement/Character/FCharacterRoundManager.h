@@ -6,7 +6,7 @@
 #include <deque>
 
 #include "Core/PriorityQueue.h"
-#include "CombatDelegate/Character/ICharacterRoundManager.h"
+#include "Combat/Interface/Character/IRoundManager.h"
 
 class IRoundActionHandler;
 
@@ -14,7 +14,7 @@ class IRoundActionHandler;
 /**
  *
  */
-class PAL4_API FCharacterRoundManager : public ICharacterRoundManager
+class PAL4_API FCharacterRoundManager : public IRoundManager
 {
 private:
     struct PAL4_API FDelayCallFuncWrapper

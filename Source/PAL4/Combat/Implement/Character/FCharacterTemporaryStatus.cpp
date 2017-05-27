@@ -58,11 +58,11 @@ void FCharacterTemporaryStatus::UpdateAllProperties()
     InfoModel = PersistentStatus.GetAccumulatedInfo();
     FStatusInfoReader persistentInfo(PersistentStatus.GetAccumulatedInfo());
     FStatusInfoAccessHelper infoAccessor(InfoModel);
-    Transformer.Traverse([&persistentInfo, &infoAccessor](void* key, ECharacterStatusType type, const FTransformAction& func)
+    Transformer.Traverse([&persistentInfo, &infoAccessor](int32 key, ECharacterStatusType type, const FTransformAction& func)
     {
         auto persistent = persistentInfo.GetPropertyValue(type);
         auto value = infoAccessor.GetPropertyValue(type);
-        value += func(key, type, persistent);
+        value += func(persistent);
         infoAccessor.SetPropertyValue(type, value);
     });
 
@@ -71,7 +71,7 @@ void FCharacterTemporaryStatus::UpdateAllProperties()
 
 void FCharacterTemporaryStatus::OnCombatStatusChanged(ECombatStatus status) const
 {
-    if (status == ECombatStatus::Property || status > ECombatStatus::ControlledDebuff)
+    if (status == ECombatStatus::Property || status > ECombatStatus::Debuff)
     {
         return;
     }

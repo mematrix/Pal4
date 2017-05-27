@@ -10,7 +10,7 @@ public:
     /**
      * 角色是否存活
      */
-    static bool IsAlive(ICharacterProperty& character)
+    static bool IsAlive(const ICharacterProperty& character)
     {
         return 0 != character.GetBasicInfo(ECharacterBasicType::Health);
     }
@@ -19,7 +19,7 @@ public:
      * 获取指定类别的仙术属性点数
      * @return 指定系仙术的属性点数
      */
-    static int32 GetMagicPoint(ICharacterProperty& character, EWuLing ling)
+    static int32 GetMagicPoint(const ICharacterProperty& character, EWuLing ling)
     {
         return character.GetBasicInfo().MagicPoints[static_cast<int32>(ling)];
     }

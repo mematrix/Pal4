@@ -3,7 +3,7 @@
 #include "PAL4.h"
 
 #include "ISingleNormalAttackAction.h"
-#include "CombatSystem/FCombatContext.h"
+#include "Combat/Core/FCombatContext.h"
 #include "Exception/FMethodNotImplementedException.h"
 
 
