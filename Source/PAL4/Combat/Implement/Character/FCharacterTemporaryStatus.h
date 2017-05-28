@@ -2,14 +2,13 @@
 
 #include <Platform.h>
 
-#include "Primitives/Model/FCombatStatus.h"
-#include "Combat/Interface/Character/ICharacterTempStatus.h"
+#include "Combat/Interface/Character/ITemporaryStatus.h"
 
 
 /**
  * 用于存储临时的状态信息，比如战斗中使用技能、仙术等附加的Buff
  */
-class PAL4_API FCharacterTemporaryStatus : public ICharacterTempStatus
+class PAL4_API FCharacterTemporaryStatus : public ITemporaryStatus
 {
 public:
     explicit FCharacterTemporaryStatus(const ICharacterStatusProperty&);
@@ -28,8 +27,6 @@ public:
     void UpdatePropertyValue(ECharacterStatusType type) override;
     void UpdateAllProperties() override;
 
-    const FCombatStatus& GetBattleStatus() const override { return BattleStatus; }
-
 private:
     void OnCombatStatusChanged(ECombatStatus) const;
     void OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType);
@@ -37,36 +34,71 @@ private:
 public:
     void SetCommonBuffStatus(EBuff value) override
     {
-        BattleStatus.CommonBuff = value;
+        Buff = value;
         OnCombatStatusChanged(ECombatStatus::Buff);
     }
 
     void SetPoisonStatus(EPoison value) override
     {
-        BattleStatus.Poison = value;
+        Poison = value;
         OnCombatStatusChanged(ECombatStatus::Poison);
     }
 
     void SetControlledDebuffStatus(EDebuff value) override
     {
-        BattleStatus.ControlledDebuff = value;
+        Debuff = value;
         OnCombatStatusChanged(ECombatStatus::Debuff);
     }
 
     void SetInVisibleStatus(bool value) override
     {
-        BattleStatus.IsInvisible = value;
+        Invisible = value;
         OnCombatStatusChanged(ECombatStatus::Invisible);
     }
 
     void SetReviveStatus(bool value) override
     {
-        BattleStatus.CanRevive = value;
+        Resurrect = value;
         OnCombatStatusChanged(ECombatStatus::Resurrection);
+    }
+
+    EBuff GetBuffStatus() const override
+    {
+        return Buff;
+    }
+
+    EPoison GetPoisonStatus() const override
+    {
+        return Poison;
+    }
+
+    EDebuff GetDebuffStatus() const override
+    {
+        return Debuff;
+    }
+
+    bool IsInvisible() const override
+    {
+        return Invisible;
+    }
+
+    bool CanResurrect() const override
+    {
+        return Resurrect;
     }
 
 private:
     const ICharacterStatusProperty& PersistentStatus;
     FCharacterStatusInfo InfoModel;
-    FCombatStatus BattleStatus;
+
+    // 通用Buff：镜壁界宁
+    EBuff Buff;
+    // 中毒状态
+    EPoison Poison;
+    // 控制性Debuff
+    EDebuff Debuff;
+    // 是否隐身状态
+    bool Invisible;
+    // 是否可在死亡后立即复活。“生”状态
+    bool Resurrect;
 };

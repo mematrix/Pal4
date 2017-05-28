@@ -5,19 +5,16 @@
 #include "Primitives/EnumType/ECombatStatus.h"
 #include "Character/ICharacterStatusProperty.h"
 
-struct FCombatStatus;
-struct FCharacterStatusInfo;
 
-
-class PAL4_API ICharacterTempStatus : public ICharacterStatusProperty
+class PAL4_API ITemporaryStatus : public ICharacterStatusProperty
 {
 public:
     /**
      * 当属性值发生变化时调用。第二个参数指示变化的属性类型
      */
-    DECLARE_EVENT_TwoParams(ICharacterTempStatus, FOnCombatStatusChangedEvent, const ICharacterTempStatus&, ECombatStatus)
+    DECLARE_EVENT_TwoParams(ITemporaryStatus, FOnCombatStatusChangedEvent, const ITemporaryStatus&, ECombatStatus)
 
-private:
+private:UPROPERTY()
     mutable FOnCombatStatusChangedEvent OnBattleStatusChangedEvent;
 
 protected:
@@ -30,19 +27,24 @@ protected:
     }
 
 public:
-    ICharacterTempStatus() = default;
-    ICharacterTempStatus(const ICharacterTempStatus&) = default;
-    ICharacterTempStatus(ICharacterTempStatus&&) = default;
+    ITemporaryStatus() = default;
+    ITemporaryStatus(const ITemporaryStatus&) = default;
+    ITemporaryStatus(ITemporaryStatus&&) = default;
     
-    ICharacterTempStatus& operator=(const ICharacterTempStatus&) = default;
-    ICharacterTempStatus& operator=(ICharacterTempStatus&&) = default;
+    ITemporaryStatus& operator=(const ITemporaryStatus&) = default;
+    ITemporaryStatus& operator=(ITemporaryStatus&&) = default;
 
     FOnCombatStatusChangedEvent& OnBattleStatusChanged() const { return OnBattleStatusChangedEvent; }
 
-    /**
-     * 获取状态信息（Buff、Debuff、中毒等）
-     */
-    virtual const FCombatStatus& GetBattleStatus() const = 0;
+    virtual EBuff GetBuffStatus() const = 0;
+
+    virtual EPoison GetPoisonStatus() const = 0;
+
+    virtual EDebuff GetDebuffStatus() const = 0;
+
+    virtual bool IsInvisible() const = 0;
+
+    virtual bool CanResurrect() const = 0;
 
     virtual void SetCommonBuffStatus(EBuff value) = 0;
 

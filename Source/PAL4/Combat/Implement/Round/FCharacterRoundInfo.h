@@ -2,7 +2,7 @@
 
 #include "Combat/Interface/Character/ICharacterCombatDelegate.h"
 #include "Combat/Interface/Character/ICharacterCombatContext.h"
-#include "Combat/Interface/Character/ICharacterTempStatus.h"
+#include "Combat/Interface/Character/ITemporaryStatus.h"
 #include "Primitives/Model/FCharacterStatusInfo.h"
 #include "Primitives/Model/FCharacterInherentInfo.h"
 #include "Character/Util/FCharacterHelper.h"

@@ -2,8 +2,9 @@
 
 class ICharacterCombatDelegate;
 class IRoundManager;
-class ICharacterTempStatus;
+class ITemporaryStatus;
 class IPassiveActionInterceptor;
+class IStatusManager;
 struct FBasicInfoResult;
 struct FStatusInfoResult;
 struct FTriggerResult;
@@ -24,18 +25,20 @@ public:
 
     virtual IRoundManager& GetRoundManager() = 0;
 
-    virtual ICharacterTempStatus& GetTempStatus() = 0;
+    virtual ITemporaryStatus& GetTempStatus() = 0;
 
     virtual IPassiveActionInterceptor& GetActionInterceptor() = 0;
+
+    virtual IStatusManager& GetStatusManager() = 0;
 
     /**
      * 分段攻击的技能每段攻击结果结束时触发
      */
-    virtual void OnSkillSubstepFinished(ICharacterCombatDelegate*, const FBasicInfoResult&) = 0;
+    virtual void OnBasicSkillFinished(ICharacterCombatDelegate*, const FBasicInfoResult&) = 0;
 
-    virtual void OnSkillSubstepFinished(ICharacterCombatDelegate*, const FStatusInfoResult&) = 0;
+    virtual void OnStatusSkillFinished(ICharacterCombatDelegate*, const FStatusInfoResult&) = 0;
 
-    virtual void OnSkillSubstepFinished(ICharacterCombatDelegate*, const FTriggerResult&) = 0;
+    virtual void OnTriggerSkillFinished(ICharacterCombatDelegate*, const FTriggerResult&) = 0;
 
-    virtual void OnSkillSubstepFinished(ICharacterCombatDelegate*, const FCombatStatusResult&) = 0;
+    virtual void OnCombatStatusSkillFinished(ICharacterCombatDelegate*, const FCombatStatusResult&) = 0;
 };

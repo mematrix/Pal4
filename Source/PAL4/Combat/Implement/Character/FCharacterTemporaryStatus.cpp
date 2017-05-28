@@ -8,7 +8,7 @@
 
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(const ICharacterStatusProperty& status) :
-    ICharacterTempStatus(),
+    ITemporaryStatus(),
     PersistentStatus(status),
     InfoModel{ 0 },
     BattleStatus()
@@ -17,7 +17,7 @@ FCharacterTemporaryStatus::FCharacterTemporaryStatus(const ICharacterStatusPrope
 }
 
 FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) noexcept :
-    ICharacterTempStatus(MoveTemp(other)),
+    ITemporaryStatus(MoveTemp(other)),
     PersistentStatus(other.PersistentStatus),
     InfoModel(MoveTemp(other.InfoModel)),
     BattleStatus(other.BattleStatus)

@@ -7,7 +7,7 @@
 #include "Primitives/EnumType/ECharacterStatusType.h"
 
 class IRoundManager;
-class ICharacterTempStatus;
+class ITemporaryStatus;
 class ITempStatusOpWrapper;
 
 
@@ -24,5 +24,5 @@ public:
 
     virtual void RemoveTemporaryStatus(ECharacterStatusType, ITempStatusOpWrapper&) = 0;
 
-    virtual ICharacterTempStatus& GetTempStatus() = 0;
+    virtual ITemporaryStatus& GetTempStatus() = 0;
 };
