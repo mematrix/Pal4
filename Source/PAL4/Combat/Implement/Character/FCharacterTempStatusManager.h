@@ -7,7 +7,7 @@
 #include "FTemporaryStatus.h"
 
 class FCombatCharacter;
-class ICharacterCombatDelegate;
+class ICharacterDelegate;
 class IRoundManager;
 class ITempStatusOpWrapper;
 
@@ -15,7 +15,7 @@ class ITempStatusOpWrapper;
 class PAL4_API FCharacterTempStatusManager : public ICharacterTempStatusOperator
 {
 public:
-    explicit FCharacterTempStatusManager(ICharacterCombatDelegate&);
+    explicit FCharacterTempStatusManager(ICharacterDelegate&);
 
     FCharacterTempStatusManager(const FCharacterTempStatusManager&) = default;
     FCharacterTempStatusManager(FCharacterTempStatusManager&&) = default;
@@ -23,8 +23,8 @@ public:
     FCharacterTempStatusManager& operator=(const FCharacterTempStatusManager&) = default;
     FCharacterTempStatusManager& operator=(FCharacterTempStatusManager&&) = default;
 
-    ICharacterCombatDelegate& GetCharacter() { return Character; }
-    const ICharacterCombatDelegate& GetCharacter() const { return Character; }
+    ICharacterDelegate& GetCharacter() { return Character; }
+    const ICharacterDelegate& GetCharacter() const { return Character; }
 
     IRoundManager& GetRoundManager() override;
     inline const IRoundManager& GetRoundManager() const;
@@ -36,7 +36,7 @@ public:
     FTemporaryStatus& GetTempStatus() override;
 
 private:
-    ICharacterCombatDelegate& Character;
+    ICharacterDelegate& Character;
     FTemporaryStatus TempStatus;
     TMap<int32, TSharedRef<ITempStatusOpWrapper>> StatusMap;
 };

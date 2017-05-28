@@ -5,14 +5,15 @@
 #include <random>
 #include <thread>
 
-#include "FCharacterRoundDispatcher.h"
+#include "FRoundDispatcher.h"
+#include "Character/Util/FCharacterHelper.h"
 
 
 std::default_random_engine generator;
-std::uniform_int_distribution<int32> distribution(FCharacterRoundDispatcher::GetMinInitPosition(),
-    FCharacterRoundDispatcher::GetMaxInitPosition());
+std::uniform_int_distribution<int32> distribution(FRoundDispatcher::GetMinInitPosition(),
+    FRoundDispatcher::GetMaxInitPosition());
 
-void FCharacterRoundDispatcher::Init(const TArray<TSharedRef<ICharacterCombatDelegate>>& characters)
+void FRoundDispatcher::Init(const TArray<TSharedRef<ICharacterDelegate>>& characters)
 {
     auto count = characters.Num();
     for (int i = 0; i < count; ++i)
@@ -20,24 +21,24 @@ void FCharacterRoundDispatcher::Init(const TArray<TSharedRef<ICharacterCombatDel
         auto& character = characters[i];
         auto position = GetNextRandomNum();
         RoundInfoArray.Emplace(character.Get(), position);
-        character->OnCharacterDead().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterDead);
-        character->OnCharacterRevive().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterRevive);
+        character->GetProperty().OnDead().AddRaw(this, &FRoundDispatcher::OnCharacterDead);
+        character->GetProperty().OnResurrect().AddRaw(this, &FRoundDispatcher::OnCharacterRevive);
     }
 }
 
-void FCharacterRoundDispatcher::OnBattleBegin()
+void FRoundDispatcher::OnBattleBegin()
 {
     UpdateProgressView();
 }
 
-void FCharacterRoundDispatcher::AddCharacter(const TSharedRef<ICharacterCombatDelegate>& character)
+void FRoundDispatcher::AddCharacter(const TSharedRef<ICharacterDelegate>& character)
 {
     auto position = GetNextRandomNum();
     RoundInfoArray.Emplace(character.Get(), position);
-    character->OnCharacterDead().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterDead);
-    character->OnCharacterRevive().AddRaw(this, &FCharacterRoundDispatcher::OnCharacterRevive);
+    character->GetProperty().OnDead().AddRaw(this, &FRoundDispatcher::OnCharacterDead);
+    character->GetProperty().OnResurrect().AddRaw(this, &FRoundDispatcher::OnCharacterRevive);
 
-    if (character->GetPropertyManager().IsAlive())
+    if (FCharacterHelper::IsAlive(character->GetProperty()))
     {
         UpdateProgressView();
     }
@@ -54,7 +55,7 @@ inline int32 GetAdvanceTime(const FCharacterRoundInfo& info)
     return time * (100 - info.GetCurrentPosition());
 }
 
-ICharacterCombatDelegate& FCharacterRoundDispatcher::MoveToNext()
+ICharacterDelegate& FRoundDispatcher::MoveToNext()
 {
     // 首先取出所有存错的角色信息
     TArray<FCharacterRoundInfo*> infoArray;
@@ -172,38 +173,38 @@ ICharacterCombatDelegate& FCharacterRoundDispatcher::MoveToNext()
     return infoArray[minIndex]->GetCharacter();
 }
 
-void FCharacterRoundDispatcher::OnBattleFinished()
+void FRoundDispatcher::OnBattleFinished()
 {
     auto count = RoundInfoArray.Num();
     for (int i = 0; i < count; ++i)
     {
         auto& character = RoundInfoArray[i].GetCharacter();
-        character.OnCharacterDead().RemoveAll(this);
-        character.OnCharacterRevive().RemoveAll(this);
+        character.GetProperty().OnDead().RemoveAll(this);
+        character.GetProperty().OnResurrect().RemoveAll(this);
     }
 }
 
-int32 FCharacterRoundDispatcher::GetNextRandomNum()
+int32 FRoundDispatcher::GetNextRandomNum()
 {
     return distribution(generator);
 }
 
 // TODO: 更新UI的操作
-void FCharacterRoundDispatcher::UpdateProgressView()
+void FRoundDispatcher::UpdateProgressView()
 {
 }
 
-void FCharacterRoundDispatcher::OnCharacterDead(const ICharacterCombatDelegate &)
+void FRoundDispatcher::OnCharacterDead(const ICharacterProperty&)
 {
     UpdateProgressView();
 }
 
-void FCharacterRoundDispatcher::OnCharacterRevive(const ICharacterCombatDelegate& character)
+void FRoundDispatcher::OnCharacterRevive(const ICharacterProperty& character)
 {
     // 复活后行动进度置零
     for (auto& info : RoundInfoArray)
     {
-        if (&character == &info.GetCharacter())
+        if (&character == &info.GetCharacter().GetProperty())
         {
             info.SetCurrentPosition(0);
             break;

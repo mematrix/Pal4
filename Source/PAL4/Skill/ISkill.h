@@ -5,7 +5,7 @@
 
 #include "FSkillResult.h"
 
-class ICharacterCombatDelegate;
+class ICharacterDelegate;
 
 
 class PAL4_API ISkillActionCallback
@@ -13,13 +13,13 @@ class PAL4_API ISkillActionCallback
 public:
     virtual ~ISkillActionCallback() = default;
 
-    virtual void ApplyBasicInfoResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FBasicInfoResult&) = 0;
+    virtual void ApplyBasicInfoResult(ICharacterDelegate*, ICharacterDelegate&, const FBasicInfoResult&) = 0;
 
-    virtual void ApplyStatusInfoResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FStatusInfoResult&) = 0;
+    virtual void ApplyStatusInfoResult(ICharacterDelegate*, ICharacterDelegate&, const FStatusInfoResult&) = 0;
 
-    virtual void ApplyTriggerResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) = 0;
+    virtual void ApplyTriggerResult(ICharacterDelegate*, ICharacterDelegate&, const FTriggerResult&) = 0;
 
-    virtual void ApplyCombatStatusResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FCombatStatusResult&) = 0;
+    virtual void ApplyCombatStatusResult(ICharacterDelegate*, ICharacterDelegate&, const FCombatStatusResult&) = 0;
 };
 
 
@@ -29,7 +29,7 @@ public:
 class PAL4_API ISkill
 {
 public:
-    typedef std::pair<std::reference_wrapper<ICharacterCombatDelegate>, FSkillResult> ResultPair;
+    typedef std::pair<std::reference_wrapper<ICharacterDelegate>, FSkillResult> ResultPair;
 
     virtual ~ISkill() = default;
 

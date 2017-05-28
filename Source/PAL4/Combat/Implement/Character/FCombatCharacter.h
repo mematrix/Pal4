@@ -2,22 +2,22 @@
 
 #include <SharedPointer.h>
 
-#include "Combat/Interface/Character/ICharacterCombatContext.h"
-#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
+#include "Combat/Interface/Character/ICombatContext.h"
+#include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "FRoundManager.h"
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"
 
 
-class PAL4_API FCombatCharacter : public ICharacterCombatContext
+class PAL4_API FCombatCharacter : public ICombatContext
 {
 public:
-    explicit FCombatCharacter(const TSharedRef<ICharacterCombatDelegate>&);
+    explicit FCombatCharacter(const TSharedRef<ICharacterDelegate>&);
     FCombatCharacter(FCombatCharacter&&) = default;
 
     FCombatCharacter& operator=(FCombatCharacter&&) = default;
 
-    ICharacterCombatDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
+    ICharacterDelegate& GetCharacterDelegate() const { return CharacterDelegate.Get(); }
 
     //IPropertyManager& GetPropertyManager() const { return CharacterDelegate->GetPropertyManager(); }
 
@@ -35,7 +35,7 @@ public:
     void OnBattleFinished();
 
 private:
-    TSharedRef<ICharacterCombatDelegate> CharacterDelegate;
+    TSharedRef<ICharacterDelegate> CharacterDelegate;
     FRoundManager RoundManager;
     FCharacterTempStatusManager TempStatusManager;
     FPassiveActionInterceptor ActionInterceptor;

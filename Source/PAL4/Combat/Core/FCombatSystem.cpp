@@ -17,16 +17,16 @@
 
 class PAL4_API RoundDispatcherRaii
 {
-    ICharacterRoundDispatcher& Dispatcher;
+    IRoundDispatcher& Dispatcher;
 
 public:
-    explicit RoundDispatcherRaii(ICharacterRoundDispatcher& dispatcher) : Dispatcher(dispatcher) { }
+    explicit RoundDispatcherRaii(IRoundDispatcher& dispatcher) : Dispatcher(dispatcher) { }
     ~RoundDispatcherRaii() { Dispatcher.OnBattleFinished(); }
 };
 
 
-FCombatSystem::FCombatSystem(const TArray<TSharedRef<ICharacterCombatDelegate>>& characters,
-    const TSharedRef<ICharacterRoundDispatcher>& dispatcher) :
+FCombatSystem::FCombatSystem(const TArray<TSharedRef<ICharacterDelegate>>& characters,
+    const TSharedRef<IRoundDispatcher>& dispatcher) :
     BattleBeginEvent(),
     BattleFinishedEvent(),
     CharacterWillActEvent(),
@@ -48,7 +48,7 @@ FCombatSystem::~FCombatSystem()
 {
 }
 
-void FCombatSystem::AddCharacter(const TSharedRef<ICharacterCombatDelegate>& characterDelegate)
+void FCombatSystem::AddCharacter(const TSharedRef<ICharacterDelegate>& characterDelegate)
 {
     Characters.Add(MakeShared<FCombatCharacter>(characterDelegate));
     Dispatcher->AddCharacter(characterDelegate);
@@ -68,7 +68,7 @@ void FCombatSystem::Run()
         FCombatCharacter* characterActLast = nullptr;
         while (!BattleIsOver())
         {
-            ICharacterCombatDelegate& character = Dispatcher->MoveToNext();
+            ICharacterDelegate& character = Dispatcher->MoveToNext();
             characterActLast = static_cast<FCombatCharacter*>(character.GetContext());
 
             InvokeEvent(CharacterWillActEvent, *this, character);
@@ -138,7 +138,7 @@ void FCombatSystem::ApplyStatusResult(const ISingleAction& action, FCombatCharac
     character.GetActionInterceptor().AfterStatusAction(action, model, type);
 }
 
-void FCombatSystem::DoAttackAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FAttackCallback cb) const
+void FCombatSystem::DoAttackAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FAttackCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
@@ -153,7 +153,7 @@ void FCombatSystem::DoAttackAction(const ISingleAction& action, ICharacterCombat
     ApplyAttackResult(action, battleCharacter, model.Get(), type);
 }
 
-void FCombatSystem::DoRestorerAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FRestorerCallback cb) const
+void FCombatSystem::DoRestorerAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FRestorerCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
@@ -168,7 +168,7 @@ void FCombatSystem::DoRestorerAction(const ISingleAction& action, ICharacterComb
     ApplyRestorerResult(action, battleCharacter, model.Get(), type);
 }
 
-void FCombatSystem::DoStatusAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FStatusCallback cb) const
+void FCombatSystem::DoStatusAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FStatusCallback cb) const
 {
     _ASSERT(IsCharacterExist(character));
 
@@ -183,7 +183,7 @@ void FCombatSystem::DoStatusAction(const ISingleAction& action, ICharacterCombat
     ApplyStatusResult(action, battleCharacter, model.Get(), type);
 }
 
-bool FCombatSystem::IsCharacterExist(const ICharacterCombatDelegate& characterDelegate) const
+bool FCombatSystem::IsCharacterExist(const ICharacterDelegate& characterDelegate) const
 {
     if (!characterDelegate.GetContext())
     {

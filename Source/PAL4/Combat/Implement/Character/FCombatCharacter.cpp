@@ -4,8 +4,9 @@
 
 #include "FCombatCharacter.h"
 
-FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterCombatDelegate>& character) :
-    ICharacterCombatContext(),
+
+FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterDelegate>& character) :
+    ICombatContext(),
     CharacterDelegate(character),
     RoundManager(character->GetRoundAction()),
     TempStatusManager(character.Get()),

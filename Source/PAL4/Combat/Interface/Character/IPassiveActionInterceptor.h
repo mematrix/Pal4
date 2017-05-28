@@ -34,7 +34,7 @@ protected:
     mutable FOnStatusActionFinishedEvent OnStatusActionFinishedEvent;
 
 public:
-    explicit IPassiveActionInterceptor(ICharacterCombatDelegate& character) :
+    explicit IPassiveActionInterceptor(ICharacterDelegate& character) :
         Character(character)
     {
     }
@@ -50,12 +50,12 @@ public:
     FOnRestorerActionFinishedEvent& OnRestorerActionFinished() const { return OnRestorerActionFinishedEvent; }
     FOnStatusActionFinishedEvent& OnStatusActionFinished() const { return OnStatusActionFinishedEvent; }
 
-    ICharacterCombatDelegate& GetCharacter() const { return Character; }
+    ICharacterDelegate& GetCharacter() const { return Character; }
 
     virtual FStatusInterceptorFunc SetStatusInterceptor(const FStatusInterceptorFunc&) = 0;
     virtual FAttackInterceptorFunc SetAttackInterceptor(const FAttackInterceptorFunc&) = 0;
     virtual FRestorerInterceptorFunc SetRestorerInterceptor(const FRestorerInterceptorFunc&) = 0;
 
 private:
-    ICharacterCombatDelegate& Character;
+    ICharacterDelegate& Character;
 };

@@ -14,7 +14,7 @@ public:
      */
     DECLARE_EVENT_TwoParams(ITemporaryStatus, FOnCombatStatusChangedEvent, const ITemporaryStatus&, ECombatStatus)
 
-private:UPROPERTY()
+private:
     mutable FOnCombatStatusChangedEvent OnBattleStatusChangedEvent;
 
 protected:
@@ -46,13 +46,13 @@ public:
 
     virtual bool CanResurrect() const = 0;
 
-    virtual void SetCommonBuffStatus(EBuff value) = 0;
+    virtual void SetBuffStatus(EBuff value) = 0;
 
     virtual void SetPoisonStatus(EPoison value) = 0;
 
-    virtual void SetControlledDebuffStatus(EDebuff value) = 0;
+    virtual void SetDebuffStatus(EDebuff value) = 0;
 
-    virtual void SetInVisibleStatus(bool value) = 0;
+    virtual void SetInvisibleStatus(bool value) = 0;
 
-    virtual void SetReviveStatus(bool value) = 0;
+    virtual void SetResurrectStatus(bool value) = 0;
 };

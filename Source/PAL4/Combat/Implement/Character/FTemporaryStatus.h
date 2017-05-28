@@ -30,7 +30,7 @@ private:
     void OnPersistentStatusChanged(const ICharacterStatus&, ECharacterStatusType);
 
 public:
-    void SetCommonBuffStatus(EBuff value) override
+    void SetBuffStatus(EBuff value) override
     {
         Buff = value;
         OnCombatStatusChanged(ECombatStatus::Buff);
@@ -42,19 +42,19 @@ public:
         OnCombatStatusChanged(ECombatStatus::Poison);
     }
 
-    void SetControlledDebuffStatus(EDebuff value) override
+    void SetDebuffStatus(EDebuff value) override
     {
         Debuff = value;
         OnCombatStatusChanged(ECombatStatus::Debuff);
     }
 
-    void SetInVisibleStatus(bool value) override
+    void SetInvisibleStatus(bool value) override
     {
         Invisible = value;
         OnCombatStatusChanged(ECombatStatus::Invisible);
     }
 
-    void SetReviveStatus(bool value) override
+    void SetResurrectStatus(bool value) override
     {
         Resurrect = value;
         OnCombatStatusChanged(ECombatStatus::Resurrect);

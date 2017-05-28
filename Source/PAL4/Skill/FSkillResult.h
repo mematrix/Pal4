@@ -11,7 +11,7 @@
 #include "Primitives/EnumType/ECombatStatus.h"
 #include "Primitives/EnumType/EAttackSpecialStatus.h"
 
-class ICharacterCombatDelegate;
+class ICharacterDelegate;
 
 
 /**
@@ -52,7 +52,7 @@ struct PAL4_API FTriggerResult
     // 技能触发类型
     ESkillTriggerType TriggerType;
     // 触发回调函数
-    std::function<void(ICharacterCombatDelegate&, ICharacterCombatDelegate&)> TriggerFunc;
+    std::function<void(ICharacterDelegate&, ICharacterDelegate&)> TriggerFunc;
 };
 
 

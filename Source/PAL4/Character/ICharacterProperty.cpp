@@ -151,7 +151,7 @@ void ICharacterProperty::SetBasicInfo(ECharacterBasicType type, int32 value)
         {
             if (!oldValue) // old == 0，说明人物复活
             {
-                InvokeEvent(OnResurrectionEvent, *this);
+                InvokeEvent(OnResurrectEvent, *this);
             }
             else if (!BasicInfo.HealthPoint) // HealthPoint == 0，说明角色死亡
             {
@@ -194,7 +194,7 @@ void ICharacterProperty::SetBasicInfo(const FCharacterBasicInfo& info)
         {
             if (!oldValue) // old == 0，说明人物复活
             {
-                InvokeEvent(OnResurrectionEvent, *this);
+                InvokeEvent(OnResurrectEvent, *this);
             }
             else if (!BasicInfo.HealthPoint) // HealthPoint == 0，说明角色死亡
             {

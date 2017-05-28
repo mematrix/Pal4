@@ -7,7 +7,7 @@
 #include "FPassiveActionInterceptor.h"
 
 
-FPassiveActionInterceptor::FPassiveActionInterceptor(ICharacterCombatDelegate& character) :
+FPassiveActionInterceptor::FPassiveActionInterceptor(ICharacterDelegate& character) :
     IPassiveActionInterceptor(character),
     StatusFunc(),
     AttackFunc(),

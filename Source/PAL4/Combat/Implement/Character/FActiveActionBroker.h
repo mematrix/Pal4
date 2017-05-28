@@ -9,9 +9,9 @@ class FCombatCharacter;
 class PAL4_API FActiveActionBroker
 {
 public:
-    typedef FakeDynamicDelegate<TSharedRef<FBaseAttackModel>(ISingleAction::*)(const ICharacterCombatDelegate&, int32) const> FAttackComDelegate;
-    typedef FakeDynamicDelegate<TSharedRef<FBaseRestorerModel>(ISingleAction::*)(const ICharacterCombatDelegate&, int32) const> FRestorerComDelegate;
-    typedef FakeDynamicDelegate<TSharedRef<FBaseStatusModel>(ISingleAction::*)(const ICharacterCombatDelegate&, int32) const> FStatusComDelegate;
+    typedef FakeDynamicDelegate<TSharedRef<FBaseAttackModel>(ISingleAction::*)(const ICharacterDelegate&, int32) const> FAttackComDelegate;
+    typedef FakeDynamicDelegate<TSharedRef<FBaseRestorerModel>(ISingleAction::*)(const ICharacterDelegate&, int32) const> FRestorerComDelegate;
+    typedef FakeDynamicDelegate<TSharedRef<FBaseStatusModel>(ISingleAction::*)(const ICharacterDelegate&, int32) const> FStatusComDelegate;
 
     FActiveActionBroker();
 

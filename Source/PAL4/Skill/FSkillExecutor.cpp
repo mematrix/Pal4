@@ -3,13 +3,13 @@
 #include "PAL4.h"
 
 #include "FSkillExecutor.h"
-#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
-#include "Combat/Interface/Character/ICharacterCombatContext.h"
+#include "Combat/Interface/Character/ICharacterDelegate.h"
+#include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/IStatusManager.h"
 #include "Character/Util/FCharacterHelper.h"
 
 using namespace std;
-using ResultPair = pair<reference_wrapper<ICharacterCombatDelegate>, FSkillResult>;
+using ResultPair = pair<reference_wrapper<ICharacterDelegate>, FSkillResult>;
 
 
 class PAL4_API FSkillActionCallback : public ISkillActionCallback
@@ -19,7 +19,7 @@ public:
     {
     }
 
-    void ApplyBasicInfoResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FBasicInfoResult& result) override
+    void ApplyBasicInfoResult(ICharacterDelegate* actor, ICharacterDelegate& target, const FBasicInfoResult& result) override
     {
         auto& prop = target.GetProperty();
         if (result.HealthValue)
@@ -41,7 +41,7 @@ public:
         }
     }
 
-    void ApplyStatusInfoResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FStatusInfoResult& result) override
+    void ApplyStatusInfoResult(ICharacterDelegate* actor, ICharacterDelegate& target, const FStatusInfoResult& result) override
     {
         auto& manager = target.GetContext()->GetStatusManager();
         manager.SetStatusTransform(Skill.GetID(), result.StatusType, result.ValidRoundNum, result.TransformAction);
@@ -52,11 +52,11 @@ public:
         }
     }
 
-    void ApplyTriggerResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) override
+    void ApplyTriggerResult(ICharacterDelegate*, ICharacterDelegate&, const FTriggerResult&) override
     {
     }
 
-    void ApplyCombatStatusResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FCombatStatusResult& result) override
+    void ApplyCombatStatusResult(ICharacterDelegate* actor, ICharacterDelegate& target, const FCombatStatusResult& result) override
     {
         auto& manager = target.GetContext()->GetStatusManager();
         switch (result.StatusType)

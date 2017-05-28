@@ -3,13 +3,13 @@
 #include "PAL4.h"
 
 #include "FCharacterTempStatusManager.h"
-#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
-#include "Combat/Interface/Character/ICharacterCombatContext.h"
+#include "Combat/Interface/Character/ICharacterDelegate.h"
+#include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/ITempStatusOpWrapper.h"
 #include "Character/ICharacterProperty.h"
 
 
-FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterCombatDelegate& character) :
+FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterDelegate& character) :
     ICharacterTempStatusOperator(),
     Character(character),
     TempStatus(character.GetProperty().StatusProperty()),

@@ -33,7 +33,7 @@ public:
     /**
      * 当人物复活时触发事件
      */
-    DECLARE_EVENT_OneParam(ICharacterProperty, FOnResurrectionEvent, const ICharacterProperty&)
+    DECLARE_EVENT_OneParam(ICharacterProperty, FOnResurrectEvent, const ICharacterProperty&)
 
 protected:
     explicit ICharacterProperty(const FCharacterBasicInfo&);
@@ -53,7 +53,7 @@ public:
 
     FOnDeadEvent& OnDead() const { return OnDeadEvent; }
 
-    FOnResurrectionEvent& OnResurrection() const { return OnResurrectionEvent; }
+    FOnResurrectEvent& OnResurrect() const { return OnResurrectEvent; }
 
     virtual void UpdateStatusInfo(ECharacterStatusType, int32) = 0;
 
@@ -76,6 +76,6 @@ private:
     mutable FOnBasicInfoChangedEvent OnBasicInfoChangedEvent;
     mutable FOnLevelUpgradedEvent OnLevelUpgradedEvent;
     mutable FOnDeadEvent OnDeadEvent;
-    mutable FOnResurrectionEvent OnResurrectionEvent;
+    mutable FOnResurrectEvent OnResurrectEvent;
     FCharacterBasicInfo BasicInfo;
 };

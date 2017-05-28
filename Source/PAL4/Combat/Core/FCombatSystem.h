@@ -7,8 +7,8 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
-#include "Combat/Interface/Round/ICharacterRoundDispatcher.h"
+#include "Combat/Interface/Character/ICharacterDelegate.h"
+#include "Combat/Interface/Round/IRoundDispatcher.h"
 
 class FCombatCharacter;
 class ISingleAction;
@@ -23,17 +23,17 @@ struct FBaseRestorerModel;
 class PAL4_API FCombatSystem
 {
 public:
-    typedef std::function<void(const ISingleAction&, const ICharacterCombatDelegate&, const FBaseAttackModel&, int32)> FAttackCallback;
-    typedef std::function<void(const ISingleAction&, const ICharacterCombatDelegate&, const FBaseRestorerModel&, int32)> FRestorerCallback;
-    typedef std::function<void(const ISingleAction&, const ICharacterCombatDelegate&, const FBaseStatusModel&, int32)> FStatusCallback;
+    typedef std::function<void(const ISingleAction&, const ICharacterDelegate&, const FBaseAttackModel&, int32)> FAttackCallback;
+    typedef std::function<void(const ISingleAction&, const ICharacterDelegate&, const FBaseRestorerModel&, int32)> FRestorerCallback;
+    typedef std::function<void(const ISingleAction&, const ICharacterDelegate&, const FBaseStatusModel&, int32)> FStatusCallback;
 
     DECLARE_EVENT_OneParam(FCombatSystem, FBattleBeginEvent, const FCombatSystem&)
     DECLARE_EVENT_OneParam(FCombatSystem, FBattleFinishedEvent, const FCombatSystem&)
-    DECLARE_EVENT_TwoParams(FCombatSystem, FCharacterWillActEvent, const FCombatSystem&, const ICharacterCombatDelegate&)
-    DECLARE_EVENT_TwoParams(FCombatSystem, FCharacterFinishActEvent, const FCombatSystem&, const ICharacterCombatDelegate&)
+    DECLARE_EVENT_TwoParams(FCombatSystem, FCharacterWillActEvent, const FCombatSystem&, const ICharacterDelegate&)
+    DECLARE_EVENT_TwoParams(FCombatSystem, FCharacterFinishActEvent, const FCombatSystem&, const ICharacterDelegate&)
 
 public:
-    FCombatSystem(const TArray<TSharedRef<ICharacterCombatDelegate>>&, const TSharedRef<ICharacterRoundDispatcher>&);
+    FCombatSystem(const TArray<TSharedRef<ICharacterDelegate>>&, const TSharedRef<IRoundDispatcher>&);
     FCombatSystem(const FCombatSystem&) = delete;
     ~FCombatSystem();
 
@@ -48,12 +48,12 @@ public:
     // 人物结束行动
     FCharacterFinishActEvent& OnCharacterFinishAct() const { return CharacterFinishActEvent; }
 
-    // TArray<TSharedRef<ICharacterCombatDelegate>>& GetCharacters() { return Characters; }
+    // TArray<TSharedRef<ICharacterDelegate>>& GetCharacters() { return Characters; }
     const TArray<TSharedRef<FCombatCharacter>>& GetCharacters() const { return Characters; }
 
-    void AddCharacter(const TSharedRef<ICharacterCombatDelegate>&);
+    void AddCharacter(const TSharedRef<ICharacterDelegate>&);
 
-    const TSharedRef<ICharacterRoundDispatcher>& GetDispatcher() const { return Dispatcher; }
+    const TSharedRef<IRoundDispatcher>& GetDispatcher() const { return Dispatcher; }
 
     /**
      * 开始进入战斗
@@ -88,7 +88,7 @@ public:
      * @param type 攻击类型
      * @param cb 用于更新UI的回调函数
      */
-    void DoAttackAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FAttackCallback cb) const;
+    void DoAttackAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FAttackCallback cb) const;
 
     /**
      * 执行恢复性动作。类型0已有默认行为，传入其他值将回调@code ISingleAction::CustomApplyRestorerResult \endcode
@@ -98,7 +98,7 @@ public:
      * @param type 恢复类型
      * @param cb 用于更新UI的回调函数
      */
-    void DoRestorerAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FRestorerCallback cb) const;
+    void DoRestorerAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FRestorerCallback cb) const;
 
     /**
      * 执行状态性动作。类型0已经有默认行为，传入其它值将回调@code ISingleAction::CustomApplyStatusResult \endcode
@@ -108,7 +108,7 @@ public:
      * @param type 类型
      * @param cb 用于更新UI的回调函数
      */
-    void DoStatusAction(const ISingleAction& action, ICharacterCombatDelegate& character, int32 type, FStatusCallback cb) const;
+    void DoStatusAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FStatusCallback cb) const;
 
 private:
     /**
@@ -124,7 +124,7 @@ private:
     int32 StatAliveStatus() const;
 
 public:
-    bool IsCharacterExist(const ICharacterCombatDelegate&) const;
+    bool IsCharacterExist(const ICharacterDelegate&) const;
 
     bool BattleIsOver() const;
     /**
@@ -140,7 +140,7 @@ private:
     mutable FCharacterFinishActEvent CharacterFinishActEvent;
 
     TArray<TSharedRef<FCombatCharacter>> Characters;
-    TSharedRef<ICharacterRoundDispatcher> Dispatcher;
+    TSharedRef<IRoundDispatcher> Dispatcher;
     // 存储每个参战人物的回合管理器实例。不直接存对象而是存储智能指针，原因是这个列表可能会有增加操作，
     // 那么就有可能会导致列表存储内存重分配，造成指向其中元素实例的指针悬挂（在FCharacterRoundManager里
     // 面会用到自身的this指针的值。）

@@ -7,6 +7,8 @@
 #include "Primitives/EnumType/ECharacterStatusType.h"
 #include "Primitives/EnumType/ECombatStatus.h"
 
+class ITemporaryStatus;
+
 
 /**
  * 人物状态属性及战斗状态管理。状态属性类型枚举见@code ECharacterStatusType \endcode
@@ -16,6 +18,7 @@ class PAL4_API IStatusManager
 public:
     virtual ~IStatusManager() = default;
 
+    virtual const ITemporaryStatus& GetTempStatus() const = 0;
 
     /**
      * @brief 设置状态变换函数
