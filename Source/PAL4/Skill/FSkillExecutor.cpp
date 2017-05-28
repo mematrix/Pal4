@@ -69,7 +69,7 @@ public:
             manager.SetInvisible(result.Status.Invisible, result.MaxEffectRoundNum);
             break;
 
-        case ECombatStatus::Resurrection:
+        case ECombatStatus::Resurrect:
             manager.SetResurrect(result.Status.CanResurrect, result.MaxEffectRoundNum);
             break;
         case ECombatStatus::Poison:

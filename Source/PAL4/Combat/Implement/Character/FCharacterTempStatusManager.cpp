@@ -51,7 +51,7 @@ void FCharacterTempStatusManager::RemoveTemporaryStatus(ECharacterStatusType typ
     }
 }
 
-FCharacterTemporaryStatus& FCharacterTempStatusManager::GetTempStatus()
+FTemporaryStatus& FCharacterTempStatusManager::GetTempStatus()
 {
     return TempStatus;
 }

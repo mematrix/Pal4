@@ -9,7 +9,7 @@
 
 struct FCharacterStatusInfo;
 struct FCharacterInherentInfo;
-class ICharacterStatusProperty;
+class ICharacterStatus;
 
 
 /**
@@ -63,8 +63,8 @@ public:
 
     virtual const FCharacterInherentInfo& GetCharacterInherentInfo() const = 0;
 
-    virtual ICharacterStatusProperty& StatusProperty() = 0;
-    virtual const ICharacterStatusProperty& StatusProperty() const = 0;
+    virtual ICharacterStatus& StatusProperty() = 0;
+    virtual const ICharacterStatus& StatusProperty() const = 0;
 
     const FCharacterBasicInfo& GetBasicInfo() const { return BasicInfo; }
     int32 GetBasicInfo(ECharacterBasicType) const;

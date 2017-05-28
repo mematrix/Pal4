@@ -3,40 +3,38 @@
 #include "PAL4.h"
 
 #include "Util/EventUtil.h"
-#include "FCharacterTemporaryStatus.h"
+#include "FTemporaryStatus.h"
 #include "Primitives/Helper/FStatusInfoAccessHelper.h"
 
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(const ICharacterStatusProperty& status) :
+FTemporaryStatus::FTemporaryStatus(const ICharacterStatus& status) :
     ITemporaryStatus(),
     PersistentStatus(status),
-    InfoModel{ 0 },
-    BattleStatus()
+    InfoModel(status.GetAccumulatedInfo())
 {
-    PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
+    PersistentStatus.OnPropertyChanged().AddRaw(this, &FTemporaryStatus::OnPersistentStatusChanged);
 }
 
-FCharacterTemporaryStatus::FCharacterTemporaryStatus(FCharacterTemporaryStatus &&other) noexcept :
+FTemporaryStatus::FTemporaryStatus(FTemporaryStatus &&other) noexcept :
     ITemporaryStatus(MoveTemp(other)),
     PersistentStatus(other.PersistentStatus),
-    InfoModel(MoveTemp(other.InfoModel)),
-    BattleStatus(other.BattleStatus)
+    InfoModel(MoveTemp(other.InfoModel))
 {
-    other.PersistentStatus.OnPropertyChanged().RemoveAll(&other);
-    PersistentStatus.OnPropertyChanged().AddRaw(this, &FCharacterTemporaryStatus::OnPersistentStatusChanged);
+    //other.PersistentStatus.OnPropertyChanged().RemoveAll(&other);
+    PersistentStatus.OnPropertyChanged().AddRaw(this, &FTemporaryStatus::OnPersistentStatusChanged);
 }
 
-FCharacterTemporaryStatus::~FCharacterTemporaryStatus()
+FTemporaryStatus::~FTemporaryStatus()
 {
     PersistentStatus.OnPropertyChanged().RemoveAll(this);
 }
 
-int32 FCharacterTemporaryStatus::GetPropertyValue(ECharacterStatusType type) const
+int32 FTemporaryStatus::GetPropertyValue(ECharacterStatusType type) const
 {
     return FStatusInfoReader(InfoModel).GetPropertyValue(type);
 }
 
-void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type)
+void FTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type)
 {
     if (type >= ECharacterStatusType::PropertyEnd)
     {
@@ -52,7 +50,7 @@ void FCharacterTemporaryStatus::UpdatePropertyValue(ECharacterStatusType type)
     }
 }
 
-void FCharacterTemporaryStatus::UpdateAllProperties()
+void FTemporaryStatus::UpdateAllProperties()
 {
     // 首先将值更新为持久化值，然后以此为基础进行计算
     InfoModel = PersistentStatus.GetAccumulatedInfo();
@@ -69,9 +67,9 @@ void FCharacterTemporaryStatus::UpdateAllProperties()
     NotifyPropertyChanged(ECharacterStatusType::PropertyEnd);
 }
 
-void FCharacterTemporaryStatus::OnCombatStatusChanged(ECombatStatus status) const
+void FTemporaryStatus::OnCombatStatusChanged(ECombatStatus status) const
 {
-    if (status == ECombatStatus::Property || status > ECombatStatus::Debuff)
+    if (status > ECombatStatus::Debuff)
     {
         return;
     }
@@ -79,7 +77,7 @@ void FCharacterTemporaryStatus::OnCombatStatusChanged(ECombatStatus status) cons
     NotifyCombatStatusChanged(status);
 }
 
-void FCharacterTemporaryStatus::OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType type)
+void FTemporaryStatus::OnPersistentStatusChanged(const ICharacterStatus&, ECharacterStatusType type)
 {
     UpdatePropertyValue(type);
 }

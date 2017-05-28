@@ -21,7 +21,7 @@ class PAL4_API IRoundManager
 {
 public:
     DECLARE_EVENT_TwoParams(IRoundManager, FRoundBeginEvent, const IRoundManager&, uint32)
-    DECLARE_EVENT_OneParam(IRoundManager, FRoundFinishedEvent, const IRoundManager&)
+    DECLARE_EVENT_TwoParams(IRoundManager, FRoundFinishedEvent, const IRoundManager&, uint32)
 
 public:
     IRoundManager() : 

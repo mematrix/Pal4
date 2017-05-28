@@ -3,7 +3,7 @@
 #include <SharedPointer.h>
 
 #include "../IMonsterProperty.h"
-#include "FCharacterPersistentStatus.h"
+#include "FPersistentStatus.h"
 
 
 class PAL4_API FMonsterProperty : public IMonsterProperty
@@ -25,9 +25,9 @@ public:
         return CharacterInherentInfo.Get();
     }
 
-    ICharacterStatusProperty& StatusProperty() override final { return PersistentStatus; }
+    FPersistentStatus& StatusProperty() override final { return PersistentStatus; }
 
-    const ICharacterStatusProperty& StatusProperty() const override final { return PersistentStatus; }
+    const FPersistentStatus& StatusProperty() const override final { return PersistentStatus; }
 
     const FMonsterInherentInfo& GetMonsterInherentInfo() const override final
     {
@@ -38,5 +38,5 @@ private:
     TSharedRef<FCharacterInherentInfo> CharacterInherentInfo;
     TSharedRef<FMonsterInherentInfo> MonsterInherentInfo;
     FCharacterStatusInfo StatusInfo;
-    FCharacterPersistentStatus PersistentStatus;
+    FPersistentStatus PersistentStatus;
 };

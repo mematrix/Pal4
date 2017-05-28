@@ -3,10 +3,10 @@
 #include <Delegate.h>
 
 #include "Primitives/EnumType/ECombatStatus.h"
-#include "Character/ICharacterStatusProperty.h"
+#include "Character/ICharacterStatus.h"
 
 
-class PAL4_API ITemporaryStatus : public ICharacterStatusProperty
+class PAL4_API ITemporaryStatus : public ICharacterStatus
 {
 public:
     /**

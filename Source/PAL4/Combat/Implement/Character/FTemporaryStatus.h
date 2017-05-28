@@ -1,24 +1,22 @@
 #pragma once
 
-#include <Platform.h>
-
 #include "Combat/Interface/Character/ITemporaryStatus.h"
 
 
 /**
  * 用于存储临时的状态信息，比如战斗中使用技能、仙术等附加的Buff
  */
-class PAL4_API FCharacterTemporaryStatus : public ITemporaryStatus
+class PAL4_API FTemporaryStatus : public ITemporaryStatus
 {
 public:
-    explicit FCharacterTemporaryStatus(const ICharacterStatusProperty&);
-    FCharacterTemporaryStatus(const FCharacterTemporaryStatus&) = delete;
-    FCharacterTemporaryStatus(FCharacterTemporaryStatus&&) noexcept;
+    explicit FTemporaryStatus(const ICharacterStatus&);
+    FTemporaryStatus(const FTemporaryStatus&) = delete;
+    FTemporaryStatus(FTemporaryStatus&&) noexcept;
 
-    ~FCharacterTemporaryStatus();
+    ~FTemporaryStatus();
 
-    FCharacterTemporaryStatus& operator=(const FCharacterTemporaryStatus&) = delete;
-    FCharacterTemporaryStatus& operator=(FCharacterTemporaryStatus&&) = default;
+    FTemporaryStatus& operator=(const FTemporaryStatus&) = delete;
+    FTemporaryStatus& operator=(FTemporaryStatus&&) = default;
 
 
     int32 GetPropertyValue(ECharacterStatusType type) const override;
@@ -29,7 +27,7 @@ public:
 
 private:
     void OnCombatStatusChanged(ECombatStatus) const;
-    void OnPersistentStatusChanged(const ICharacterStatusProperty&, ECharacterStatusType);
+    void OnPersistentStatusChanged(const ICharacterStatus&, ECharacterStatusType);
 
 public:
     void SetCommonBuffStatus(EBuff value) override
@@ -59,7 +57,7 @@ public:
     void SetReviveStatus(bool value) override
     {
         Resurrect = value;
-        OnCombatStatusChanged(ECombatStatus::Resurrection);
+        OnCombatStatusChanged(ECombatStatus::Resurrect);
     }
 
     EBuff GetBuffStatus() const override
@@ -88,7 +86,7 @@ public:
     }
 
 private:
-    const ICharacterStatusProperty& PersistentStatus;
+    const ICharacterStatus& PersistentStatus;
     FCharacterStatusInfo InfoModel;
 
     // 通用Buff：镜壁界宁

@@ -7,8 +7,8 @@
 #include <Array.h>
 #include <SharedPointer.h>
 
-#include "CombatDelegate/Character/ICharacterCombatDelegate.h"
-#include "CombatDelegate/RoundDispatcher/ICharacterRoundDispatcher.h"
+#include "Combat/Interface/Character/ICharacterCombatDelegate.h"
+#include "Combat/Interface/Round/ICharacterRoundDispatcher.h"
 
 class FCombatCharacter;
 class ISingleAction;
@@ -144,7 +144,7 @@ private:
     // 存储每个参战人物的回合管理器实例。不直接存对象而是存储智能指针，原因是这个列表可能会有增加操作，
     // 那么就有可能会导致列表存储内存重分配，造成指向其中元素实例的指针悬挂（在FCharacterRoundManager里
     // 面会用到自身的this指针的值。）
-    // TArray<TSharedRef<FCharacterRoundManager>> RoundManagers;
+    // TArray<TSharedRef<FRoundManager>> RoundManagers;
 
     // 最后一次出手的人
     FCombatCharacter *CharacterActLast;

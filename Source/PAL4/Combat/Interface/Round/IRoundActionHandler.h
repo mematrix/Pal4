@@ -8,7 +8,7 @@
 
 
 /**
- * 处理回合动作的回调接口。每次只能绑定单个@see FCharacterRoundManager，绑定单个玩家角色或AI角色
+ * 处理回合动作的回调接口。每次只能绑定单个@see FRoundManager，绑定单个玩家角色或AI角色
  */
 class PAL4_API IRoundActionHandler
 {

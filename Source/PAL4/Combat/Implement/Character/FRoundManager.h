@@ -14,7 +14,7 @@ class IRoundActionHandler;
 /**
  *
  */
-class PAL4_API FCharacterRoundManager : public IRoundManager
+class PAL4_API FRoundManager : public IRoundManager
 {
 private:
     struct PAL4_API FDelayCallFuncWrapper
@@ -69,14 +69,14 @@ private:
 
 
 public:
-    explicit FCharacterRoundManager(IRoundActionHandler&);
-    FCharacterRoundManager(const FCharacterRoundManager&) = default;
-    FCharacterRoundManager(FCharacterRoundManager&&) = default;
+    explicit FRoundManager(IRoundActionHandler&);
+    FRoundManager(const FRoundManager&) = default;
+    FRoundManager(FRoundManager&&) = default;
 
-    FCharacterRoundManager& operator=(const FCharacterRoundManager&) = delete;
-    FCharacterRoundManager& operator=(FCharacterRoundManager&&) = delete;
+    FRoundManager& operator=(const FRoundManager&) = delete;
+    FRoundManager& operator=(FRoundManager&&) = delete;
 
-    // void Swap(FCharacterRoundManager& other);
+    // void Swap(FRoundManager& other);
 
     IRoundActionHandler& GetBindAction() { return RoundAction; }
     const IRoundActionHandler& GetBindAction() const { return RoundAction; }
@@ -124,5 +124,5 @@ private:
 };
 
 //template<>
-//void std::swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right) noexcept(noexcept(left.Swap(right)));
+//void std::swap<FRoundManager>(FRoundManager& left, FRoundManager& right) noexcept(noexcept(left.Swap(right)));
 

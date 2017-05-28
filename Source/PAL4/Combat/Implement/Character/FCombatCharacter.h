@@ -4,7 +4,7 @@
 
 #include "Combat/Interface/Character/ICharacterCombatContext.h"
 #include "Combat/Interface/Character/ICharacterCombatDelegate.h"
-#include "FCharacterRoundManager.h"
+#include "FRoundManager.h"
 #include "FCharacterTempStatusManager.h"
 #include "FPassiveActionInterceptor.h"
 
@@ -23,10 +23,10 @@ public:
 
     FPassiveActionInterceptor& GetActionInterceptor() override { return ActionInterceptor; }
 
-    FCharacterTemporaryStatus& GetTempStatus() override { return TempStatusManager.GetTempStatus(); }
+    FTemporaryStatus& GetTempStatus() override { return TempStatusManager.GetTempStatus(); }
 
-    FCharacterRoundManager& GetRoundManager() override { return RoundManager; }
-    const FCharacterRoundManager& GetRoundManager() const { return RoundManager; }
+    FRoundManager& GetRoundManager() override { return RoundManager; }
+    const FRoundManager& GetRoundManager() const { return RoundManager; }
 
     FCharacterTempStatusManager& GetTempStatusManager() { return TempStatusManager; }
     const FCharacterTempStatusManager& GetTempStatusManager() const { return TempStatusManager; }
@@ -36,7 +36,7 @@ public:
 
 private:
     TSharedRef<ICharacterCombatDelegate> CharacterDelegate;
-    FCharacterRoundManager RoundManager;
+    FRoundManager RoundManager;
     FCharacterTempStatusManager TempStatusManager;
     FPassiveActionInterceptor ActionInterceptor;
 };

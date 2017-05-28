@@ -4,7 +4,7 @@
 #include <SharedPointer.h>
 
 #include "Combat/Interface/Character/ICharacterTempStatusOperator.h"
-#include "FCharacterTemporaryStatus.h"
+#include "FTemporaryStatus.h"
 
 class FCombatCharacter;
 class ICharacterCombatDelegate;
@@ -33,10 +33,10 @@ public:
 
     void RemoveTemporaryStatus(ECharacterStatusType, ITempStatusOpWrapper&) override;
 
-    FCharacterTemporaryStatus& GetTempStatus() override;
+    FTemporaryStatus& GetTempStatus() override;
 
 private:
     ICharacterCombatDelegate& Character;
-    FCharacterTemporaryStatus TempStatus;
+    FTemporaryStatus TempStatus;
     TMap<int32, TSharedRef<ITempStatusOpWrapper>> StatusMap;
 };

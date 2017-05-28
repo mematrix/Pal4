@@ -2,23 +2,23 @@
 
 #include "PAL4.h"
 
-#include "FCharacterPersistentStatus.h"
+#include "FPersistentStatus.h"
 #include "Primitives/Helper/FStatusInfoAccessHelper.h"
 
 
-FCharacterPersistentStatus::FCharacterPersistentStatus(const FCharacterStatusInfo& info) :
-    ICharacterStatusProperty(),
+FPersistentStatus::FPersistentStatus(const FCharacterStatusInfo& info) :
+    ICharacterStatus(),
     BaseInfo(info),
     InfoModel(info)
 {
 }
 
-int32 FCharacterPersistentStatus::GetPropertyValue(ECharacterStatusType type) const
+int32 FPersistentStatus::GetPropertyValue(ECharacterStatusType type) const
 {
     return FStatusInfoReader(InfoModel).GetPropertyValue(type);
 }
 
-void FCharacterPersistentStatus::UpdatePropertyValue(ECharacterStatusType type)
+void FPersistentStatus::UpdatePropertyValue(ECharacterStatusType type)
 {
     if (type >= ECharacterStatusType::PropertyEnd)
     {
@@ -34,7 +34,7 @@ void FCharacterPersistentStatus::UpdatePropertyValue(ECharacterStatusType type)
     }
 }
 
-void FCharacterPersistentStatus::UpdateAllProperties()
+void FPersistentStatus::UpdateAllProperties()
 {
     // 首先将值更新为基础值，然后以此为基础进行计算
     InfoModel = BaseInfo;

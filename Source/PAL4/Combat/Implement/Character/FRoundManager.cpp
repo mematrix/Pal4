@@ -2,10 +2,10 @@
 
 #include "PAL4.h"
 
-#include "FCharacterRoundManager.h"
+#include "FRoundManager.h"
 #include "Combat/Interface/Round/IRoundActionHandler.h"
 
-FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
+FRoundManager::FRoundManager(IRoundActionHandler& action) :
     IRoundManager(),
     RoundAction(action),
     RoundFunc(),
@@ -13,7 +13,7 @@ FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
 {
 }
 
-//void FCharacterRoundManager::Swap(FCharacterRoundManager& other)
+//void FRoundManager::Swap(FRoundManager& other)
 //{
 //    using std::swap;
 //
@@ -31,7 +31,7 @@ FCharacterRoundManager::FCharacterRoundManager(IRoundActionHandler& action) :
 //    swap(RoundStatus, other.RoundStatus);
 //}
 
-uint32 FCharacterRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func)
+uint32 FRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func)
 {
     uint32 key = ++DelayFuncKey;
     uint32 roundNum = RoundNum + delayNum;
@@ -39,7 +39,7 @@ uint32 FCharacterRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBe
     return key;
 }
 
-uint32 FCharacterRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, const std::function<void()>& func)
+uint32 FRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, const std::function<void()>& func)
 {
     // 回合数已过。或者处于当前回合，但是已经没有调用时机了：要求在回合开始调用、或者要求在结束调用但是现在已经处于结束状态了
     if (roundNum < RoundNum ||
@@ -60,14 +60,14 @@ uint32 FCharacterRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool cal
     }
 }
 
-void FCharacterRoundManager::RemoveDelayCallFunc(uint32 key)
+void FRoundManager::RemoveDelayCallFunc(uint32 key)
 {
     RoundFunc.remove([key](const FDelayCallFuncWrapper& funcWrapper) -> bool {
         return key == funcWrapper.Key;
     });
 }
 
-void FCharacterRoundManager::DoRoundAction(bool shouldSkipAction)
+void FRoundManager::DoRoundAction(bool shouldSkipAction)
 {
     ++RoundNum;
 
@@ -104,7 +104,7 @@ void FCharacterRoundManager::DoRoundAction(bool shouldSkipAction)
 
     if (RoundFinishedEvent.IsBound())
     {
-        RoundFinishedEvent.Broadcast(*this);
+        RoundFinishedEvent.Broadcast(*this, RoundNum);
     }
     while (RoundFunc.top().RoundNumWhenCall == RoundNum && !RoundFunc.top().CallWhenRoundBegin)
     {
@@ -121,7 +121,7 @@ void FCharacterRoundManager::DoRoundAction(bool shouldSkipAction)
 }
 
 
-void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundManager::FDelayCallFuncWrapper& right)
+void swap(FRoundManager::FDelayCallFuncWrapper& left, FRoundManager::FDelayCallFuncWrapper& right)
     noexcept(noexcept(left.Swap(right)))
 {
     left.Swap(right);
@@ -129,7 +129,7 @@ void swap(FCharacterRoundManager::FDelayCallFuncWrapper& left, FCharacterRoundMa
 
 //namespace std
 //{
-//    template<> void swap<FCharacterRoundManager>(FCharacterRoundManager& left, FCharacterRoundManager& right)
+//    template<> void swap<FRoundManager>(FRoundManager& left, FRoundManager& right)
 //        noexcept(noexcept(left.Swap(right)))
 //    {
 //        left.Swap(right);

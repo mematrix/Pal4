@@ -5,7 +5,7 @@ struct FBaseAttackModel;
 struct FBaseStatusModel;
 class ISingleAction;
 class IRoundActionHandler;
-class ICharacterStatusProperty;
+class ICharacterStatus;
 class ICharacterCombatContext;
 class ICharacterProperty;
 

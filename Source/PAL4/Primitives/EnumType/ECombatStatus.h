@@ -57,14 +57,12 @@ enum class PAL4_API EDebuff
 
 enum class PAL4_API ECombatStatus
 {
-    // 常规属性
-    Property,
     // 通用Buff
     Buff,
     // 隐身状态
     Invisible,
     // “生”状态
-    Resurrection,
+    Resurrect,
     // 中毒属性
     Poison,
     // 控制性Debuff
