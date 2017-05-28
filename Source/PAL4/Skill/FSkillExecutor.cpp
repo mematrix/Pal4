@@ -5,6 +5,7 @@
 #include "FSkillExecutor.h"
 #include "Combat/Interface/Character/ICharacterCombatDelegate.h"
 #include "Combat/Interface/Character/ICharacterCombatContext.h"
+#include "Combat/Interface/Character/IStatusManager.h"
 #include "Character/Util/FCharacterHelper.h"
 
 using namespace std;
@@ -18,7 +19,7 @@ public:
     {
     }
 
-    void ApplyResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FBasicInfoResult& result) override
+    void ApplyBasicInfoResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FBasicInfoResult& result) override
     {
         auto& prop = target.GetProperty();
         if (result.HealthValue)
@@ -36,21 +37,56 @@ public:
 
         if (Skill.CanTriggerPassiveSkill())
         {
-            target.GetContext()->OnSkillSubstepFinished(actor, result);
+            target.GetContext()->OnBasicSkillFinished(actor, result);
         }
     }
 
-    void ApplyResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FStatusInfoResult& result) override
+    void ApplyStatusInfoResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FStatusInfoResult& result) override
     {
+        auto& manager = target.GetContext()->GetStatusManager();
+        manager.SetStatusTransform(Skill.GetID(), result.StatusType, result.ValidRoundNum, result.TransformAction);
 
+        if (Skill.CanTriggerPassiveSkill())
+        {
+            target.GetContext()->OnStatusSkillFinished(actor, result);
+        }
     }
 
-    void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) override
+    void ApplyTriggerResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) override
     {
     }
 
-    void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FCombatStatusResult&) override
+    void ApplyCombatStatusResult(ICharacterCombatDelegate* actor, ICharacterCombatDelegate& target, const FCombatStatusResult& result) override
     {
+        auto& manager = target.GetContext()->GetStatusManager();
+        switch (result.StatusType)
+        {
+        case ECombatStatus::Buff:
+            manager.SetBuff(result.Status.Buff, result.MaxEffectRoundNum);
+            break;
+
+        case ECombatStatus::Invisible:
+            manager.SetInvisible(result.Status.Invisible, result.MaxEffectRoundNum);
+            break;
+
+        case ECombatStatus::Resurrection:
+            manager.SetResurrect(result.Status.CanResurrect, result.MaxEffectRoundNum);
+            break;
+        case ECombatStatus::Poison:
+            manager.SetPoison(result.Status.Poison, result.MaxEffectRoundNum);
+            break;
+
+        case ECombatStatus::Debuff:
+            manager.SetDebuff(result.Status.Debuff, result.MaxEffectRoundNum);
+            break;
+
+        default: break;
+        }
+
+        if (Skill.CanTriggerPassiveSkill())
+        {
+            target.GetContext()->OnCombatStatusSkillFinished(actor, result);
+        }
     }
 
 private:

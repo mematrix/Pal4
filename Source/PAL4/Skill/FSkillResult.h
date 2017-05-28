@@ -66,7 +66,7 @@ struct PAL4_API FCombatStatusResult
     // 战斗状态值，根据类型取对应值
     union
     {
-        EBuff CommonBuff;
+        EBuff Buff;
         EPoison Poison;
         EDebuff Debuff;
         bool CanResurrect;

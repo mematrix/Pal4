@@ -13,13 +13,13 @@ class PAL4_API ISkillActionCallback
 public:
     virtual ~ISkillActionCallback() = default;
 
-    virtual void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FBasicInfoResult&) = 0;
+    virtual void ApplyBasicInfoResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FBasicInfoResult&) = 0;
 
-    virtual void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FStatusInfoResult&) = 0;
+    virtual void ApplyStatusInfoResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FStatusInfoResult&) = 0;
 
-    virtual void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) = 0;
+    virtual void ApplyTriggerResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FTriggerResult&) = 0;
 
-    virtual void ApplyResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FCombatStatusResult&) = 0;
+    virtual void ApplyCombatStatusResult(ICharacterCombatDelegate*, ICharacterCombatDelegate&, const FCombatStatusResult&) = 0;
 };
 
 
