@@ -111,5 +111,20 @@ void FSkillExecutor::Execute(ISkill& skill)
         Execute(*attachSkill);
     }
 
+    if (skill.CanTriggerPassiveSkill())
+    {
+        auto actor = skill.GetActor();
+        if (actor)
+        {
+            actor->GetContext()->TriggerSkill(ESkillTriggerType::HitTarget);
+        }
+
+        // TODO: 处理技能触发情况。如连击。怪物反击处理等到AfterAction结束后
+        for (auto& result : resultList)
+        {
+            result.first.get().GetContext()->TriggerSkill(ESkillTriggerType::HitByMagic);
+        }
+    }
+
     skill.AfterAction();
 }

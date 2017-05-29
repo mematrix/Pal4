@@ -42,6 +42,11 @@ public:
     virtual int32 GetAttribute() const = 0;
 
     /**
+     * 获取攻击者。无伤害来源的技能返回nullptr
+     */
+    virtual ICharacterDelegate* GetActor() = 0;
+
+    /**
      * 是否可以触发被攻击者被动技能
      */
     virtual bool CanTriggerPassiveSkill() const = 0;

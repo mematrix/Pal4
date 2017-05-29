@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Primitives/EnumType/ESkillTriggerType.h"
+
 class ICharacterDelegate;
 class IRoundManager;
 class IPassiveActionInterceptor;
@@ -38,4 +40,9 @@ public:
     virtual void OnTriggerSkillFinished(ICharacterDelegate*, const FTriggerResult&) = 0;
 
     virtual void OnCombatStatusSkillFinished(ICharacterDelegate*, const FCombatStatusResult&) = 0;
+
+    /**
+     * 触发指定情况下的技能
+     */
+    virtual void TriggerSkill(ESkillTriggerType) = 0;
 };
