@@ -90,4 +90,6 @@ struct PAL4_API FSkillResult
     TSharedPtr<std::vector<FTriggerResult>> TriggerResult;
     // 战斗Buff和Debuff结果。无改变则为nullptr
     TSharedPtr<FCombatStatusResult> CombatStatusResult;
+    // 是否命中
+    bool HitTarget;
 };

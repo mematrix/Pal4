@@ -35,11 +35,10 @@ public:
 
     virtual int32 GetID() const = 0;
 
-    // TODO: using enum as ret value
     /**
      * 获取技能特性。五灵属性、攻击辅助等
      */
-    virtual int32 GetAttribute() const = 0;
+    virtual uint32 GetAttribute() const = 0;
 
     /**
      * 获取攻击者。无伤害来源的技能返回nullptr
@@ -68,7 +67,7 @@ public:
     /**
      * 附加的技能，将会在当前技能@code ISkill::DoAction \endcode 调用结束、
      * @code ISkill::AfterAction \endcode 执行之前触发。
-     * 返回nullptr表示无附加技能
+     * @return 附加技能。返回nullptr表示无附加技能
      */
     virtual TSharedPtr<ISkill> AttachedSkill() = 0;
 };

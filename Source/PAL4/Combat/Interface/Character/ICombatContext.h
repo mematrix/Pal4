@@ -42,7 +42,10 @@ public:
     virtual void OnCombatStatusSkillFinished(ICharacterDelegate*, const FCombatStatusResult&) = 0;
 
     /**
-     * 触发指定情况下的技能
+     * 触发指定情况下的技能。
+     * 对于当前技能来说，第二个参数为技能攻击者；对于技能释放者来说，第二个参数为当前技能效果目标
      */
+    virtual void TriggerSkillWithPeer(ESkillTriggerType, ICharacterDelegate&) = 0;
+
     virtual void TriggerSkill(ESkillTriggerType) = 0;
 };

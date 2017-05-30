@@ -2,11 +2,12 @@
 
 #include "PAL4.h"
 
-#include "FSkillExecutor.h"
+#include "FSkillUtil.h"
 #include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/IStatusManager.h"
 #include "Character/Util/FCharacterHelper.h"
+#include "Primitives/EnumType/ESkillAttribute.h"
 
 using namespace std;
 using ResultPair = pair<reference_wrapper<ICharacterDelegate>, FSkillResult>;
@@ -94,7 +95,7 @@ private:
 };
 
 
-void FSkillExecutor::Execute(ISkill& skill)
+void FSkillUtil::Execute(ISkill& skill)
 {
     list<ResultPair> resultList;
     skill.ComputeResult(resultList);
@@ -113,7 +114,22 @@ void FSkillExecutor::Execute(ISkill& skill)
 
     if (skill.CanTriggerPassiveSkill())
     {
+        auto attr = skill.GetAttribute();
+        auto source = GetSkillSource(attr);
         auto actor = skill.GetActor();
+
+        if (source == ESkillSource::PhysicalAttack)
+        {
+            for (auto& result : resultList)
+            {
+                if (result.second.HitTarget)
+                {
+                    actor->GetContext()->TriggerSkillWithPeer(ESkillTriggerType::HitTarget, result.first);
+                    result.first.get().GetContext()->TriggerSkillWithPeer(ESkillTriggerType::HitByPhysicalAttack, *actor);
+                }
+            }
+        }
+
         if (actor)
         {
             actor->GetContext()->TriggerSkill(ESkillTriggerType::HitTarget);
@@ -122,6 +138,11 @@ void FSkillExecutor::Execute(ISkill& skill)
         // TODO: 处理技能触发情况。如连击。怪物反击处理等到AfterAction结束后
         for (auto& result : resultList)
         {
+            if (result.second.HitTarget)
+            {
+                
+            }
+
             result.first.get().GetContext()->TriggerSkill(ESkillTriggerType::HitByMagic);
         }
     }

@@ -14,7 +14,7 @@ enum class PAL4_API ESkillTriggerType
     Invoke,
     // 被普通攻击击中
     HitByPhysicalAttack,
-    // 普通击中目标后触发
+    // 普通攻击击中目标后触发
     HitTarget,
     // 同伴数量减少
     CompanionsReduced,
