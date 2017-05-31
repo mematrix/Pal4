@@ -7,7 +7,7 @@
 #include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/IStatusManager.h"
 #include "Character/Util/FCharacterHelper.h"
-#include "Primitives/EnumType/ESkillAttribute.h"
+#include "Enum/ESkillAttribute.h"
 
 using namespace std;
 using ResultPair = pair<reference_wrapper<ICharacterDelegate>, FSkillResult>;

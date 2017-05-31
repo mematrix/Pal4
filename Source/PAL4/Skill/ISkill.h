@@ -4,6 +4,7 @@
 #include <list>
 
 #include "FSkillResult.h"
+#include "Enum/ESkillAttribute.h"
 
 class ICharacterDelegate;
 
@@ -46,9 +47,12 @@ public:
     virtual ICharacterDelegate* GetActor() = 0;
 
     /**
-     * 是否可以触发被攻击者被动技能
+     * 是否可以触发被攻击者被动技能。默认情况下，只有主动调用的技能才可以触发
      */
-    virtual bool CanTriggerPassiveSkill() const = 0;
+    virtual bool CanTriggerPassiveSkill() const
+    {
+        return GetSkillSource(GetAttribute()) < ESkillSource::Trigger;
+    }
 
     /**
      * 计算技能执行预期结果。此结果将会继续由后续管道过程修正

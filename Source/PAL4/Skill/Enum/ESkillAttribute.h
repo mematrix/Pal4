@@ -23,7 +23,9 @@ enum class ESkillSource
     // 风系仙术
     WindMagic,
     // 土系仙术
-    SoilMagic
+    SoilMagic,
+    // 触发被动技能
+    Trigger
 };
 
 

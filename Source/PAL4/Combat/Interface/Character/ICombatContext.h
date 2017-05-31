@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Primitives/EnumType/ESkillTriggerType.h"
+#include "Skill/Enum/ESkillTriggerType.h"
 
 class ICharacterDelegate;
 class IRoundManager;

@@ -7,9 +7,9 @@
 #include <SharedPointer.h>
 
 #include "Primitives/EnumType/ECharacterStatusType.h"
-#include "Primitives/EnumType/ESkillTriggerType.h"
 #include "Primitives/EnumType/ECombatStatus.h"
 #include "Primitives/EnumType/EAttackSpecialStatus.h"
+#include "Skill/Enum/ESkillTriggerType.h"
 
 class ICharacterDelegate;
 
