@@ -4,12 +4,14 @@
 
 class ICharacterDelegate;
 class IRoundManager;
-class IPassiveActionInterceptor;
+class ISkillReactor;
 class IStatusManager;
+
 struct FBasicInfoResult;
 struct FStatusInfoResult;
 struct FTriggerResult;
 struct FCombatStatusResult;
+struct FSkillTriggerInfo;
 
 
 /**
@@ -26,7 +28,7 @@ public:
 
     virtual IRoundManager& GetRoundManager() = 0;
 
-    virtual IPassiveActionInterceptor& GetActionInterceptor() = 0;
+    virtual ISkillReactor& GetActionInterceptor() = 0;
 
     virtual IStatusManager& GetStatusManager() = 0;
 
@@ -42,10 +44,7 @@ public:
     virtual void OnCombatStatusSkillFinished(ICharacterDelegate*, const FCombatStatusResult&) = 0;
 
     /**
-     * 触发指定情况下的技能。
-     * 对于当前技能来说，第二个参数为技能攻击者；对于技能释放者来说，第二个参数为当前技能效果目标
+     * 触发指定情况下的技能
      */
-    virtual void TriggerSkillWithPeer(ESkillTriggerType, ICharacterDelegate&) = 0;
-
-    virtual void TriggerSkill(ESkillTriggerType) = 0;
+    virtual void TriggerSkill(const FSkillTriggerInfo&) = 0;
 };

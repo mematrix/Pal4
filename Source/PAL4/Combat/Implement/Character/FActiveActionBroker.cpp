@@ -7,11 +7,11 @@
 #include "../ActionCore/ISingleAction.h"
 #include "FCombatCharacter.h"
 #include "FActiveActionBroker.h"
-#include "FPassiveActionInterceptor.h"
+#include "FSkillReactor.h"
 
 using namespace std::placeholders;
 
-typedef void (FPassiveActionInterceptor::*CallBeforeInterceptor)(ISingleAction&, int32);
+typedef void (FSkillReactor::*CallBeforeInterceptor)(ISingleAction&, int32);
 
 void CallBefore(const FActiveActionBroker* broker, CallBeforeInterceptor call,
     ISingleAction& action, ICharacterDelegate&, int32 type)

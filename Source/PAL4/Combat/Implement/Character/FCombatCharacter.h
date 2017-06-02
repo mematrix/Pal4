@@ -6,7 +6,7 @@
 #include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "FRoundManager.h"
 #include "FCharacterTempStatusManager.h"
-#include "FPassiveActionInterceptor.h"
+#include "FSkillReactor.h"
 
 
 class PAL4_API FCombatCharacter : public ICombatContext
@@ -21,7 +21,7 @@ public:
 
     //IPropertyManager& GetPropertyManager() const { return CharacterDelegate->GetPropertyManager(); }
 
-    FPassiveActionInterceptor& GetActionInterceptor() override { return ActionInterceptor; }
+    FSkillReactor& GetActionInterceptor() override { return ActionInterceptor; }
 
     FTemporaryStatus& GetTempStatus() override { return TempStatusManager.GetTempStatus(); }
 
@@ -38,5 +38,5 @@ private:
     TSharedRef<ICharacterDelegate> CharacterDelegate;
     FRoundManager RoundManager;
     FCharacterTempStatusManager TempStatusManager;
-    FPassiveActionInterceptor ActionInterceptor;
+    FSkillReactor ActionInterceptor;
 };

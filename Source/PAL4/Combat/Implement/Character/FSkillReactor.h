@@ -2,18 +2,18 @@
 
 #include <SharedPointer.h>
 
-#include "Combat/Interface/Character/IPassiveActionInterceptor.h"
+#include "Combat/Interface/Character/ISkillReactor.h"
 
 
-class PAL4_API FPassiveActionInterceptor : public IPassiveActionInterceptor
+class PAL4_API FSkillReactor : public ISkillReactor
 {
 public:
-    explicit FPassiveActionInterceptor(ICharacterDelegate&);
-    FPassiveActionInterceptor(const FPassiveActionInterceptor&) = default;
-    FPassiveActionInterceptor(FPassiveActionInterceptor&&) = default;
+    explicit FSkillReactor(ICharacterDelegate&);
+    FSkillReactor(const FSkillReactor&) = default;
+    FSkillReactor(FSkillReactor&&) = default;
 
-    FPassiveActionInterceptor& operator=(const FPassiveActionInterceptor&) = default;
-    FPassiveActionInterceptor& operator=(FPassiveActionInterceptor&&) = default;
+    FSkillReactor& operator=(const FSkillReactor&) = default;
+    FSkillReactor& operator=(FSkillReactor&&) = default;
 
     TSharedRef<FBaseStatusModel> AfterComputeStatusResult(const ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32);
 
