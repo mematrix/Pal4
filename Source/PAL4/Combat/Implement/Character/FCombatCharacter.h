@@ -21,7 +21,7 @@ public:
 
     //IPropertyManager& GetPropertyManager() const { return CharacterDelegate->GetPropertyManager(); }
 
-    FSkillReactor& GetActionInterceptor() override { return ActionInterceptor; }
+    FSkillReactor& GetSkillReactor() override { return ActionInterceptor; }
 
     FTemporaryStatus& GetTempStatus() override { return TempStatusManager.GetTempStatus(); }
 

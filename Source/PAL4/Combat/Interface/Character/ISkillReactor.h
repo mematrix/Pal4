@@ -1,61 +1,46 @@
 #pragma once
 
-#include <functional>
-
-#include <Delegate.h>
-
-class ISingleAction;
-class ICharacterDelegate;
-struct FBaseStatusModel;
-struct FBaseAttackModel;
-struct FBaseRestorerModel;
+struct FBasicInfoResultRecord;
+struct FStatusInfoResultRecord;
+struct FTriggerResultRecord;
+struct FCombatStatusResultRecord;
+struct FSkillTriggerInfo;
+struct FSkillResult;
 
 
 class PAL4_API ISkillReactor
 {
 public:
-    typedef std::function<TSharedRef<FBaseStatusModel>(
-        ISkillReactor&, const ISingleAction&, const TSharedRef<FBaseStatusModel>&, int32)> FStatusInterceptorFunc;
-    typedef std::function<TSharedRef<FBaseAttackModel>(
-        ISkillReactor&, const ISingleAction&, const TSharedRef<FBaseAttackModel>&, int32)> FAttackInterceptorFunc;
-    typedef std::function<TSharedRef<FBaseRestorerModel>(
-        ISkillReactor&, const ISingleAction&, const TSharedRef<FBaseRestorerModel>&, int32)> FRestorerInterceptorFunc;
-
-    DECLARE_EVENT_FourParams(ISkillReactor, FOnAttackActionFinishedEvent, const ISkillReactor&,
-        const ISingleAction&, const FBaseAttackModel&, int32)
-    DECLARE_EVENT_FourParams(ISkillReactor, FOnRestorerActionFinishedEvent, const ISkillReactor&,
-        const ISingleAction&, const FBaseRestorerModel&, int32)
-    DECLARE_EVENT_FourParams(ISkillReactor, FOnStatusActionFinishedEvent, const ISkillReactor&,
-        const ISingleAction&, const FBaseStatusModel&, int32)
-
-protected:
-    mutable FOnAttackActionFinishedEvent OnAttackActionFinishedEvent;
-    mutable FOnRestorerActionFinishedEvent OnRestorerActionFinishedEvent;
-    mutable FOnStatusActionFinishedEvent OnStatusActionFinishedEvent;
-
-public:
-    explicit ISkillReactor(ICharacterDelegate& character) :
-        Character(character)
-    {
-    }
-    ISkillReactor(const ISkillReactor&) = default;
-    ISkillReactor(ISkillReactor&&) = default;
-
     virtual ~ISkillReactor() = default;
 
-    ISkillReactor& operator=(const ISkillReactor&) = default;
-    ISkillReactor& operator=(ISkillReactor&&) = default;
+    /*
+     * 修正技能计算结果
+     */
+    virtual void AmendResult(FSkillResult&) = 0;
 
-    FOnAttackActionFinishedEvent& OnAttackActionFinished() const { return OnAttackActionFinishedEvent; }
-    FOnRestorerActionFinishedEvent& OnRestorerActionFinished() const { return OnRestorerActionFinishedEvent; }
-    FOnStatusActionFinishedEvent& OnStatusActionFinished() const { return OnStatusActionFinishedEvent; }
+    /**
+     * 分段攻击的技能每段攻击结果结束时触发
+     */
+    virtual void OnBasicSkillFinished(const FBasicInfoResultRecord&) = 0;
 
-    ICharacterDelegate& GetCharacter() const { return Character; }
+    /**
+     * 分段攻击的技能每段攻击结果结束时触发
+     */
+    virtual void OnStatusSkillFinished(const FStatusInfoResultRecord&) = 0;
 
-    virtual FStatusInterceptorFunc SetStatusInterceptor(const FStatusInterceptorFunc&) = 0;
-    virtual FAttackInterceptorFunc SetAttackInterceptor(const FAttackInterceptorFunc&) = 0;
-    virtual FRestorerInterceptorFunc SetRestorerInterceptor(const FRestorerInterceptorFunc&) = 0;
+    /**
+     * 分段攻击的技能每段攻击结果结束时触发
+     */
+    virtual void OnTriggerSkillFinished(const FTriggerResultRecord&) = 0;
 
-private:
-    ICharacterDelegate& Character;
+    /**
+     * 分段攻击的技能每段攻击结果结束时触发
+     */
+    virtual void OnCombatStatusSkillFinished(const FCombatStatusResultRecord&) = 0;
+
+    /**
+     * 触发指定情况下的技能
+     */
+    virtual void TriggerSkill(const FSkillTriggerInfo&) = 0;
 };
+

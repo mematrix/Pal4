@@ -100,7 +100,7 @@ void FCombatSystem::ApplyAttackResult(const ISingleAction& action, FCombatCharac
     }
 
     action.OnAttackFinished(character.GetCharacterDelegate(), model, type);
-    character.GetActionInterceptor().AfterAttackAction(action, model, type);
+    character.GetSkillReactor().AfterAttackAction(action, model, type);
 }
 
 void FCombatSystem::ApplyRestorerResult(const ISingleAction& action, FCombatCharacter& character,
@@ -118,7 +118,7 @@ void FCombatSystem::ApplyRestorerResult(const ISingleAction& action, FCombatChar
     }
 
     action.OnRestorerFinished(character.GetCharacterDelegate(), model, type);
-    character.GetActionInterceptor().AfterRestorerAction(action, model, type);
+    character.GetSkillReactor().AfterRestorerAction(action, model, type);
 }
 
 void FCombatSystem::ApplyStatusResult(const ISingleAction& action, FCombatCharacter& character,
@@ -135,7 +135,7 @@ void FCombatSystem::ApplyStatusResult(const ISingleAction& action, FCombatCharac
     }
 
     action.OnStatusFinished(character.GetCharacterDelegate(), model, type);
-    character.GetActionInterceptor().AfterStatusAction(action, model, type);
+    character.GetSkillReactor().AfterStatusAction(action, model, type);
 }
 
 void FCombatSystem::DoAttackAction(const ISingleAction& action, ICharacterDelegate& character, int32 type, FAttackCallback cb) const
@@ -143,7 +143,7 @@ void FCombatSystem::DoAttackAction(const ISingleAction& action, ICharacterDelega
     _ASSERT(IsCharacterExist(character));
 
     auto& battleCharacter = static_cast<FCombatCharacter&>(*character.GetContext());
-    auto model = battleCharacter.GetActionInterceptor().AfterComputeAttackResult(action, action.ComputeAttackResult(character, type), type);
+    auto model = battleCharacter.GetSkillReactor().AfterComputeAttackResult(action, action.ComputeAttackResult(character, type), type);
 
     if (cb)
     {
@@ -158,7 +158,7 @@ void FCombatSystem::DoRestorerAction(const ISingleAction& action, ICharacterDele
     _ASSERT(IsCharacterExist(character));
 
     auto& battleCharacter = static_cast<FCombatCharacter&>(*character.GetContext());
-    auto model = battleCharacter.GetActionInterceptor().AfterComputeRestorerResult(action, action.ComputeRestorerResult(character, type), type);
+    auto model = battleCharacter.GetSkillReactor().AfterComputeRestorerResult(action, action.ComputeRestorerResult(character, type), type);
 
     if (cb)
     {
@@ -173,7 +173,7 @@ void FCombatSystem::DoStatusAction(const ISingleAction& action, ICharacterDelega
     _ASSERT(IsCharacterExist(character));
 
     auto& battleCharacter = static_cast<FCombatCharacter&>(*character.GetContext());
-    auto model = battleCharacter.GetActionInterceptor().AfterComputeStatusResult(action, action.ComputeStatusResult(character, type), type);
+    auto model = battleCharacter.GetSkillReactor().AfterComputeStatusResult(action, action.ComputeStatusResult(character, type), type);
 
     if (cb)
     {

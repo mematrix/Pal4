@@ -1,17 +1,9 @@
 #pragma once
 
-#include "Skill/Enum/ESkillTriggerType.h"
-
 class ICharacterDelegate;
 class IRoundManager;
 class ISkillReactor;
 class IStatusManager;
-
-struct FBasicInfoResult;
-struct FStatusInfoResult;
-struct FTriggerResult;
-struct FCombatStatusResult;
-struct FSkillTriggerInfo;
 
 
 /**
@@ -28,23 +20,7 @@ public:
 
     virtual IRoundManager& GetRoundManager() = 0;
 
-    virtual ISkillReactor& GetActionInterceptor() = 0;
+    virtual ISkillReactor& GetSkillReactor() = 0;
 
     virtual IStatusManager& GetStatusManager() = 0;
-
-    /**
-     * 分段攻击的技能每段攻击结果结束时触发
-     */
-    virtual void OnBasicSkillFinished(ICharacterDelegate*, const FBasicInfoResult&) = 0;
-
-    virtual void OnStatusSkillFinished(ICharacterDelegate*, const FStatusInfoResult&) = 0;
-
-    virtual void OnTriggerSkillFinished(ICharacterDelegate*, const FTriggerResult&) = 0;
-
-    virtual void OnCombatStatusSkillFinished(ICharacterDelegate*, const FCombatStatusResult&) = 0;
-
-    /**
-     * 触发指定情况下的技能
-     */
-    virtual void TriggerSkill(const FSkillTriggerInfo&) = 0;
 };
