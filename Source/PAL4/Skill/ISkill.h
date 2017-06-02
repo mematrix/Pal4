@@ -3,10 +3,10 @@
 #include <functional>
 #include <list>
 
-#include "FSkillResult.h"
-#include "Enum/ESkillAttribute.h"
+#include "Model/FSkillResultRecord.h"
 
 class ICharacterDelegate;
+struct FSkillInfo;
 
 
 class PAL4_API ISkillActionCallback
@@ -14,13 +14,13 @@ class PAL4_API ISkillActionCallback
 public:
     virtual ~ISkillActionCallback() = default;
 
-    virtual void ApplyBasicInfoResult(ICharacterDelegate*, ICharacterDelegate&, const FBasicInfoResult&) = 0;
+    virtual void ApplyBasicInfoResult(const FBasicInfoResultRecord&) = 0;
 
-    virtual void ApplyStatusInfoResult(ICharacterDelegate*, ICharacterDelegate&, const FStatusInfoResult&) = 0;
+    virtual void ApplyStatusInfoResult(const FStatusInfoResultRecord&) = 0;
 
-    virtual void ApplyTriggerResult(ICharacterDelegate*, ICharacterDelegate&, const FTriggerResult&) = 0;
+    virtual void ApplyTriggerResult(const FTriggerResultRecord&) = 0;
 
-    virtual void ApplyCombatStatusResult(ICharacterDelegate*, ICharacterDelegate&, const FCombatStatusResult&) = 0;
+    virtual void ApplyCombatStatusResult(const FCombatStatusResultRecord&) = 0;
 };
 
 
@@ -34,7 +34,10 @@ public:
 
     virtual ~ISkill() = default;
 
-    virtual int32 GetID() const = 0;
+    /**
+     * 获取技能基本信息
+     */
+    virtual const FSkillInfo& GetInfo() const = 0;
 
     /**
      * 获取技能特性。五灵属性、攻击辅助等
@@ -47,18 +50,13 @@ public:
     virtual ICharacterDelegate* GetActor() = 0;
 
     /**
-     * 是否可以触发被攻击者被动技能。默认情况下，只有主动调用的技能才可以触发
-     */
-    virtual bool CanTriggerPassiveSkill() const
-    {
-        return GetSkillSource(GetAttribute()) < ESkillSource::Trigger;
-    }
-
-    /**
      * 计算技能执行预期结果。此结果将会继续由后续管道过程修正
      */
     virtual void ComputeResult(std::list<ResultPair>&) = 0;
 
+    /**
+     * 执行前奏动作
+     */
     virtual void BeforeAction() = 0;
 
     /**
@@ -66,6 +64,9 @@ public:
      */
     virtual void DoAction(const std::list<ResultPair>&, ISkillActionCallback&) = 0;
 
+    /**
+     * 执行后置动作
+     */
     virtual void AfterAction() = 0;
 
     /**

@@ -6,8 +6,11 @@
 #include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/IStatusManager.h"
+#include "Combat/Interface/Character/ISkillReactor.h"
 #include "Character/Util/FCharacterHelper.h"
 #include "Enum/ESkillAttribute.h"
+#include "Model/FSkillInfo.h"
+#include "Model/FSkillTriggerInfo.h"
 
 using namespace std;
 using ResultPair = pair<reference_wrapper<ICharacterDelegate>, FSkillResult>;
@@ -20,9 +23,10 @@ public:
     {
     }
 
-    void ApplyBasicInfoResult(ICharacterDelegate* actor, ICharacterDelegate& target, const FBasicInfoResult& result) override
+    void ApplyBasicInfoResult(const FBasicInfoResultRecord& record) override
     {
-        auto& prop = target.GetProperty();
+        auto& prop = record.Target->GetProperty();
+        auto& result = *record.Result;
         if (result.HealthValue)
         {
             FCharacterHelper::AddHealthValue(prop, result.HealthValue);
@@ -36,30 +40,34 @@ public:
             FCharacterHelper::AddCraftValue(prop, result.CraftValue);
         }
 
-        if (Skill.CanTriggerPassiveSkill())
+        if (FSkillUtil::CheckCategory(Skill, ESkillCategory::Attack))
         {
-            target.GetContext()->OnBasicSkillFinished(actor, result);
+            record.Target->GetContext()->GetSkillReactor().OnBasicSkillFinished(record);
         }
     }
 
-    void ApplyStatusInfoResult(ICharacterDelegate* actor, ICharacterDelegate& target, const FStatusInfoResult& result) override
+    void ApplyStatusInfoResult(const FStatusInfoResultRecord& record) override
     {
-        auto& manager = target.GetContext()->GetStatusManager();
-        manager.SetStatusTransform(Skill.GetID(), result.StatusType, result.ValidRoundNum, result.TransformAction);
+        auto context = record.Target->GetContext();
+        auto& manager = context->GetStatusManager();
+        auto& result = *record.Result;
+        manager.SetStatusTransform(Skill.GetInfo().ID, result.StatusType, result.ValidRoundNum, result.TransformAction);
 
-        if (Skill.CanTriggerPassiveSkill())
+        if (FSkillUtil::CheckCategory(Skill, ESkillCategory::Attack))
         {
-            target.GetContext()->OnStatusSkillFinished(actor, result);
+            context->GetSkillReactor().OnStatusSkillFinished(record);
         }
     }
 
-    void ApplyTriggerResult(ICharacterDelegate*, ICharacterDelegate&, const FTriggerResult&) override
+    void ApplyTriggerResult(const FTriggerResultRecord&) override
     {
     }
 
-    void ApplyCombatStatusResult(ICharacterDelegate* actor, ICharacterDelegate& target, const FCombatStatusResult& result) override
+    void ApplyCombatStatusResult(const FCombatStatusResultRecord& record) override
     {
-        auto& manager = target.GetContext()->GetStatusManager();
+        auto context = record.Target->GetContext();
+        auto& manager = context->GetStatusManager();
+        auto& result = *record.Result;
         switch (result.StatusType)
         {
         case ECombatStatus::Buff:
@@ -84,9 +92,9 @@ public:
         default: break;
         }
 
-        if (Skill.CanTriggerPassiveSkill())
+        if (FSkillUtil::CheckCategory(Skill, ESkillCategory::Attack))
         {
-            target.GetContext()->OnCombatStatusSkillFinished(actor, result);
+            context->GetSkillReactor().OnCombatStatusSkillFinished(record);
         }
     }
 
@@ -99,7 +107,11 @@ void FSkillUtil::Execute(ISkill& skill)
 {
     list<ResultPair> resultList;
     skill.ComputeResult(resultList);
-    // TODO: 通知被攻击对象修正技能结果（免疫等）
+    // 通知被攻击对象修正技能结果（免疫等）
+    for (auto& result : resultList)
+    {
+        result.first.get().GetContext()->GetSkillReactor().AmendResult(result.second);
+    }
 
     skill.BeforeAction();
 
@@ -112,39 +124,30 @@ void FSkillUtil::Execute(ISkill& skill)
         Execute(*attachSkill);
     }
 
-    if (skill.CanTriggerPassiveSkill())
+    auto attr = skill.GetAttribute();
+    auto category = GetSkillCategory(attr);
+    if (ESkillCategory::Attack == category)
     {
-        auto attr = skill.GetAttribute();
-        auto source = GetSkillSource(attr);
         auto actor = skill.GetActor();
 
-        if (source == ESkillSource::PhysicalAttack)
-        {
-            for (auto& result : resultList)
-            {
-                if (result.second.HitTarget)
-                {
-                    actor->GetContext()->TriggerSkillWithPeer(ESkillTriggerType::HitTarget, result.first);
-                    result.first.get().GetContext()->TriggerSkillWithPeer(ESkillTriggerType::HitByPhysicalAttack, *actor);
-                }
-            }
-        }
-
-        if (actor)
-        {
-            actor->GetContext()->TriggerSkill(ESkillTriggerType::HitTarget);
-        }
-
-        // TODO: 处理技能触发情况。如连击。怪物反击处理等到AfterAction结束后
+        FSkillTriggerInfo info;
+        info.Source = GetSkillSource(attr);
+        info.Actor = actor;
         for (auto& result : resultList)
         {
             if (result.second.HitTarget)
             {
-                
-            }
+                info.Target = &result.first.get();
+                if (actor)
+                {
+                    actor->GetContext()->GetSkillReactor().TriggerSkill(info);
+                }
 
-            result.first.get().GetContext()->TriggerSkill(ESkillTriggerType::HitByMagic);
+                info.Target->GetContext()->GetSkillReactor().TriggerSkill(info);
+            }
         }
+
+        // TODO: 处理技能触发情况。如连击。怪物反击处理等到AfterAction结束后
     }
 
     skill.AfterAction();

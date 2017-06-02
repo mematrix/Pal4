@@ -74,6 +74,8 @@ struct PAL4_API FCombatStatusResult
     } Status;
     // 状态效果持续最大回合数
     uint32 MaxEffectRoundNum;
+    // 由被攻击者设置，是否免疫。默认设置为false
+    bool Immune;
 };
 
 

@@ -7,7 +7,7 @@
 enum class ESkillSource
 {
     // 普通攻击
-    PhysicalAttack,
+    Physical,
     // 特技
     Stunt,
     // 道具
@@ -23,9 +23,9 @@ enum class ESkillSource
     // 风系仙术
     WindMagic,
     // 土系仙术
-    SoilMagic
-    // 触发被动技能
-    // Trigger
+    SoilMagic,
+    // 触发技能
+    Trigger
 };
 
 
@@ -49,19 +49,3 @@ enum class ESkillCategory
     // 不可用
     Unavailable
 };
-
-
-constexpr unsigned int MakeSkillAttribute(ESkillSource source, ESkillCategory category)
-{
-    return (static_cast<unsigned>(category) << 16) | static_cast<unsigned>(source);
-}
-
-constexpr ESkillSource GetSkillSource(unsigned int attribute)
-{
-    return static_cast<ESkillSource>(attribute & 0xff);
-}
-
-constexpr ESkillCategory GetSkillCategory(unsigned int attribute)
-{
-    return static_cast<ESkillCategory>((attribute >> 16) & 0xff);
-}
