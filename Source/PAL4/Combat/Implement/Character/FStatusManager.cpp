@@ -2,14 +2,14 @@
 
 #include "PAL4.h"
 
-#include "FCharacterTempStatusManager.h"
+#include "FStatusManager.h"
 #include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/ITempStatusOpWrapper.h"
 #include "Character/ICharacterProperty.h"
 
 
-FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterDelegate& character) :
+FStatusManager::FStatusManager(ICharacterDelegate& character) :
     ICharacterTempStatusOperator(),
     Character(character),
     TempStatus(character.GetProperty().StatusProperty()),
@@ -17,19 +17,19 @@ FCharacterTempStatusManager::FCharacterTempStatusManager(ICharacterDelegate& cha
 {
 }
 
-IRoundManager& FCharacterTempStatusManager::GetRoundManager()
+IRoundManager& FStatusManager::GetRoundManager()
 {
     _ASSERT(Character.GetContext());
     return Character.GetContext()->GetRoundManager();
 }
 
-const IRoundManager& FCharacterTempStatusManager::GetRoundManager() const
+const IRoundManager& FStatusManager::GetRoundManager() const
 {
     _ASSERT(Character.GetContext());
     return Character.GetContext()->GetRoundManager();
 }
 
-void FCharacterTempStatusManager::AddTemporaryStatus(ECharacterStatusType type, const TSharedRef<ITempStatusOpWrapper>& wrapper)
+void FStatusManager::AddTemporaryStatus(ECharacterStatusType type, const TSharedRef<ITempStatusOpWrapper>& wrapper)
 {
     auto oldWrapper = StatusMap.Find(static_cast<int32>(type));
     if (oldWrapper)
@@ -41,7 +41,7 @@ void FCharacterTempStatusManager::AddTemporaryStatus(ECharacterStatusType type, 
     wrapper->OnAddingStatus(*this);
 }
 
-void FCharacterTempStatusManager::RemoveTemporaryStatus(ECharacterStatusType type, ITempStatusOpWrapper& wrapper)
+void FStatusManager::RemoveTemporaryStatus(ECharacterStatusType type, ITempStatusOpWrapper& wrapper)
 {
     auto existWrapper = StatusMap.Find(static_cast<int32>(type));
     if (existWrapper && (*existWrapper).operator->() == &wrapper)
@@ -51,7 +51,7 @@ void FCharacterTempStatusManager::RemoveTemporaryStatus(ECharacterStatusType typ
     }
 }
 
-FTemporaryStatus& FCharacterTempStatusManager::GetTempStatus()
+FTemporaryStatus& FStatusManager::GetTempStatus()
 {
     return TempStatus;
 }

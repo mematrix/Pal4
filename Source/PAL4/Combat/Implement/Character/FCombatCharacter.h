@@ -5,7 +5,7 @@
 #include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "FRoundManager.h"
-#include "FCharacterTempStatusManager.h"
+#include "FStatusManager.h"
 #include "FSkillReactor.h"
 
 
@@ -28,8 +28,8 @@ public:
     FRoundManager& GetRoundManager() override { return RoundManager; }
     const FRoundManager& GetRoundManager() const { return RoundManager; }
 
-    FCharacterTempStatusManager& GetTempStatusManager() { return TempStatusManager; }
-    const FCharacterTempStatusManager& GetTempStatusManager() const { return TempStatusManager; }
+    FStatusManager& GetTempStatusManager() { return TempStatusManager; }
+    const FStatusManager& GetTempStatusManager() const { return TempStatusManager; }
 
     void OnBattleBegin();
     void OnBattleFinished();
@@ -37,6 +37,6 @@ public:
 private:
     TSharedRef<ICharacterDelegate> CharacterDelegate;
     FRoundManager RoundManager;
-    FCharacterTempStatusManager TempStatusManager;
+    FStatusManager TempStatusManager;
     FSkillReactor ActionInterceptor;
 };

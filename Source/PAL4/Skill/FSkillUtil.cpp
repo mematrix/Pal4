@@ -59,8 +59,9 @@ public:
         }
     }
 
-    void ApplyTriggerResult(const FTriggerResultRecord&) override
+    void ApplyTriggerResult(const FTriggerResultRecord& record) override
     {
+        record.Target->GetContext()->GetSkillReactor().OnTriggerSkillFinished(record);
     }
 
     void ApplyCombatStatusResult(const FCombatStatusResultRecord& record) override
