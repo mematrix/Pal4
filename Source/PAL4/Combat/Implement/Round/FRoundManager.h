@@ -6,7 +6,7 @@
 #include <deque>
 
 #include "Core/PriorityQueue.h"
-#include "Combat/Interface/Character/IRoundManager.h"
+#include "Combat/Interface/Round/IRoundManager.h"
 
 class IRoundActionHandler;
 

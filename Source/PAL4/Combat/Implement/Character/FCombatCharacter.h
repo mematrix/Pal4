@@ -6,8 +6,8 @@
 #include "Combat/Interface/Character/IStatusManager.h"
 #include "Combat/Interface/Character/ISkillReactor.h"
 #include "Combat/Interface/Character/ICharacterDelegate.h"
+#include "../Round/FRoundManager.h"
 #include "FTemporaryStatus.h"
-#include "FRoundManager.h"
 
 
 class PAL4_API FCombatCharacter : public ICombatContext, public IStatusManager, public ISkillReactor
