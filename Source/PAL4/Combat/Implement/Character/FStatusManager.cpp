@@ -4,16 +4,52 @@
 
 #include "FStatusManager.h"
 #include "Combat/Interface/Character/ICharacterDelegate.h"
-#include "Combat/Interface/Character/ICombatContext.h"
 #include "Combat/Interface/Character/ITempStatusOpWrapper.h"
 #include "Character/ICharacterProperty.h"
+#include "FCombatCharacter.h"
 
 
-FStatusManager::FStatusManager(ICharacterDelegate& character) :
-    ICharacterTempStatusOperator(),
+FStatusManager::FStatusManager(FCombatCharacter& character) :
+    IStatusManager(),
     Character(character),
-    TempStatus(character.GetProperty().StatusProperty()),
+    TempStatus(character.GetCharacter().GetProperty().StatusProperty()),
     StatusMap()
+{
+}
+
+void FStatusManager::SetStatusTransform(int32 skillID, ECharacterStatusType type, uint32 validNum, const std::function<int32(int32)>& func)
+{
+}
+
+void FStatusManager::ClearSkillStatus(int32 skillID)
+{
+}
+
+void FStatusManager::ClearSpecialStatus(ECharacterStatusType type)
+{
+}
+
+void FStatusManager::ClearStatus(int32 skillID, ECharacterStatusType type)
+{
+}
+
+void FStatusManager::SetBuff(EBuff buff, uint32 maxRoundNum)
+{
+}
+
+void FStatusManager::SetPoison(EPoison poison, uint32 maxRoundNum)
+{
+}
+
+void FStatusManager::SetDebuff(EDebuff debuff, uint32 maxRoundNum)
+{
+}
+
+void FStatusManager::SetResurrect(bool canResurrct, uint32 maxRoundNum)
+{
+}
+
+void FStatusManager::SetInvisible(bool invisible, uint32 maxRoundNum)
 {
 }
 

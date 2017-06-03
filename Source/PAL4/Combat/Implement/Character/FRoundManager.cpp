@@ -43,7 +43,7 @@ uint32 FRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegi
 {
     // 回合数已过。或者处于当前回合，但是已经没有调用时机了：要求在回合开始调用、或者要求在结束调用但是现在已经处于结束状态了
     if (roundNum < RoundNum ||
-        (roundNum == RoundNum && (callWhenBegin || RoundStatus != ECharacterRoundStatus::PostAction || RoundStatus != ECharacterRoundStatus::NoAction)))
+        (roundNum == RoundNum && (callWhenBegin || RoundStatus != ERoundStatus::PostAction || RoundStatus != ERoundStatus::NoAction)))
     {
         if (callIfPast && func)
         {
@@ -71,7 +71,7 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
 {
     ++RoundNum;
 
-    RoundStatus = ECharacterRoundStatus::BeforeAction;
+    RoundStatus = ERoundStatus::BeforeAction;
     while (RoundFunc.top().RoundNumWhenCall < RoundNum)
     {
         RoundFunc.pop();
@@ -93,13 +93,13 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
         RoundBeginEvent.Broadcast(*this, RoundNum);
     }
 
-    RoundStatus = ECharacterRoundStatus::OnAction;
+    RoundStatus = ERoundStatus::OnAction;
     if (!shouldSkipAction)
     {
         RoundAction.DoAction();
     }
 
-    RoundStatus = ECharacterRoundStatus::PostAction;
+    RoundStatus = ERoundStatus::PostAction;
     RoundAction.OnRoundFinished();
 
     if (RoundFinishedEvent.IsBound())
@@ -117,7 +117,7 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
         RoundFunc.pop();
     }
 
-    RoundStatus = ECharacterRoundStatus::NoAction;
+    RoundStatus = ERoundStatus::NoAction;
 }
 
 

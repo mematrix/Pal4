@@ -9,8 +9,8 @@ FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterDelegate>& charact
     ICombatContext(),
     CharacterDelegate(character),
     RoundManager(character->GetRoundAction()),
-    TempStatusManager(character.Get()),
-    ActionInterceptor(character.Get())
+    StatusManager(*this),
+    SkillReactor(*this)
 {
 }
 

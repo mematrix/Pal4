@@ -88,7 +88,7 @@ public:
      * @param func 调用方法
      * @return 一个key值，用于取消事件
      */
-    uint32 AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func) override;
+    uint32 AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func);
 
     /**
      * 添加延迟回合调用事件，在指定的回合调用。
@@ -98,13 +98,13 @@ public:
      * @param func 调用方法
      * @return 一个key值，用于取消事件。或者0，表示调用时机已过
      */
-    uint32 AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, const std::function<void()>& func) override;
+    uint32 AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegin, bool callIfPast, const std::function<void()>& func);
 
     /**
      * 移除延迟调用的事件。前提是事件还未被调度过
      * @param key 在添加事件时返回的key值
      */
-    void RemoveDelayCallFunc(uint32 key) override;
+    void RemoveDelayCallFunc(uint32 key);
 
     /**
      * 执行回合动作。
