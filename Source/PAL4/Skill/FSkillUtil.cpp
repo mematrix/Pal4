@@ -111,7 +111,7 @@ void FSkillUtil::Execute(ISkill& skill)
     // 通知被攻击对象修正技能结果（免疫等）
     for (auto& result : resultList)
     {
-        result.first.get().GetContext()->GetSkillReactor().AmendResult(result.second);
+        result.first.get().GetContext()->GetSkillReactor().AmendResult(result.second, skill);
     }
 
     skill.BeforeAction();

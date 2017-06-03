@@ -7,16 +7,18 @@ struct FCombatStatusResultRecord;
 struct FSkillTriggerInfo;
 struct FSkillResult;
 
+class ISkill;
+
 
 class PAL4_API ISkillReactor
 {
 public:
     virtual ~ISkillReactor() = default;
 
-    /*
+    /**
      * 修正技能计算结果
      */
-    virtual void AmendResult(FSkillResult&) = 0;
+    virtual void AmendResult(FSkillResult&, const ISkill&) = 0;
 
     /**
      * 分段攻击的技能每段攻击结果结束时触发

@@ -3,13 +3,16 @@
 #include "PAL4.h"
 
 #include "FRoundManager.h"
+#include "Combat/Interface/Character/ICharacterDelegate.h"
 #include "Combat/Interface/Round/IRoundActionHandler.h"
 
-FRoundManager::FRoundManager(IRoundActionHandler& action) :
+
+FRoundManager::FRoundManager(ICharacterDelegate& character) :
     IRoundManager(),
-    RoundAction(action),
-    RoundFunc(),
-    DelayFuncKey(0)
+    Character(character),
+    DelayRoundFuncs(),
+    RoundFuncs(),
+    FuncKey(0)
 {
 }
 
@@ -24,18 +27,18 @@ FRoundManager::FRoundManager(IRoundActionHandler& action) :
 //
 //    swap(RoundBeginEvent, other.RoundBeginEvent);
 //    swap(RoundFinishedEvent, other.RoundFinishedEvent);
-//    swap(RoundAction, other.RoundAction);
-//    RoundFunc.swap(other.RoundFunc);
+//    swap(Character, other.Character);
+//    DelayRoundFuncs.swap(other.DelayRoundFuncs);
 //    swap(RoundNum, other.RoundNum);
-//    swap(DelayFuncKey, other.DelayFuncKey);
+//    swap(FuncKey, other.FuncKey);
 //    swap(RoundStatus, other.RoundStatus);
 //}
 
 uint32 FRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func)
 {
-    uint32 key = ++DelayFuncKey;
+    uint32 key = ++FuncKey;
     uint32 roundNum = RoundNum + delayNum;
-    RoundFunc.emplace(key, roundNum, callWhenBegin, func);
+    DelayRoundFuncs.emplace(key, roundNum, callWhenBegin, func);
     return key;
 }
 
@@ -43,7 +46,7 @@ uint32 FRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegi
 {
     // 回合数已过。或者处于当前回合，但是已经没有调用时机了：要求在回合开始调用、或者要求在结束调用但是现在已经处于结束状态了
     if (roundNum < RoundNum ||
-        (roundNum == RoundNum && (callWhenBegin || RoundStatus != ERoundStatus::PostAction || RoundStatus != ERoundStatus::NoAction)))
+        roundNum == RoundNum && (callWhenBegin || RoundStatus == ERoundStatus::PostAction || RoundStatus == ERoundStatus::NoAction))
     {
         if (callIfPast && func)
         {
@@ -52,17 +55,29 @@ uint32 FRoundManager::AddDelayCallFuncByRound(uint32 roundNum, bool callWhenBegi
 
         return 0;
     }
-    else
-    {
-        uint32 key = ++DelayFuncKey;
-        RoundFunc.emplace(key, roundNum, callWhenBegin, func);
-        return key;
-    }
+
+    uint32 key = ++FuncKey;
+    DelayRoundFuncs.emplace(key, roundNum, callWhenBegin, func);
+    return key;
 }
 
 void FRoundManager::RemoveDelayCallFunc(uint32 key)
 {
-    RoundFunc.remove([key](const FDelayCallFuncWrapper& funcWrapper) -> bool {
+    DelayRoundFuncs.remove([key](const FRoundFuncWrapper& funcWrapper) -> bool {
+        return key == funcWrapper.Key;
+    });
+}
+
+uint32 FRoundManager::AddRoundFunc(bool callWhenBegin, const std::function<void()>& func)
+{
+    uint32 key = ++FuncKey;
+    RoundFuncs.emplace_back(key, 0, callWhenBegin, func);
+    return key;
+}
+
+void FRoundManager::RemoveRoundFunc(uint32 key)
+{
+    RoundFuncs.remove_if([key](const FRoundFuncWrapper& funcWrapper) -> bool {
         return key == funcWrapper.Key;
     });
 }
@@ -72,60 +87,66 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
     ++RoundNum;
 
     RoundStatus = ERoundStatus::BeforeAction;
-    while (RoundFunc.top().RoundNumWhenCall < RoundNum)
+    while (DelayRoundFuncs.top().RoundNumWhenCall < RoundNum)
     {
-        RoundFunc.pop();
+        DelayRoundFuncs.pop();
     }
-    while (RoundFunc.top().RoundNumWhenCall == RoundNum && RoundFunc.top().CallWhenRoundBegin)
+    while (DelayRoundFuncs.top().RoundNumWhenCall == RoundNum && DelayRoundFuncs.top().CallWhenRoundBegin)
     {
-        auto &func = RoundFunc.top().DelayCalledFunc;
+        auto func = DelayRoundFuncs.top().Func;
+        DelayRoundFuncs.pop();
+
         if (func)
         {
             func();
         }
-
-        RoundFunc.pop();
     }
-    RoundAction.OnNewRoundBegin(RoundNum);
 
+    auto& roundAction = Character.GetRoundAction();
+    roundAction.OnNewRoundBegin(RoundNum);
     if (RoundBeginEvent.IsBound())
     {
         RoundBeginEvent.Broadcast(*this, RoundNum);
     }
 
     RoundStatus = ERoundStatus::OnAction;
+    // TODO: 使用人物状态自行判断，无需借助外部参数
     if (!shouldSkipAction)
     {
-        RoundAction.DoAction();
+        roundAction.DoAction();
     }
 
     RoundStatus = ERoundStatus::PostAction;
-    RoundAction.OnRoundFinished();
-
+    roundAction.OnRoundFinished();
     if (RoundFinishedEvent.IsBound())
     {
         RoundFinishedEvent.Broadcast(*this, RoundNum);
     }
-    while (RoundFunc.top().RoundNumWhenCall == RoundNum && !RoundFunc.top().CallWhenRoundBegin)
+
+    while (DelayRoundFuncs.top().RoundNumWhenCall == RoundNum && DelayRoundFuncs.top().CallWhenRoundBegin)
     {
-        auto &func = RoundFunc.top().DelayCalledFunc;
+        DelayRoundFuncs.pop();
+    }
+    while (DelayRoundFuncs.top().RoundNumWhenCall == RoundNum && !DelayRoundFuncs.top().CallWhenRoundBegin)
+    {
+        auto func = DelayRoundFuncs.top().Func;
+        DelayRoundFuncs.pop();
+
         if (func)
         {
             func();
         }
-
-        RoundFunc.pop();
     }
 
     RoundStatus = ERoundStatus::NoAction;
 }
 
 
-void swap(FRoundManager::FDelayCallFuncWrapper& left, FRoundManager::FDelayCallFuncWrapper& right)
-    noexcept(noexcept(left.Swap(right)))
-{
-    left.Swap(right);
-}
+//void swap(FRoundManager::FRoundFuncWrapper& left, FRoundManager::FRoundFuncWrapper& right)
+//    noexcept(noexcept(left.Swap(right)))
+//{
+//    left.Swap(right);
+//}
 
 //namespace std
 //{
