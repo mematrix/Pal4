@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include <SharedPointer.h>
 
 #include "Combat/Interface/Character/ICombatContext.h"
@@ -24,11 +26,29 @@ public:
 
     void OnBattleFinished();
 
+private:
+    struct PAL4_API FSkillRoundRecord
+    {
+        int32 SkillID;
+        ECharacterStatusType Type;
+        uint32 RoundFuncKey;
+
+        FSkillRoundRecord(int32 id, ECharacterStatusType type, uint32 key) :
+            SkillID(id),
+            Type(type),
+            RoundFuncKey(key)
+        {
+        }
+    };
+
+    FTemporaryStatus TempStatus;
+    std::list<FSkillRoundRecord> SkillRoundRecord;
+
+
+public:
     ICharacterDelegate& GetCharacter() override { return CharacterDelegate.Get(); }
 
     FRoundManager& GetRoundManager() override { return RoundManager; }
-
-    const FRoundManager& GetRoundManager() const { return RoundManager; }
 
     ISkillReactor& GetSkillReactor() override { return *this; }
 
@@ -54,7 +74,7 @@ public:
 
     void SetInvisible(bool invisible, uint32 maxRoundNum) override;
 
-    void AmendResult(FSkillResult&) override;
+    void AmendResult(FSkillResult&, const ISkill&) override;
 
     void OnBasicSkillFinished(const FBasicInfoResultRecord&) override;
 
@@ -69,5 +89,4 @@ public:
 private:
     TSharedRef<ICharacterDelegate> CharacterDelegate;
     FRoundManager RoundManager;
-    FTemporaryStatus TempStatus;
 };

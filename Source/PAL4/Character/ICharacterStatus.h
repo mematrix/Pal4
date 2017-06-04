@@ -81,6 +81,20 @@ public:
         UpdatePropertyValue(type);
     }
 
+    void RemoveTransformerByKey(int32 key)
+    {
+        Transformer.RemoveKey(key);
+        UpdateAllProperties();
+    }
+
+    void RemoveTransformerByStatus(ECharacterStatusType type)
+    {
+        _ASSERT(static_cast<uint32>(type) < PropertySetCount);
+
+        Transformer.RemoveGroup(type);
+        UpdatePropertyValue(type);
+    }
+
 protected:
     FStatusTransformer Transformer;
 };

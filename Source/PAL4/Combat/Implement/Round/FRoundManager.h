@@ -24,7 +24,7 @@ class PAL4_API FRoundManager : public IRoundManager
         bool CallWhenRoundBegin;
         std::function<void()> Func;
 
-        explicit FRoundFuncWrapper(uint32 key, uint32 num = 0, bool callWhenBegin = true, std::function<void()> func = nullptr) :
+        FRoundFuncWrapper(uint32 key, uint32 num, bool callWhenBegin, std::function<void()> func) :
             Key(key),
             RoundNumWhenCall(num),
             CallWhenRoundBegin(callWhenBegin),
@@ -33,27 +33,16 @@ class PAL4_API FRoundManager : public IRoundManager
         }
 
         FRoundFuncWrapper(const FRoundFuncWrapper&) = default;
-        FRoundFuncWrapper(FRoundFuncWrapper&& other) = default;
+        FRoundFuncWrapper(FRoundFuncWrapper&&) = default;
 
-        FRoundFuncWrapper& operator=(const FRoundFuncWrapper& other) = default;
-        FRoundFuncWrapper& operator=(FRoundFuncWrapper&& other) = default;
+        FRoundFuncWrapper& operator=(const FRoundFuncWrapper&) = default;
+        FRoundFuncWrapper& operator=(FRoundFuncWrapper&&) = default;
 
         bool operator==(const FRoundFuncWrapper& other) const
         {
             return Key == other.Key /*&& RoundNumWhenCall == other.RoundNumWhenCall && CallWhenRoundBegin == other.CallWhenRoundBegin*/;
         }
-
-        void Swap(FRoundFuncWrapper& other) noexcept
-        {
-            using std::swap;
-            swap(Key, other.Key);
-            swap(RoundNumWhenCall, other.RoundNumWhenCall);
-            swap(CallWhenRoundBegin, other.CallWhenRoundBegin);
-            Func.swap(other.Func);
-        }
     };
-
-    // friend void swap(FRoundFuncWrapper& left, FRoundFuncWrapper& right) noexcept(noexcept(left.Swap(right)));
 
     struct PAL4_API FRoundTimeComparator
     {
@@ -75,8 +64,6 @@ public:
 
     FRoundManager& operator=(const FRoundManager&) = delete;
     FRoundManager& operator=(FRoundManager&&) = delete;
-
-    // void Swap(FRoundManager& other);
 
     /**
      * 添加延迟回合调用方法，在指定的回合数之后调用。
@@ -118,11 +105,9 @@ public:
     void RemoveRoundFunc(uint32 key);
 
     /**
-     * 执行回合动作。
-     * @param shouldSkipAction 指示是否应该跳过当前角色的行动，例如角色处于定、眠状态，
-     * 将会跳过@code IRoundActionHandler::DoAction()\endcode 的执行，但是不会跳过其它方法
+     * 执行回合动作。自动处理定、眠两种状态（跳过回合Action，但仍然会继续执行BeforeAction和AfterAction方法）
      */
-    void DoRoundAction(bool shouldSkipAction = false);
+    void DoRoundAction();
 
 private:
     // 战场中的人物或AI
@@ -135,7 +120,3 @@ private:
     // 用于添加延迟调用时返回的key值，每次添加都递增。考虑使用原子类型
     uint32 FuncKey;
 };
-
-//template<>
-//void std::swap<FRoundManager>(FRoundManager& left, FRoundManager& right) noexcept(noexcept(left.Swap(right)));
-

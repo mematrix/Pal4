@@ -2,16 +2,9 @@
 
 #include <crtdbg.h>
 
-#include <Platform.h>
-
-struct FBaseRestorerModel;
-struct FBaseAttackModel;
-struct FBaseStatusModel;
-class ISingleAction;
-class IRoundActionHandler;
-class ICharacterStatus;
 class ICombatContext;
 class ICharacterProperty;
+class IRoundActionHandler;
 
 
 /**
@@ -49,20 +42,21 @@ public:
 
     ICombatContext* GetContext() const { return Context; }
 
-    virtual ICharacterProperty& GetProperty() = 0;
-
-    virtual IRoundActionHandler& GetRoundAction() = 0;
-
-    virtual void OnAttackActionFinished(const ISingleAction&, const ICharacterDelegate&, const FBaseAttackModel&, int32) = 0;
-
-    virtual void OnRestorerActionFinished(const ISingleAction&, const ICharacterDelegate&, const FBaseRestorerModel&, int32) = 0;
-
-    virtual void OnStatusActionFinished(const ISingleAction&, const ICharacterDelegate&, const FBaseStatusModel&, int32) = 0;
-
     /**
      * 角色是否是由玩家控制的一方，true表示玩家一方，false表示敌方（即AI怪物）
      */
     virtual bool IsPlayer() const = 0;
+
+    /**
+     * 获取角色属性。如果角色为玩家控制人物，实际返回@code IRoleProperty \endcode 对象，
+     * 而当角色为AI时，返回@code IMonsterProperty \endcode 对象
+     */
+    virtual ICharacterProperty& GetProperty() = 0;
+
+    /**
+     * 获取回合动作处理对象
+     */
+    virtual IRoundActionHandler& GetRoundAction() = 0;
 
 protected:
     virtual void OnBattleBegin() = 0;

@@ -4,6 +4,9 @@
 
 #include "FRoundManager.h"
 #include "Combat/Interface/Character/ICharacterDelegate.h"
+#include "Combat/Interface/Character/ICombatContext.h"
+#include "Combat/Interface/Character/IStatusManager.h"
+#include "Combat/Interface/Character/ITemporaryStatus.h"
 #include "Combat/Interface/Round/IRoundActionHandler.h"
 
 
@@ -15,24 +18,6 @@ FRoundManager::FRoundManager(ICharacterDelegate& character) :
     FuncKey(0)
 {
 }
-
-//void FRoundManager::Swap(FRoundManager& other)
-//{
-//    using std::swap;
-//
-//    if (&other == this)
-//    {
-//        return;
-//    }
-//
-//    swap(RoundBeginEvent, other.RoundBeginEvent);
-//    swap(RoundFinishedEvent, other.RoundFinishedEvent);
-//    swap(Character, other.Character);
-//    DelayRoundFuncs.swap(other.DelayRoundFuncs);
-//    swap(RoundNum, other.RoundNum);
-//    swap(FuncKey, other.FuncKey);
-//    swap(RoundStatus, other.RoundStatus);
-//}
 
 uint32 FRoundManager::AddDelayCallFunc(uint32 delayNum, bool callWhenBegin, const std::function<void()>& func)
 {
@@ -82,7 +67,7 @@ void FRoundManager::RemoveRoundFunc(uint32 key)
     });
 }
 
-void FRoundManager::DoRoundAction(bool shouldSkipAction)
+void FRoundManager::DoRoundAction()
 {
     ++RoundNum;
 
@@ -101,6 +86,13 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
             func();
         }
     }
+    for (const auto& wrapper : RoundFuncs)
+    {
+        if (wrapper.CallWhenRoundBegin && wrapper.Func)
+        {
+            wrapper.Func();
+        }
+    }
 
     auto& roundAction = Character.GetRoundAction();
     roundAction.OnNewRoundBegin(RoundNum);
@@ -109,10 +101,11 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
         RoundBeginEvent.Broadcast(*this, RoundNum);
     }
 
-    RoundStatus = ERoundStatus::OnAction;
-    // TODO: 使用人物状态自行判断，无需借助外部参数
+    auto debuff = Character.GetContext()->GetStatusManager().GetTempStatus().GetDebuffStatus();
+    bool shouldSkipAction = EDebuff::Ding == debuff || EDebuff::Mian == debuff;
     if (!shouldSkipAction)
     {
+        RoundStatus = ERoundStatus::OnAction;
         roundAction.DoAction();
     }
 
@@ -137,23 +130,13 @@ void FRoundManager::DoRoundAction(bool shouldSkipAction)
             func();
         }
     }
+    for (const auto& wrapper : RoundFuncs)
+    {
+        if (!wrapper.CallWhenRoundBegin && wrapper.Func)
+        {
+            wrapper.Func();
+        }
+    }
 
     RoundStatus = ERoundStatus::NoAction;
 }
-
-
-//void swap(FRoundManager::FRoundFuncWrapper& left, FRoundManager::FRoundFuncWrapper& right)
-//    noexcept(noexcept(left.Swap(right)))
-//{
-//    left.Swap(right);
-//}
-
-//namespace std
-//{
-//    template<> void swap<FRoundManager>(FRoundManager& left, FRoundManager& right)
-//        noexcept(noexcept(left.Swap(right)))
-//    {
-//        left.Swap(right);
-//    }
-//}
-
