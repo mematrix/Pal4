@@ -27,6 +27,25 @@ public:
     void OnBattleFinished();
 
 private:
+    TSharedRef<ICharacterDelegate> CharacterDelegate;
+    FRoundManager RoundManager;
+
+
+    /* ICombatContext begin */
+public:
+    ICharacterDelegate& GetCharacter() override { return CharacterDelegate.Get(); }
+
+    FRoundManager& GetRoundManager() override { return RoundManager; }
+
+    ISkillReactor& GetSkillReactor() override { return *this; }
+
+    IStatusManager& GetStatusManager() override { return *this; }
+
+    /* ICombatContext end */
+
+
+    /* IStatusManager begin */
+private:
     struct PAL4_API FSkillRoundRecord
     {
         int32 SkillID;
@@ -42,18 +61,9 @@ private:
     };
 
     FTemporaryStatus TempStatus;
-    std::list<FSkillRoundRecord> SkillRoundRecord;
-
+    std::list<FSkillRoundRecord> SkillRoundRecords;
 
 public:
-    ICharacterDelegate& GetCharacter() override { return CharacterDelegate.Get(); }
-
-    FRoundManager& GetRoundManager() override { return RoundManager; }
-
-    ISkillReactor& GetSkillReactor() override { return *this; }
-
-    IStatusManager& GetStatusManager() override { return *this; }
-
     const FTemporaryStatus& GetTempStatus() const override { return TempStatus; }
 
     void SetStatusTransform(int32 skillID, ECharacterStatusType type, uint32 validNum, const std::function<int32(int32)>& func) override;
@@ -74,6 +84,11 @@ public:
 
     void SetInvisible(bool invisible, uint32 maxRoundNum) override;
 
+    /* IStatusManager end */
+
+
+    /* ISkillReactor begin */
+
     void AmendResult(FSkillResult&, const ISkill&) override;
 
     void OnBasicSkillFinished(const FBasicInfoResultRecord&) override;
@@ -86,7 +101,5 @@ public:
 
     void TriggerSkill(const FSkillTriggerInfo&) override;
 
-private:
-    TSharedRef<ICharacterDelegate> CharacterDelegate;
-    FRoundManager RoundManager;
+    /* ISkillReactor end */
 };

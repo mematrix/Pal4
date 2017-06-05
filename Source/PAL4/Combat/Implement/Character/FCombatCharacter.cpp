@@ -11,7 +11,7 @@ FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterDelegate>& charact
     CharacterDelegate(character),
     RoundManager(character.Get()),
     TempStatus(character->GetProperty().StatusProperty()),
-    SkillRoundRecord()
+    SkillRoundRecords()
 {
 }
 
@@ -27,7 +27,7 @@ void FCombatCharacter::OnBattleFinished()
 
 void FCombatCharacter::SetStatusTransform(int32 skillID, ECharacterStatusType type, uint32 validNum, const std::function<int32(int32)>& func)
 {
-    SkillRoundRecord.remove_if([skillID, type, this](const FSkillRoundRecord& record) -> bool
+    SkillRoundRecords.remove_if([skillID, type, this](const FSkillRoundRecord& record) -> bool
     {
         if (skillID == record.SkillID && type == record.Type)
         {
@@ -38,7 +38,11 @@ void FCombatCharacter::SetStatusTransform(int32 skillID, ECharacterStatusType ty
         return false;
     });
 
-
+    auto key = RoundManager.AddDelayCallFunc(validNum, false, [this, skillID, type] {
+        this->ClearStatus(skillID, type);
+    });
+    SkillRoundRecords.emplace_back(skillID, type, key);
+    TempStatus.AddOrUpdateTransformer(skillID, type, func);
 }
 
 void FCombatCharacter::ClearSkillStatus(int32 skillID)

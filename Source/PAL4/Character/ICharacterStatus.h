@@ -73,6 +73,15 @@ public:
         UpdatePropertyValue(type);
     }
 
+    void AddOrUpdateTransformer(int32 key, ECharacterStatusType type, const FTransformAction& func)
+    {
+        _ASSERT(static_cast<uint32>(type) < PropertySetCount);
+
+        Transformer.RemoveTransformer(key, type);
+        Transformer.AddTransformer(key, type, func);
+        UpdatePropertyValue(type);
+    }
+
     void RemoveTransformer(int32 key, ECharacterStatusType type)
     {
         _ASSERT(static_cast<uint32>(type) < PropertySetCount);
