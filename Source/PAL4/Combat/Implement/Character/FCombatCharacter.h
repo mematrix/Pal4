@@ -62,6 +62,11 @@ private:
 
     FTemporaryStatus TempStatus;
     std::list<FSkillRoundRecord> SkillRoundRecords;
+    uint32 RoundFuncKeyBuff;
+    uint32 RoundFuncKeyPoison;
+    uint32 RoundFuncKeyDebuff;
+    uint32 RoundFuncKeyResurrect;
+    uint32 RoundFuncKeyInvisible;
 
 public:
     const FTemporaryStatus& GetTempStatus() const override { return TempStatus; }
@@ -88,7 +93,19 @@ public:
 
 
     /* ISkillReactor begin */
+private:
+    template<typename T>
+    using FSkillFuncList = std::list<std::function<void(const T&)>>;
 
+    std::list<std::function<void(FSkillResult&, const ISkill&)>> AmendFuncs;
+
+    FSkillFuncList<FBasicInfoResultRecord> BasicInfoFinishedFuncs;
+    FSkillFuncList<FStatusInfoResultRecord> StatusInfoFinishedFuncs;
+    FSkillFuncList<FTriggerResultRecord> TriggerFinishedFuncs;
+    FSkillFuncList<FCombatStatusResultRecord> CombatStatusFinishedFuncs;
+    FSkillFuncList<FSkillTriggerInfo> SkillTriggerFuncs;
+
+public:
     void AmendResult(FSkillResult&, const ISkill&) override;
 
     void OnBasicSkillFinished(const FBasicInfoResultRecord&) override;
