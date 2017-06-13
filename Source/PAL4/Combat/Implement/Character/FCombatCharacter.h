@@ -95,15 +95,15 @@ public:
     /* ISkillReactor begin */
 private:
     template<typename T>
-    using FSkillFuncList = std::list<std::function<void(const T&)>>;
+    using TSkillFuncList = std::list<std::function<void(const T&)>>;
 
     std::list<std::function<void(FSkillResult&, const ISkill&)>> AmendFuncs;
 
-    FSkillFuncList<FBasicInfoResultRecord> BasicInfoFinishedFuncs;
-    FSkillFuncList<FStatusInfoResultRecord> StatusInfoFinishedFuncs;
-    FSkillFuncList<FTriggerResultRecord> TriggerFinishedFuncs;
-    FSkillFuncList<FCombatStatusResultRecord> CombatStatusFinishedFuncs;
-    FSkillFuncList<FSkillTriggerInfo> SkillTriggerFuncs;
+    TSkillFuncList<FBasicInfoResultRecord> BasicInfoFinishedFuncs;
+    TSkillFuncList<FStatusInfoResultRecord> StatusInfoFinishedFuncs;
+    TSkillFuncList<FTriggerResultRecord> TriggerFinishedFuncs;
+    TSkillFuncList<FCombatStatusResultRecord> CombatStatusFinishedFuncs;
+    TSkillFuncList<FSkillTriggerInfo> SkillTriggerFuncs;
 
 public:
     void AmendResult(FSkillResult&, const ISkill&) override;
@@ -116,7 +116,7 @@ public:
 
     void OnCombatStatusSkillFinished(const FCombatStatusResultRecord&) override;
 
-    void TriggerSkill(const FSkillTriggerInfo&) override;
+    void TriggerSkill(const FSkillTriggerInfo&, bool) override;
 
     /* ISkillReactor end */
 };

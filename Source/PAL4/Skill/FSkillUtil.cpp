@@ -141,10 +141,10 @@ void FSkillUtil::Execute(ISkill& skill)
                 info.Target = &result.first.get();
                 if (actor)
                 {
-                    actor->GetContext()->GetSkillReactor().TriggerSkill(info);
+                    actor->GetContext()->GetSkillReactor().TriggerSkill(info, true);
                 }
 
-                info.Target->GetContext()->GetSkillReactor().TriggerSkill(info);
+                info.Target->GetContext()->GetSkillReactor().TriggerSkill(info, false);
             }
         }
 

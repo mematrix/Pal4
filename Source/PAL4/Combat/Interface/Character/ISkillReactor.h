@@ -41,8 +41,8 @@ public:
     virtual void OnCombatStatusSkillFinished(const FCombatStatusResultRecord&) = 0;
 
     /**
-     * 触发指定情况下的技能
+     * 触发指定情况下的技能，第二个参数指示是攻击方还是被攻击者
      */
-    virtual void TriggerSkill(const FSkillTriggerInfo&) = 0;
+    virtual void TriggerSkill(const FSkillTriggerInfo&, bool) = 0;
 };
 

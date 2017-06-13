@@ -4,6 +4,8 @@
 
 #include "FCombatCharacter.h"
 #include "Character/ICharacterProperty.h"
+#include "Skill/Enum/ESkillTriggerType.h"
+#include "Skill/Model/FSkillTriggerInfo.h"
 
 
 FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterDelegate>& character) :
@@ -11,7 +13,12 @@ FCombatCharacter::FCombatCharacter(const TSharedRef<ICharacterDelegate>& charact
     CharacterDelegate(character),
     RoundManager(character.Get()),
     TempStatus(character->GetProperty().StatusProperty()),
-    SkillRoundRecords()
+    SkillRoundRecords(),
+    RoundFuncKeyBuff(0),
+    RoundFuncKeyPoison(0),
+    RoundFuncKeyDebuff(0),
+    RoundFuncKeyResurrect(0),
+    RoundFuncKeyInvisible(0)
 {
 }
 
@@ -227,7 +234,27 @@ void FCombatCharacter::OnCombatStatusSkillFinished(const FCombatStatusResultReco
     }
 }
 
-void FCombatCharacter::TriggerSkill(const FSkillTriggerInfo& info)
-{
+//static ESkillTriggerType GetTriggerType(ESkillSource source, bool isActor)
+//{
+//    switch (source)
+//    {
+//    case ESkillSource::Physical:
+//        return isActor ? ESkillTriggerType
+//        break;
+//    case ESkillSource::Stunt: break;
+//    case ESkillSource::Prop: break;
+//    case ESkillSource::Prescription: break;
+//    case ESkillSource::WaterMagic: break;
+//    case ESkillSource::FireMagic: break;
+//    case ESkillSource::ThunderMagic: break;
+//    case ESkillSource::WindMagic: break;
+//    case ESkillSource::SoilMagic: break;
+//    case ESkillSource::Trigger: break;
+//    default: ;
+//    }
+//}
 
+void FCombatCharacter::TriggerSkill(const FSkillTriggerInfo& info, bool isActor)
+{
+    //
 }
