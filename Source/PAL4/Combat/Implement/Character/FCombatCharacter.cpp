@@ -258,3 +258,12 @@ void FCombatCharacter::TriggerSkill(const FSkillTriggerInfo& info, bool isActor)
 {
     //
 }
+
+void FCombatCharacter::AddTriggerSkill(int32 skillID)
+{
+    // TODO: 使用技能ID查找技能触发信息，然后加入Map存储
+}
+
+void FCombatCharacter::RemoveTriggerSkill(int32 skillID)
+{
+}

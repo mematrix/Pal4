@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <map>
 
 #include <SharedPointer.h>
 
@@ -103,7 +104,7 @@ private:
     TSkillFuncList<FStatusInfoResultRecord> StatusInfoFinishedFuncs;
     TSkillFuncList<FTriggerResultRecord> TriggerFinishedFuncs;
     TSkillFuncList<FCombatStatusResultRecord> CombatStatusFinishedFuncs;
-    TSkillFuncList<FSkillTriggerInfo> SkillTriggerFuncs;
+    std::map<int32, std::list<int32>> TriggerSkillMap;
 
 public:
     void AmendResult(FSkillResult&, const ISkill&) override;
@@ -117,6 +118,11 @@ public:
     void OnCombatStatusSkillFinished(const FCombatStatusResultRecord&) override;
 
     void TriggerSkill(const FSkillTriggerInfo&, bool) override;
+
+private:
+    void AddTriggerSkill(int32 skillID);
+
+    void RemoveTriggerSkill(int32 skillID);
 
     /* ISkillReactor end */
 };
